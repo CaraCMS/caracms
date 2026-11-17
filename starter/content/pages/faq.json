@@ -1,0 +1,46 @@
+{
+  "$schema": "../../schemas/pages.schema.json",
+  "title": "Questions",
+  "blocks": [
+    {
+      "type": "faq",
+      "heading": "Questions we hear a lot",
+      "intro": "If yours isn’t here, email hello@example.com.",
+      "items": [
+        {
+          "question": "What does it cost?",
+          "answer": [
+            { "p": "The caracms package is free, under the MIT licence, with no caps. CaraCMS Cloud is optional: it takes on the annoying parts, such as GitHub access, images, and forms and email." }
+          ]
+        },
+        {
+          "question": "Which sites does it work with?",
+          "answer": [
+            { "p": "Astro sites, on Astro 7 and Node 22.12 or later. npx caracms init adds it to a site you already have." }
+          ]
+        },
+        {
+          "question": "Where does the content live?",
+          "answer": [
+            { "p": "In the site’s own git repository, as JSON files. A Publish commits them to main, and the host deploys the change. See [editing](/services/websites) for more." }
+          ]
+        },
+        {
+          "question": "Where can a site run?",
+          "answer": [
+            { "p": "On any host that keeps one Node server running behind HTTPS: Railway, Render, Fly or a VPS." }
+          ]
+        },
+        {
+          "question": "Can a site use its own blocks?",
+          "answer": [
+            { "p": "Yes. The **blocks** are the site’s own Astro components; caracms.config.ts lists them and their fields." }
+          ]
+        }
+      ],
+      "background": "light",
+      "spaceAbove": "default",
+      "spaceBelow": "default"
+    }
+  ]
+}

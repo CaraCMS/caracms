@@ -1,0 +1,386 @@
+/* The site's stylesheet: Tailwind, the look's tokens, and the few shared rules every
+   block uses (bands, buttons, links, rich text, frames). Layout only: every colour,
+   font and size here is a token from src/styles/tokens.css, so a restyle never
+   touches this file (M7 Decision 6). Page.astro imports it once.
+
+   Sources: only the starter's own components and scripts, where the class names are
+   (not content/, whose words would generate stray utilities, and not test/). */
+@import 'tailwindcss' source(none);
+@import '../styles/tokens.css';
+@import '../scripts/motion/locomotive.css';
+@source '../**/*.{astro,ts}';
+
+/* ── The content column: the content width inside the gutters. `container` is
+      Tailwind's own utility, hence the name. ── */
+@utility content-container {
+	width: min(100% - 2 * var(--spacing-gutter), var(--container-content));
+	margin-inline: auto;
+}
+
+/* ── The small upper-case label: the 404's "Error 404", the footer's labels. ── */
+@utility eyebrow {
+	font-size: var(--text-small);
+	line-height: var(--text-small--line-height);
+	font-weight: var(--font-weight-medium);
+	letter-spacing: var(--tracking-eyebrow);
+	text-transform: uppercase;
+}
+
+/* ── Text in a band's soft or muted colour (intros, captions), so it follows the band. ── */
+@utility fg-soft {
+	color: var(--fg-soft);
+}
+@utility fg-muted {
+	color: var(--fg-muted);
+}
+
+@layer base {
+	/* Scheme roles. NOT tokens: local names that point at tokens, so a band (a
+	   block's Background, or media behind a hero's text) flips its text, links and
+	   buttons in one place by redefining them on a class. These are the page's own
+	   (Light) values. */
+	body {
+		--fg: var(--color-ink);
+		--fg-soft: var(--color-grey-700);
+		--fg-muted: var(--color-grey-600);
+		--bg: var(--color-surface);
+		--line: var(--color-grey-200);
+		--focus: var(--color-accent);
+		--link: var(--color-accent);
+		--btn-1-bg: var(--color-accent);
+		--btn-1-fg: var(--color-on-accent);
+		--btn-1-hover: color-mix(in srgb, var(--color-accent) 80%, var(--color-ink));
+		--btn-2-fg: var(--color-ink);
+		--btn-2-line: var(--color-ink);
+		--btn-2-hover-bg: var(--color-ink);
+		--btn-2-hover-fg: var(--color-surface);
+	}
+
+	html {
+		-webkit-text-size-adjust: 100%;
+		text-size-adjust: 100%;
+	}
+	/* The footer sits at the bottom of a short page (the 404, a page with little on it). */
+	body {
+		display: flex;
+		flex-direction: column;
+		min-height: 100svh;
+		background: var(--bg);
+		color: var(--fg);
+		font-family: var(--font-sans);
+		font-size: var(--text-body);
+		line-height: var(--text-body--line-height);
+		font-weight: var(--font-weight-normal);
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+	body > main {
+		flex: 1 0 auto;
+	}
+	h1,
+	h2,
+	h3,
+	h4 {
+		font-weight: var(--font-weight-medium);
+		text-wrap: balance;
+	}
+	p,
+	li,
+	dd,
+	figcaption {
+		text-wrap: pretty;
+	}
+	strong {
+		font-weight: var(--font-weight-semibold);
+	}
+	address {
+		font-style: normal;
+	}
+	:focus-visible {
+		outline: 2px solid var(--focus);
+		outline-offset: 2px;
+	}
+}
+
+@layer components {
+	/* ── A block's band (M7 Decision 11): its Background is a scheme, its Space above
+	      and below are the section roles. Light is the page; Grey, Dark and Accent
+	      redefine the roles, so the band's text, links and buttons follow. ── */
+	.band {
+		background: var(--bg);
+		color: var(--fg);
+	}
+	.scheme-grey {
+		--bg: var(--color-grey-50);
+		--line: var(--color-grey-300);
+	}
+	.scheme-dark,
+	.scheme-accent,
+	.scheme-media {
+		--fg-soft: color-mix(in srgb, var(--fg) 90%, transparent);
+		--fg-muted: color-mix(in srgb, var(--fg) 80%, transparent);
+		--line: color-mix(in srgb, var(--fg) 30%, transparent);
+		--focus: var(--fg);
+		--link: var(--fg);
+		--btn-1-bg: var(--fg);
+		--btn-1-hover: color-mix(in srgb, var(--fg) 86%, var(--bg));
+		--btn-2-fg: var(--fg);
+		--btn-2-line: var(--fg);
+		--btn-2-hover-bg: var(--fg);
+		--btn-2-hover-fg: var(--bg);
+	}
+	.scheme-dark {
+		--fg: var(--color-surface);
+		--bg: var(--color-ink);
+		--btn-1-fg: var(--color-ink);
+	}
+	.scheme-accent {
+		--fg: var(--color-on-accent);
+		--bg: var(--color-accent);
+		--btn-1-fg: var(--color-accent);
+	}
+	/* White text over media behind a hero's text, on the scrim. */
+	.scheme-media {
+		--fg: var(--color-surface);
+		--bg: var(--color-ink);
+		--btn-1-fg: var(--color-ink);
+	}
+
+	/* ── A text link: underlined, in the link role. ── */
+	.link,
+	.btn--link {
+		color: var(--link);
+		font-weight: var(--font-weight-medium);
+		text-decoration: underline;
+		text-decoration-thickness: 1px;
+		text-underline-offset: 0.22em;
+	}
+	.link:hover,
+	.btn--link:hover {
+		text-decoration-thickness: 2px;
+	}
+
+	/* ── Buttons: primary and secondary (and a text link, for a card's one link).
+	      Colours come from the scheme roles, so a band restyles them. ── */
+	.btn-row {
+		display: flex;
+		flex-wrap: wrap;
+		gap: calc(var(--spacing) * 3);
+	}
+	.btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-height: calc(var(--spacing) * 12);
+		padding: calc(var(--spacing) * 3) calc(var(--spacing) * 5);
+		border: 1px solid transparent;
+		border-radius: var(--radius-control);
+		font-size: var(--text-body);
+		font-weight: var(--font-weight-medium);
+		line-height: 1.2;
+		text-decoration: none;
+		white-space: nowrap;
+		cursor: pointer;
+		transition:
+			background-color 150ms ease,
+			color 150ms ease,
+			border-color 150ms ease;
+	}
+	/* .btn switches the underline off; a card's text link is a link, so it gets it back. */
+	.btn.btn--link {
+		text-decoration: underline;
+		text-decoration-thickness: 1px;
+		text-underline-offset: 0.22em;
+	}
+	.btn.btn--link:hover {
+		text-decoration-thickness: 2px;
+	}
+	.btn--primary {
+		background: var(--btn-1-bg);
+		border-color: var(--btn-1-bg);
+		color: var(--btn-1-fg);
+	}
+	.btn--primary:hover {
+		background: var(--btn-1-hover);
+		border-color: var(--btn-1-hover);
+	}
+	.btn--secondary {
+		background: transparent;
+		border-color: var(--btn-2-line);
+		color: var(--btn-2-fg);
+	}
+	.btn--secondary:hover {
+		background: var(--btn-2-hover-bg);
+		border-color: var(--btn-2-hover-bg);
+		color: var(--btn-2-hover-fg);
+	}
+	/* A card's one link, drawn as a text link: no box. */
+	.btn.btn--link {
+		min-height: 0;
+		padding: 0;
+		border: 0;
+		white-space: normal;
+	}
+	/* A button with words and no link ("Coming soon", Two columns' allowNoLink): a label. */
+	span.btn {
+		cursor: default;
+	}
+
+	/* ── A block's heading group: heading, then an intro in the soft colour. ── */
+	.head {
+		display: grid;
+		gap: calc(var(--spacing) * 4);
+		align-content: start;
+		margin-bottom: var(--spacing-heading);
+	}
+	.head > p {
+		max-width: var(--container-reading);
+		color: var(--fg-soft);
+	}
+
+	/* ── Heading aside in the first third, content in the last two, on desktop. ── */
+	.split {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr);
+		gap: var(--spacing-heading);
+	}
+	.split .head {
+		margin-bottom: 0;
+	}
+	@media (min-width: 64rem) {
+		.split {
+			grid-template-columns: repeat(12, minmax(0, 1fr));
+			column-gap: var(--spacing-grid);
+		}
+		.split > :first-child {
+			grid-column: 1 / span 4;
+		}
+		.split > :last-child {
+			grid-column: 5 / -1;
+		}
+		/* No heading: the content still starts in the second third. */
+		.split > :only-child {
+			grid-column: 5 / -1;
+		}
+	}
+
+	/* ── Even grids: 1 per row on phones, 2 on tablets, the block's choice on desktop. ── */
+	.grid-even {
+		--cols: 1;
+		display: grid;
+		grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+		gap: calc(var(--spacing) * 12) var(--spacing-grid);
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+	@media (min-width: 48rem) {
+		.grid-even {
+			--cols: 2;
+		}
+	}
+	@media (min-width: 64rem) {
+		.grid-even.per-row-3 {
+			--cols: 3;
+		}
+		.grid-even.per-row-4 {
+			--cols: 4;
+		}
+	}
+
+	/* ── A media frame: its shape, a grey fill until the image loads. ── */
+	.frame {
+		display: block;
+		width: 100%;
+		height: auto;
+		object-fit: cover;
+		border-radius: var(--radius-media);
+		background: var(--color-grey-100);
+	}
+	.frame-wide {
+		aspect-ratio: var(--aspect-wide);
+	}
+	.frame-landscape {
+		aspect-ratio: var(--aspect-landscape);
+	}
+	.frame-portrait {
+		aspect-ratio: var(--aspect-portrait);
+	}
+	.caption {
+		margin-top: calc(var(--spacing) * 3);
+		font-size: var(--text-small);
+		line-height: var(--text-small--line-height);
+		color: var(--fg-muted);
+	}
+
+	/* ── Rich text (the package's RichText: p, h2, h3, lists, links, bold, italic).
+	      At reading width; inside it H2 draws at h3 size and H3 at h4. ── */
+	.prose {
+		max-width: var(--container-reading);
+	}
+	.prose > * + * {
+		margin-top: 1em;
+	}
+	.prose h2 {
+		margin-top: 1.8em;
+		font-size: var(--text-h3);
+		line-height: var(--text-h3--line-height);
+		letter-spacing: var(--text-h3--letter-spacing);
+		font-weight: var(--text-h3--font-weight);
+	}
+	.prose h3 {
+		margin-top: 1.6em;
+		font-size: var(--text-h4);
+		line-height: var(--text-h4--line-height);
+		letter-spacing: var(--text-h4--letter-spacing);
+		font-weight: var(--text-h4--font-weight);
+	}
+	.prose > :first-child {
+		margin-top: 0;
+	}
+	.prose h2 + *,
+	.prose h3 + * {
+		margin-top: 0.6em;
+	}
+	.prose ul,
+	.prose ol {
+		padding-left: 1.25em;
+	}
+	.prose ul {
+		list-style: disc;
+	}
+	.prose ol {
+		list-style: decimal;
+	}
+	.prose li + li {
+		margin-top: 0.4em;
+	}
+	.prose li::marker {
+		color: var(--fg-muted);
+	}
+	.prose a {
+		color: var(--link);
+		text-decoration: underline;
+		text-decoration-thickness: 1px;
+		text-underline-offset: 0.22em;
+	}
+	.prose a:hover {
+		text-decoration-thickness: 2px;
+	}
+	.prose em {
+		font-style: italic;
+	}
+}
+
+/* ── Page transitions (Decision 20): every navigation is a full page load, so the
+      site opts into the browser's cross-document view transition, with no script.
+      Browsers without it just load the page; reduced motion gets a plain load. ── */
+@view-transition {
+	navigation: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	@view-transition {
+		navigation: none;
+	}
+}

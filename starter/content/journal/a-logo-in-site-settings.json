@@ -1,0 +1,23 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "A logo in Site Settings",
+  "date": "2025-04-02",
+  "tags": ["brand"],
+  "cover": { "key": "uploads/61e1f507072b/cafe-chairs.jpg", "alt": "An empty café with wooden chairs and tables", "focal": [0.92, 0.33], "w": 4000, "h": 2662 },
+  "excerpt": "The logo and the tab icon are content, so an editor can change them.",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["A logo in", "Site Settings"],
+      "intro": "The brand belongs to the people who run the site.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "Not in the code",
+      "body": "The name, accent, logo and tab icon live in Site Settings, not in a config file.",
+      "background": "light"
+    }
+  ]
+}

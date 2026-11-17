@@ -1,0 +1,6 @@
+{
+  "$schema": "../../schemas/workshops.schema.json",
+  "title": "Riso basics",
+  "open": true,
+  "sessions": ["morning"]
+}

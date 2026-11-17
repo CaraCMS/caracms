@@ -1,0 +1,205 @@
+---
+/**
+ * A case study's body (M5a Decision 7): the collection's component, rendered in the
+ * page's frame by Page.astro's `<Blocks>`. Schema beside it in case-studies.ts.
+ *
+ * The package's components work here as in a block, markers included (Decision 16):
+ * `<Block>` is the root (in a preview it carries `data-cms-document`), and list items
+ * pass their paths (`credits.1.name`). The heading is the page's `h1` when it has
+ * lines (Decision 7's rule). Related work is read through the render context
+ * (Decision 9); a related case study that doesn't exist is null, and skipped.
+ *
+ * M5b: the cover, at 16:9 across the band under the header (eager, high priority:
+ * it's the page's first image). `sizes`: the band's content width, 100vw − 48px below
+ * 640, 100vw − 128px from 640, capped at 1312px from 1440.
+ */
+import Block from 'caracms/components/Block.astro';
+import Lockup from 'caracms/components/Lockup.astro';
+import Media from 'caracms/components/Media.astro';
+import RichText from 'caracms/components/RichText.astro';
+import Text from 'caracms/components/Text.astro';
+import type { FieldsDocumentProps } from 'caracms/document';
+import { formatDay, sectorLabel, type CaseStudyData } from './case-studies.ts';
+
+type Props = FieldsDocumentProps<CaseStudyData>;
+const { document: cs, cms } = Astro.props;
+const year = cs.launched ? cs.launched.slice(0, 4) : '';
+const related = (await Promise.all(cs.related.map((path) => (path ? cms.read.document('case-studies', path) : null)))).filter((r) => r !== null);
+const credits = cs.credits.map((c, i) => ({ ...c, i })).filter((c) => c.role || c.name || cms.preview);
+---
+
+<Block cms={cms} as="article" class="case">
+	<header class="band bg-light case-top">
+		<div class="band-inner">
+			<p class="case-kicker">{['Case study', sectorLabel(cs.sector), year].filter(Boolean).join(' · ')}</p>
+			<Lockup cms={cms} field="heading" value={cs.heading} />
+			<dl class="case-meta">
+				{
+					(cs.client || cms.preview) && (
+						<div>
+							<dt>Client</dt>
+							<Text cms={cms} field="client" value={cs.client} as="dd" />
+						</div>
+					)
+				}
+				{
+					cs.launched && (
+						<div>
+							<dt>Launched</dt>
+							<dd>{formatDay(cs.launched)}</dd>
+						</div>
+					)
+				}
+			</dl>
+		</div>
+	</header>
+	{
+		cs.cover && (
+			<div class="band bg-light case-cover-band">
+				<div class="band-inner">
+					<Media cms={cms} field="cover" value={cs.cover} sizes="(min-width: 1440px) 1312px, (min-width: 640px) calc(100vw - 128px), calc(100vw - 48px)" ratio={16 / 9} class="case-cover" />
+				</div>
+			</div>
+		)
+	}
+	<section class="band bg-light case-body">
+		<div class="band-inner case-grid">
+			{
+				credits.length > 0 && (
+					<ul class="case-credits">
+						{credits.map((c) => (
+							<li>
+								<Text cms={cms} field={`credits.${c.i}.role`} value={c.role} as="span" class="case-role" />
+								<Text cms={cms} field={`credits.${c.i}.name`} value={c.name} as="span" />
+							</li>
+						))}
+					</ul>
+				)
+			}
+			<div class="case-story">
+				<Text cms={cms} field="summary" value={cs.summary} class="case-summary" />
+				<RichText cms={cms} field="body" value={cs.body} class="case-rich" />
+			</div>
+		</div>
+	</section>
+	{
+		related.length > 0 && (
+			<section class="band bg-dark case-related">
+				<div class="band-inner">
+					<h2>Related work</h2>
+					<ul>
+						{related.map((r) => (
+							<li>
+								<Block cms={cms.of(r)} as="a" href={r.url ?? undefined}>{r.title}</Block>
+							</li>
+						))}
+					</ul>
+				</div>
+			</section>
+		)
+	}
+</Block>
+
+<style>
+	.case-top {
+		padding-block: 4rem 2.5rem;
+	}
+
+	.case-kicker {
+		margin: 0 0 1.5rem;
+		font-size: 0.875rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.case-meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1rem 3rem;
+		margin: 2rem 0 0;
+	}
+
+	.case-meta dt {
+		font-size: 0.8125rem;
+		opacity: 0.7;
+	}
+
+	.case-meta dd {
+		margin: 0.25rem 0 0;
+		font-weight: 600;
+	}
+
+	.case-body {
+		padding-block: 2rem 4rem;
+	}
+
+	.case-cover-band :global(.case-cover) {
+		display: block;
+		width: 100%;
+		height: auto;
+		aspect-ratio: 16 / 9;
+		object-fit: cover;
+		border-radius: 0.25rem;
+	}
+
+	.case-grid {
+		display: grid;
+		gap: 2.5rem;
+	}
+
+	.case-credits {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		font-size: 0.9375rem;
+	}
+
+	.case-credits li {
+		display: flex;
+		flex-direction: column;
+		margin-bottom: 0.75rem;
+	}
+
+	.case-role {
+		font-size: 0.8125rem;
+		opacity: 0.7;
+	}
+
+	.case-story {
+		max-width: 44rem;
+	}
+
+	.case-summary {
+		margin: 0 0 1.5rem;
+		font-size: 1.25rem;
+		line-height: 1.5;
+	}
+
+	.case-rich {
+		font-size: 1.0625rem;
+		line-height: 1.65;
+	}
+
+	.case-related {
+		padding-block: 3rem;
+	}
+
+	.case-related ul {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem 2rem;
+		margin: 1rem 0 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.case-related a {
+		color: inherit;
+	}
+
+	@media (width >= 640px) {
+		.case-grid {
+			grid-template-columns: 14rem 1fr;
+		}
+	}
+</style>

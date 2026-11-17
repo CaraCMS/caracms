@@ -1,0 +1,30 @@
+{
+  "$schema": "../../schemas/case-studies.schema.json",
+  "title": "A coffee roaster",
+  "heading": ["A coffee", "Roaster"],
+  "client": "A coffee roaster",
+  "sector": "food",
+  "featured": true,
+  "launched": "2024-05-02",
+  "summary": "An example: a roaster’s site, with a shop page, a menu and the cart’s timetable.",
+  "body": [
+    { "p": "The roaster started as a cart, selling coffee to people waiting for the morning ferry." },
+    { "h2": "From the cart\noutward" },
+    { "p": "The timetable lives in **Site Settings**, so the roaster changes it without a developer. See [editing](/services/websites) for how." },
+    { "ul": ["A shop page and a menu", "Opening times in Site Settings", "A one-page timetable for the cart"] },
+    { "p": "Each part of the page is one of the site’s own blocks, edited where it sits." },
+    { "h2": "What the editor sees" },
+    { "p": "A form for the block.\nThe preview beside it.\n\nAnd a Publish button." }
+  ],
+  "credits": [
+    {
+      "role": "Photography",
+      "name": "Dara"
+    },
+    {
+      "role": "Website",
+      "name": "Orla"
+    }
+  ],
+  "related": ["a-small-publisher", "a-bakery"]
+}

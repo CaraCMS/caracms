@@ -1,0 +1,24 @@
+---
+/** The React fixture's page component: the header and footer slots around the blocks. */
+import Blocks from 'caracms/components/Blocks.astro';
+import Slot from 'caracms/components/Slot.astro';
+import type { PageProps } from 'caracms/document';
+
+type Props = PageProps;
+const { document, collection, preview = false, listPage } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>{document.title}</title>
+	</head>
+	<body>
+		<Slot name="header" {...Astro.props} />
+		<main>
+			<Blocks document={document} collection={collection} preview={preview} listPage={listPage} />
+		</main>
+		<Slot name="footer" {...Astro.props} />
+	</body>
+</html>

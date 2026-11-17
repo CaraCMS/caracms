@@ -1,0 +1,14 @@
+{
+  "title": "Footer",
+  "default": true,
+  "block": {
+    "type": "footer",
+    "address": "1 Quay Street",
+    "extra": "Open weekdays",
+    "links": [{ "label": "Instagram", "href": "https://instagram.com/x" }],
+    "menu": [{ "label": "Opening times", "href": { "href": "/visit" } }],
+    "news": "All the news",
+    "more": "More from us",
+    "menuLabel": "Open the menu"
+  }
+}

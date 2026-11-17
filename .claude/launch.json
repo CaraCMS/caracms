@@ -1,0 +1,67 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "starter",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": [
+        "--dir",
+        "starter",
+        "astro",
+        "dev"
+      ],
+      "port": 4326
+    },
+    {
+      "name": "starter (live, memory)",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": [
+        "-c",
+        "CARACMS_GITHUB=memory CARACMS_SECRET=local-walk-secret-0123456789abcdef0123 CARACMS_ALLOW=walker@example.com,second@example.com pnpm --dir starter astro dev"
+      ],
+      "port": 4326
+    },
+    {
+      "name": "starter (live, memory media)",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": [
+        "-c",
+        "CARACMS_GITHUB=memory CARACMS_MEDIA=memory CARACMS_SECRET=local-walk-secret-0123456789abcdef0123 CARACMS_ALLOW=walker@example.com,second@example.com pnpm --dir starter astro dev"
+      ],
+      "port": 4326
+    },
+    {
+      "name": "starter (built)",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": [
+        "-c",
+        "pnpm build && cd starter && HOST=127.0.0.1 PORT=4330 CARACMS_CLIENT_IP_HEADER=${CARACMS_CLIENT_IP_HEADER-socket} pnpm exec caracms start"
+      ],
+      "port": 4330
+    },
+    {
+      "name": "mockups",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "4328",
+        "--bind",
+        "127.0.0.1",
+        "--directory",
+        "packages/caracms/test/mockups"
+      ],
+      "port": 4328
+    },
+    {
+      "name": "restyle proof",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": [
+        "--filter",
+        "caracms-starter",
+        "restyle-proof"
+      ],
+      "port": 4331
+    }
+  ]
+}

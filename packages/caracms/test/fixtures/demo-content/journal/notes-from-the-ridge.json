@@ -1,0 +1,21 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "Notes from the Ridge",
+  "kicker": "Field notes",
+  "credit": "Aoife",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Notes from", "The Ridge"],
+      "intro": "Three days, forty bands and one very large printed programme.",
+      "layout": "left",
+      "background": "light"
+    },
+    {
+      "type": "text",
+      "heading": "What we learned",
+      "body": "Print the schedule bigger than you think. Then bigger again.",
+      "background": "dark"
+    }
+  ]
+}

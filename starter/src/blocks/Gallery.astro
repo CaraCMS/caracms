@@ -1,0 +1,37 @@
+---
+/**
+ * The gallery (M5b Decision 10): a heading and images at 4:5, one per row on phones,
+ * two on tablets, three on desktop. Each image is its own slot (`images.<i>`), so a
+ * click in a preview opens its row; the grid is the list's (`images`), ringed when the
+ * field is picked. Schema beside it in gallery.ts.
+ */
+import Block from 'caracms/components/Block.astro';
+import Media from 'caracms/components/Media.astro';
+import Text from 'caracms/components/Text.astro';
+import type { BlockProps } from 'caracms/document';
+import { bandClass } from './background.ts';
+import type { GalleryData } from './gallery.ts';
+import { gridSizes, perRowClass } from './grid.ts';
+
+type Props = BlockProps<GalleryData>;
+const { block, cms } = Astro.props;
+const SIZES = gridSizes(3);
+const images = block.images.map((image, i) => ({ image, i })).filter((x) => x.image);
+// In a preview, the grid is the list's own field, so picking Images rings it (the mockup's #gallery); each image is its row.
+const listMarkers = cms.preview ? { 'data-cms-field': 'images', 'data-cms-kind': 'list' } : {};
+---
+
+<Block cms={cms} class={bandClass(block)}>
+	<div class="content-container">
+		{
+			(block.heading || cms.preview) && (
+				<div class="head">
+					<Text cms={cms} field="heading" value={block.heading} class="text-h2" />
+				</div>
+			)
+		}
+		<div class={`${perRowClass('3')} gap-y-8`} {...listMarkers}>
+			{images.map(({ image, i }) => <Media cms={cms} field={`images.${i}`} value={image} sizes={SIZES} ratio={4 / 5} class="gallery-image frame frame-portrait" />)}
+		</div>
+	</div>
+</Block>

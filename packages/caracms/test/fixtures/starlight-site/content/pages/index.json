@@ -1,0 +1,7 @@
+{
+  "title": "Home",
+  "blocks": [
+    { "type": "note", "body": "Approvals need a manager", "credit": "Written by the support team" },
+    { "type": "text", "body": [{ "h2": "Asking for approval" }, { "p": "Send the post to your manager." }] }
+  ]
+}

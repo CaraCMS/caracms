@@ -1,0 +1,26 @@
+{
+  "$schema": "../../schemas/pages.schema.json",
+  "title": "Privacy",
+  "blocks": [
+    {
+      "type": "text",
+      "heading": "Privacy policy",
+      "body": [
+        { "p": "This policy explains what this site collects when you use it or get in touch, and what we do with it. It was last updated on 1 October 2026." },
+        { "h2": "What we collect" },
+        { "p": "We only collect what you give us, and a little about how the site is used:" },
+        { "ul": ["your name, email address and message when you use the contact form;", "anything you send us by email or tell us on the phone;", "anonymous visit statistics, such as which pages are read most."] },
+        { "h2": "How we use it" },
+        { "p": "We use your details **only to reply to you**. We never sell them, and we don’t add you to a mailing list unless you ask." },
+        { "ol": ["Your message arrives in our inbox and in the site’s editor.", "One of us replies, usually within a day.", "After a year without contact, we delete it."] },
+        { "h3": "Your rights" },
+        { "p": "You can ask to see, correct or delete anything we hold about you, and we’ll answer within a month, as *the GDPR* asks." },
+        { "h2": "Contact" },
+        { "p": "Questions about this policy go to [privacy@example.com](mailto:privacy@example.com)." }
+      ],
+      "background": "light",
+      "spaceAbove": "default",
+      "spaceBelow": "default"
+    }
+  ]
+}

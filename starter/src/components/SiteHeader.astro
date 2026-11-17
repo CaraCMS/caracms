@@ -1,0 +1,154 @@
+---
+/**
+ * The page shell's header (M7 Decision 17, from the Tina template's SiteHeader). On every
+ * page, the 404 too; not on a body block's own preview. Since edit in context (Decision 16)
+ * it's the header slot's shared block (src/blocks/Header.astro gives it its data and `cms`).
+ *
+ *   - The site's name as text, linking home (`brand.name`, Decision 13). Never the brand
+ *     logo: that's the editor's.
+ *   - Site Settings' menu (shell.ts → menuItems). From 768px it sits inline beside the
+ *     name, and wraps to a second line rather than overflow when it's long (a site with a
+ *     long menu changes its own breakpoint). A group (an item with dropdown links) is a
+ *     real <button> with `aria-expanded` opening a small panel of its links. Below 768px
+ *     the whole menu folds behind one "Menu"/"Close" button that opens a panel in the page
+ *     flow, each group's links listed under its label.
+ *   - The current page's link carries `aria-current="page"` and the accent underline, on
+ *     an exact address match only. A group holding it gets the underline on its button,
+ *     visually only: `aria-current` doesn't belong on a <button>.
+ *   - An empty menu: just the name, with no nav, list or button at any width.
+ *
+ * Static, not sticky. Its script (src/scripts/siteMenu.ts) is small, plain and ships no
+ * React; Page.astro runs it from its own module, beside the motion setup, so a page loads
+ * one script of the site's.
+ *
+ * Edit in context: in a preview its root is marked as its shared block (`<Block cms>`:
+ * `data-cms-source="shared/header"`), so a click on it opens the Header over the page. Its
+ * links aren't marked: they follow, as they did (Decision 7), and the menu is edited in the
+ * Header's form.
+ */
+import Block from 'caracms/components/Block.astro';
+import type { BlockContext } from 'caracms/document';
+import type { MenuItem, ShellLink } from './shell.ts';
+import { fileAttributes } from './shell.ts';
+
+interface Props {
+	name: string;
+	items: MenuItem[];
+	/** The header's shared block's context (the slot's). */
+	cms: BlockContext;
+}
+
+const { name, items, cms } = Astro.props;
+const underline = 'underline-offset-[0.3em] hover:underline hover:decoration-1 aria-[current=page]:underline aria-[current=page]:decoration-accent aria-[current=page]:decoration-2';
+const groupId = (i: number) => `site-menu-group-${i}`;
+const linkProps = (link: ShellLink) => ({ href: link.href, 'aria-current': link.current ? ('page' as const) : undefined, ...fileAttributes(link) });
+---
+
+<Block cms={cms} as="header" class="border-b border-grey-200 bg-surface" data-site-header>
+	{
+		items.length > 0 ? (
+			<nav aria-label="Main">
+				<div class="content-container flex min-h-16 items-center justify-between gap-6 lg:min-h-18">
+					<Block cms={cms.settings} as="a" class="shrink-0 text-h4 font-semibold no-underline" href="/">
+						{name}
+					</Block>
+					<ul class="hidden min-w-0 flex-wrap items-center justify-end gap-x-8 gap-y-2 py-3 md:flex">
+						{items.map((item, i) =>
+							item.kind === 'link' ? (
+								<li>
+									<a class={`font-medium no-underline ${underline}`} {...linkProps(item)}>
+										{item.label}
+										{item.file === 'new-tab' && <span class="sr-only"> (opens in a new tab)</span>}
+									</a>
+								</li>
+							) : (
+								<li class="relative" data-nav-group>
+									<button
+										class="group inline-flex cursor-pointer items-center gap-1.5 font-medium"
+										type="button"
+										aria-expanded="false"
+										aria-controls={groupId(i)}
+										data-nav-group-button
+									>
+										<span
+											class:list={[
+												'underline-offset-[0.3em] group-hover:underline group-hover:decoration-1',
+												item.current && 'underline decoration-accent decoration-2 group-hover:decoration-2',
+											]}
+										>
+											{item.label}
+										</span>
+										<svg class="size-3 transition-transform duration-150 group-aria-expanded:rotate-180" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+											<path d="M2.5 4.5 6 8l3.5-3.5" />
+										</svg>
+									</button>
+									<ul class="absolute top-full -left-4 z-20 mt-4 min-w-48 in-[li:last-child]:right-0 in-[li:last-child]:left-auto rounded-control border border-grey-200 bg-surface py-2" id={groupId(i)} hidden data-nav-group-panel>
+										{item.links.map((link) => (
+											<li>
+												<a class={`block px-4 py-2 font-medium whitespace-nowrap no-underline ${underline}`} {...linkProps(link)}>
+													{link.label}
+													{link.file === 'new-tab' && <span class="sr-only"> (opens in a new tab)</span>}
+												</a>
+											</li>
+										))}
+									</ul>
+								</li>
+							),
+						)}
+					</ul>
+					<button
+						class="group -mr-2 inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-control px-2 font-medium md:hidden"
+						type="button"
+						aria-expanded="false"
+						aria-controls="site-menu-panel"
+						data-menu-button
+					>
+						<span class="relative block h-3 w-5" aria-hidden="true">
+							<span class="absolute inset-x-0 top-0 h-0.5 bg-current transition-[transform,top] duration-150 group-aria-expanded:top-[calc(50%-1px)] group-aria-expanded:rotate-45" />
+							<span class="absolute inset-x-0 top-[calc(100%-2px)] h-0.5 bg-current transition-[transform,top] duration-150 group-aria-expanded:top-[calc(50%-1px)] group-aria-expanded:-rotate-45" />
+						</span>
+						<span data-menu-word data-cms-fixed>
+							Menu
+						</span>
+					</button>
+				</div>
+				<div class="border-t border-grey-200 md:hidden" id="site-menu-panel" hidden data-menu-panel>
+					<ul class="content-container pt-2 pb-6">
+						{items.map((item, i) =>
+							item.kind === 'link' ? (
+								<li class="border-grey-200 not-first:border-t">
+									<a class="block py-4 text-h3 font-medium no-underline aria-[current=page]:text-accent" {...linkProps(item)}>
+										{item.label}
+										{item.file === 'new-tab' && <span class="sr-only"> (opens in a new tab)</span>}
+									</a>
+								</li>
+							) : (
+								<li class="border-grey-200 not-first:border-t">
+									<span class="eyebrow fg-muted block pt-5" id={`site-menu-label-${i}`}>
+										{item.label}
+									</span>
+									<ul class="pt-1 pb-3 pl-4" aria-labelledby={`site-menu-label-${i}`}>
+										{item.links.map((link) => (
+											<li>
+												<a class="block py-2 text-h3 font-medium no-underline aria-[current=page]:text-accent" {...linkProps(link)}>
+													{link.label}
+													{link.file === 'new-tab' && <span class="sr-only"> (opens in a new tab)</span>}
+												</a>
+											</li>
+										))}
+									</ul>
+								</li>
+							),
+						)}
+					</ul>
+				</div>
+			</nav>
+		) : (
+			<div class="content-container flex min-h-16 items-center lg:min-h-18">
+				<Block cms={cms.settings} as="a" class="text-h4 font-semibold no-underline" href="/">
+					{name}
+				</Block>
+			</div>
+		)
+	}
+</Block>

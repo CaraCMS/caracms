@@ -1,0 +1,13 @@
+---
+/** Rich text with h2 headings, as the docs kit draws it: the headings are marked (inside the marked field) and are the page's table of contents. */
+import Block from 'caracms/components/Block.astro';
+import RichText from 'caracms/components/RichText.astro';
+import type { BlockProps } from 'caracms/document';
+
+type Props = BlockProps<any>;
+const { block, cms } = Astro.props;
+---
+
+<Block cms={cms} as="div">
+	<RichText cms={cms} field="body" value={block.body} />
+</Block>

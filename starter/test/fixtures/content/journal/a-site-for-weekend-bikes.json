@@ -1,0 +1,23 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "A site for Weekend bike shop",
+  "date": "2025-10-01",
+  "tags": ["web", "identity"],
+  "cover": { "key": "uploads/61e1f507072b/cafe-chairs.jpg", "alt": "An empty café with wooden chairs and tables", "focal": [0.92, 0.33], "w": 4000, "h": 2662 },
+  "excerpt": "A bike shop that wanted a website its staff could change between repairs.",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["A site for", "Weekend bike shop"],
+      "intro": "The opening hours change every season. Now the shop changes them itself.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "Editable by the till",
+      "body": "Every page is made of blocks the staff can reorder in a lunch break.",
+      "background": "light"
+    }
+  ]
+}

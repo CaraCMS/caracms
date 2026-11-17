@@ -1,0 +1,23 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "Headings in rich text",
+  "date": "2026-02-24",
+  "tags": ["type", "editing"],
+  "cover": { "key": "uploads/61e1f507072b/cafe-chairs.jpg", "alt": "An empty café with wooden chairs and tables", "focal": [0.92, 0.33], "w": 4000, "h": 2662 },
+  "excerpt": "Rich text can carry its own headings, and each one gets an id a link can point at.",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Headings in", "Rich text"],
+      "intro": "A heading in the text, and a link straight to it.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "Linked to",
+      "body": "Each heading’s id comes from its words, so a link to it reads plainly.",
+      "background": "light"
+    }
+  ]
+}

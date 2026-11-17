@@ -1,0 +1,96 @@
+---
+/**
+ * Text and media (M5b Decision 10): rich text beside an image or a clip at 3:2.
+ * Two columns from 768px (the side select puts the media left or right), one below,
+ * the media first. An empty slot leaves one column of text.
+ *
+ * `sizes`, from this CSS: below 640 the band's gutter is 1.5rem (the media is
+ * 100vw − 48px); 640–767 it's 4rem (100vw − 128px); from 768 the media is one of two
+ * columns with a 4rem gap, (100vw − 128px − 64px) / 2, until the band's 82rem
+ * (1312px) cap at 1440px wide: (1312 − 64) / 2 = 624px.
+ */
+import Block from 'caracms/components/Block.astro';
+import Media from 'caracms/components/Media.astro';
+import RichText from 'caracms/components/RichText.astro';
+import type { BlockProps } from 'caracms/document';
+import type { TmData } from './tm.ts';
+
+type Props = BlockProps<TmData>;
+const { block, cms } = Astro.props;
+const SIZES = '(min-width: 1440px) 624px, (min-width: 768px) calc((100vw - 192px) / 2), (min-width: 640px) calc(100vw - 128px), calc(100vw - 48px)';
+---
+
+<Block cms={cms} class={`band bg-${block.background} tm tm--${block.side}${block.media ? '' : ' tm--text'}`}>
+	<div class="band-inner tm-grid">
+		{block.media && <Media cms={cms} field="media" value={block.media} sizes={SIZES} ratio={3 / 2} class="tm-media" />}
+		<RichText cms={cms} field="body" value={block.body} class="tm-body" />
+	</div>
+</Block>
+
+<style>
+	.tm {
+		padding-block: 3.5rem;
+	}
+
+	.tm-grid {
+		display: grid;
+		gap: 2rem;
+		align-items: center;
+	}
+
+	.tm :global(.tm-media) {
+		display: block;
+		width: 100%;
+		height: auto;
+		aspect-ratio: 3 / 2;
+		object-fit: cover;
+		border-radius: 0.25rem;
+	}
+
+	.tm-body {
+		max-width: 36rem;
+		font-size: 1.0625rem;
+		line-height: 1.65;
+		text-wrap: pretty;
+	}
+
+	.tm-body > :global(*) {
+		margin: 0 0 1em;
+	}
+
+	.tm-body > :global(:last-child) {
+		margin-bottom: 0;
+	}
+
+	.tm-body :global(h2) {
+		font-size: 1.75rem;
+		line-height: 1.2;
+		font-weight: 650;
+	}
+
+	.tm-body :global(h3) {
+		margin-top: 1.5em;
+		line-height: 1.25;
+	}
+
+	.tm-body :global(a) {
+		color: inherit;
+	}
+
+	@media (width >= 640px) {
+		.tm {
+			padding-block: 5rem;
+		}
+	}
+
+	@media (width >= 768px) {
+		.tm:not(.tm--text) .tm-grid {
+			grid-template-columns: 1fr 1fr;
+			gap: 4rem;
+		}
+
+		.tm--right :global(.tm-media) {
+			order: 2;
+		}
+	}
+</style>

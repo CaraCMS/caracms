@@ -1,0 +1,963 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Shared blocks",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "default": {
+      "description": "This shared block is its slot's default: pages that don't pick one get it.",
+      "const": true
+    },
+    "block": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/block:hero"
+        },
+        {
+          "$ref": "#/$defs/block:text"
+        },
+        {
+          "$ref": "#/$defs/block:tm"
+        },
+        {
+          "$ref": "#/$defs/block:gallery"
+        },
+        {
+          "$ref": "#/$defs/block:cta"
+        },
+        {
+          "$ref": "#/$defs/block:cases"
+        },
+        {
+          "$ref": "#/$defs/block:columns"
+        },
+        {
+          "$ref": "#/$defs/block:form"
+        },
+        {
+          "$ref": "#/$defs/block:footer"
+        }
+      ]
+    }
+  },
+  "required": [
+    "title",
+    "block"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "block:hero": {
+      "title": "Hero",
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "hero"
+        },
+        "heading": {
+          "title": "Heading",
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "object",
+              "properties": {
+                "lines": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "phone": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "lines"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "intro": {
+          "title": "Intro",
+          "type": "string"
+        },
+        "buttons": {
+          "title": "Buttons",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "href": {
+                "type": "string"
+              },
+              "style": {
+                "enum": [
+                  "primary",
+                  "secondary"
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "media": {
+          "title": "Image or video",
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "alt": {
+                  "type": "string"
+                },
+                "decorative": {
+                  "type": "boolean"
+                },
+                "focal": {
+                  "type": "array",
+                  "items": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  "minItems": 2,
+                  "maxItems": 2
+                },
+                "w": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "h": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                }
+              },
+              "required": [
+                "key"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "video": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "play": {
+                  "enum": [
+                    "loop",
+                    "player"
+                  ]
+                },
+                "poster": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "name": {
+                  "type": "string"
+                },
+                "duration": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "w": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "h": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                }
+              },
+              "required": [
+                "video"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "layout": {
+          "title": "Layout",
+          "enum": [
+            "left",
+            "centre"
+          ]
+        },
+        "background": {
+          "title": "Background",
+          "enum": [
+            "light",
+            "dark",
+            "photo"
+          ]
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "block:text": {
+      "title": "Text",
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "text"
+        },
+        "heading": {
+          "title": "Heading",
+          "type": "string"
+        },
+        "body": {
+          "title": "Body",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "p": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "p"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "h2": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "h2"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "h3": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "h3"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "ul": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "required": [
+                      "ul"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "ol": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "required": [
+                      "ol"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "background": {
+          "title": "Background",
+          "enum": [
+            "light",
+            "dark",
+            "photo"
+          ]
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "block:tm": {
+      "title": "Text and media",
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "tm"
+        },
+        "body": {
+          "title": "Text",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "p": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "p"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "h2": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "h2"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "h3": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "h3"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "ul": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "required": [
+                      "ul"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "ol": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "required": [
+                      "ol"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "media": {
+          "title": "Image or video",
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "alt": {
+                  "type": "string"
+                },
+                "decorative": {
+                  "type": "boolean"
+                },
+                "focal": {
+                  "type": "array",
+                  "items": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  "minItems": 2,
+                  "maxItems": 2
+                },
+                "w": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "h": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                }
+              },
+              "required": [
+                "key"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "video": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "play": {
+                  "enum": [
+                    "loop",
+                    "player"
+                  ]
+                },
+                "poster": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "name": {
+                  "type": "string"
+                },
+                "duration": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "w": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "h": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                }
+              },
+              "required": [
+                "video"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "side": {
+          "title": "Media side",
+          "enum": [
+            "left",
+            "right"
+          ]
+        },
+        "background": {
+          "title": "Background",
+          "enum": [
+            "light",
+            "dark",
+            "photo"
+          ]
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "block:gallery": {
+      "title": "Gallery",
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "gallery"
+        },
+        "heading": {
+          "title": "Heading",
+          "type": "string"
+        },
+        "images": {
+          "title": "Images",
+          "type": "array",
+          "items": {
+            "title": "Image",
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "key": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "alt": {
+                    "type": "string"
+                  },
+                  "decorative": {
+                    "type": "boolean"
+                  },
+                  "focal": {
+                    "type": "array",
+                    "items": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    "minItems": 2,
+                    "maxItems": 2
+                  },
+                  "w": {
+                    "type": "number",
+                    "exclusiveMinimum": 0
+                  },
+                  "h": {
+                    "type": "number",
+                    "exclusiveMinimum": 0
+                  }
+                },
+                "required": [
+                  "key"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "background": {
+          "title": "Background",
+          "enum": [
+            "light",
+            "dark",
+            "photo"
+          ]
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "block:cta": {
+      "title": "Call to action",
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "cta"
+        },
+        "heading": {
+          "title": "Heading",
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "object",
+              "properties": {
+                "lines": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "phone": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "lines"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "button": {
+          "title": "Button label",
+          "type": "string"
+        },
+        "background": {
+          "title": "Background",
+          "enum": [
+            "light",
+            "dark",
+            "photo"
+          ]
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "block:cases": {
+      "title": "Case-study list",
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "cases"
+        },
+        "heading": {
+          "title": "Heading",
+          "type": "string"
+        },
+        "show": {
+          "title": "Which case studies",
+          "enum": [
+            "featured",
+            "in-order"
+          ]
+        },
+        "count": {
+          "title": "How many",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "background": {
+          "title": "Background",
+          "enum": [
+            "light",
+            "dark",
+            "photo"
+          ]
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "block:columns": {
+      "title": "Two columns",
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "columns"
+        },
+        "left": {
+          "title": "Left",
+          "type": "object",
+          "properties": {
+            "heading": {
+              "title": "Heading",
+              "type": "string"
+            },
+            "text": {
+              "title": "Text",
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "p": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "p"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "ul": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "required": [
+                          "ul"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "ol": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "required": [
+                          "ol"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            "button": {
+              "title": "Button",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "label": {
+                    "type": "string"
+                  },
+                  "href": {
+                    "type": "string"
+                  },
+                  "style": {
+                    "enum": [
+                      "primary",
+                      "secondary"
+                    ]
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "right": {
+          "title": "Right",
+          "type": "object",
+          "properties": {
+            "heading": {
+              "title": "Heading",
+              "type": "string"
+            },
+            "text": {
+              "title": "Text",
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "p": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "p"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "ul": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "required": [
+                          "ul"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "ol": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "required": [
+                          "ol"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            "button": {
+              "title": "Button",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "label": {
+                    "type": "string"
+                  },
+                  "href": {
+                    "type": "string"
+                  },
+                  "style": {
+                    "enum": [
+                      "primary",
+                      "secondary"
+                    ]
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "background": {
+          "title": "Background",
+          "enum": [
+            "light",
+            "dark",
+            "photo"
+          ]
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "block:form": {
+      "title": "Form",
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "form"
+        },
+        "heading": {
+          "title": "Heading",
+          "type": "string"
+        },
+        "intro": {
+          "title": "Intro",
+          "type": "string"
+        },
+        "form": {
+          "title": "Form",
+          "enum": [
+            "contact",
+            "workshop"
+          ]
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "block:footer": {
+      "title": "Footer",
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "footer"
+        },
+        "address": {
+          "title": "Address",
+          "type": "string"
+        },
+        "email": {
+          "title": "Email",
+          "type": "string"
+        },
+        "links": {
+          "title": "Links",
+          "type": "array",
+          "items": {
+            "title": "Link",
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "href": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

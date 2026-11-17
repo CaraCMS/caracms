@@ -1,0 +1,13 @@
+{
+  "extends": "astro/tsconfigs/strict",
+  "include": ["src/**/*", "test/**/*.ts", "starlight-kit/**/*.ts"],
+  "exclude": ["test/.tmp"],
+  "compilerOptions": {
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "erasableSyntaxOnly": true,
+    "types": ["node"],
+    "jsx": "react-jsx",
+    "jsxImportSource": "react"
+  }
+}

@@ -1,0 +1,45 @@
+---
+/**
+ * The end of a public form (Form.astro): its button and its status line, drawn once whether
+ * `actions` wraps them or not. Review gaps (Decisions 12 and 14): in a preview the button's words
+ * are typed on the page and the button sends nothing (`type="button"`); in the `sent` state with
+ * no sent heading the status line holds the thanks line, in the `error` state the couldn't-send
+ * line, each typed on the page. Not for a site's own use.
+ */
+import type { BlockContext } from '../document.ts';
+import type { FormWords } from '../forms/words.ts';
+import Text from './Text.astro';
+
+interface Props {
+	words: FormWords;
+	/** Site Settings' context, marking in a preview. */
+	settings: BlockContext;
+	preview: boolean;
+	state: 'sent' | 'error' | 'invalid' | null;
+	submitClass?: string;
+}
+
+const { words, settings, preview, state, submitClass } = Astro.props;
+const status = { role: 'status', 'aria-live': 'polite', 'data-caracms-form-status': true };
+---
+
+{
+	preview ? (
+		<button type="button" tabindex="-1" class:list={['cms-form-submit', submitClass]}>
+			<Text cms={settings} field={words.submit.field!} value={words.submit.value} as="span" />
+		</button>
+	) : (
+		<button type="submit" class:list={['cms-form-submit', submitClass]}>
+			{words.submit.value}
+		</button>
+	)
+}
+{
+	state === 'sent' ? (
+		<Text cms={settings} field={words.sent.line.field!} value={words.sent.line.value} class="cms-form-status" {...status} />
+	) : state === 'error' ? (
+		<Text cms={settings} field={words.failed.field!} value={words.failed.value} class="cms-form-status cms-form-failed" {...status} />
+	) : (
+		<p class="cms-form-status" role="status" aria-live="polite" data-caracms-form-status />
+	)
+}

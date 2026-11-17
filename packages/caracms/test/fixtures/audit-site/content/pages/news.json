@@ -1,0 +1,4 @@
+{
+  "title": "News",
+  "blocks": [{ "type": "listing", "heading": "News" }]
+}

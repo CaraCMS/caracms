@@ -1,0 +1,23 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "Choosing a text face",
+  "date": "2025-09-08",
+  "tags": ["type"],
+  "cover": { "key": "uploads/e4c45074933b/studio-window.jpg", "alt": "Morning light through a window", "w": 1920, "h": 1280 },
+  "excerpt": "Why the starter is set in Inter, and how a site swaps in its own fonts.",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Choosing a", "Text face"],
+      "intro": "Inter for now, and easy to swap.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "Swapping it",
+      "body": "The fonts live in src/fonts/ and the tokens name them. A site restyles by swapping those files.",
+      "background": "light"
+    }
+  ]
+}

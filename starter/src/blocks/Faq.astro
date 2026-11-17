@@ -1,0 +1,101 @@
+---
+/**
+ * Questions (M7 Decision 10): the heading group in the first third on desktop, then
+ * each question as `<details>`, so an answer opens and closes with no script. The
+ * first starts open. Hairlines between questions, a plus that turns to a minus.
+ * A question with no words isn't drawn. Schema beside it in faq.ts.
+ */
+import Block from 'caracms/components/Block.astro';
+import RichText from 'caracms/components/RichText.astro';
+import Text from 'caracms/components/Text.astro';
+import type { BlockProps } from 'caracms/document';
+import { bandClass } from './background.ts';
+import type { FaqData } from './faq.ts';
+
+type Props = BlockProps<FaqData>;
+const { block, cms } = Astro.props;
+const items = block.items.map((item, i) => ({ item, i })).filter(({ item }) => cms.preview || item.question);
+const listMarkers = cms.preview ? { 'data-cms-field': 'items', 'data-cms-kind': 'list' } : {};
+---
+
+<Block cms={cms} class={bandClass(block)}>
+	<div class="content-container split">
+		{
+			(block.heading || block.intro || cms.preview) && (
+				<div class="head">
+					<Text cms={cms} field="heading" value={block.heading} class="text-h2" />
+					<Text cms={cms} field="intro" value={block.intro} class="text-lead" />
+				</div>
+			)
+		}
+		<div class="faq" {...listMarkers}>
+			{
+				items.map(({ item, i }) => (
+					<details class="faq-item" open={i === items[0]?.i}>
+						<summary class="faq-q flex cursor-pointer items-start justify-between gap-6 py-5">
+							<Text cms={cms} field={`items.${i}.question`} value={item.question} as="h3" class="text-h4" />
+							<span class="faq-icon" aria-hidden="true" />
+						</summary>
+						<RichText cms={cms} field={`items.${i}.answer`} value={item.answer} class="prose fg-soft pb-6" />
+					</details>
+				))
+			}
+		</div>
+	</div>
+</Block>
+
+<style>
+	.faq {
+		border-top: 1px solid var(--line);
+	}
+
+	.faq-item {
+		border-bottom: 1px solid var(--line);
+	}
+
+	.faq-q {
+		list-style: none;
+	}
+
+	.faq-q::-webkit-details-marker {
+		display: none;
+	}
+
+	.faq-q:hover :global(h3) {
+		text-decoration: underline;
+		text-decoration-thickness: 1px;
+		text-underline-offset: 0.2em;
+	}
+
+	.faq-q:focus-visible {
+		outline-offset: 4px;
+	}
+
+	.faq-icon {
+		position: relative;
+		flex: none;
+		width: calc(var(--spacing) * 4);
+		height: calc(var(--spacing) * 4);
+		margin-top: 0.35lh;
+	}
+
+	.faq-icon::before,
+	.faq-icon::after {
+		content: '';
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: calc(50% - 1px);
+		height: 2px;
+		background: var(--fg);
+		transition: transform 150ms ease;
+	}
+
+	.faq-icon::after {
+		transform: rotate(90deg);
+	}
+
+	.faq-item[open] .faq-icon::after {
+		transform: rotate(0deg);
+	}
+</style>

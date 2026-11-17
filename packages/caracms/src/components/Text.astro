@@ -1,0 +1,84 @@
+---
+/**
+ * A text field, one line or several (Decision 12; the line-break rule: a break is
+ * stored as `\n` and rendered as `<br>`, nothing else breaks the text).
+ *
+ *   <Text cms={cms} field="intro" value={block.intro} class="hero-intro" />
+ *
+ * - The element: `as`, or for a field marked `heading: true`, `h1` when it holds
+ *   the page's first heading (Decision 16) and `h2` otherwise; `p` by default.
+ * - Public render: an empty value renders nothing.
+ * - Preview render (Decision 17): always rendered, so it can be typed into, with
+ *   `data-cms-field="<field>" data-cms-kind="text"` and `contenteditable="plaintext-only"`
+ *   (plain text fields are edited on the page, Decision 12). The block's index is
+ *   on the nearest `[data-cms-block]` ancestor (Block.astro).
+ * - `field` is the field's key, or a dotted path into a list (M5a Decision 16):
+ *   `<Text cms={cms} field={`credits.${i}.name`} value={credit.name} />` in the
+ *   block's own loop. The marker carries the path. Text inside a list is edited in
+ *   the sidebar (Decision 13), so a nested path is never `contenteditable`.
+ * - **The lines rendering** (M9 Decision 10), for a field declared `text({ lines: true })`:
+ *   each line is drawn trimmed and blank lines draw nothing; with one line left it's drawn unwrapped; with more, each
+ *   line is a `<span>` with `lineClass` (a client site's `block text-balance`), and no `<br>`.
+ *   In a preview each span also carries `data-cms-line`, so the text read back from the
+ *   page (preview/field-text.ts) starts a new line at each, and the element carries
+ *   `data-cms-lines` (and `data-cms-line-class`), so a sidebar edit is drawn the same way.
+ *
+ *     <Text cms={cms} field="heading" value={block.heading} lineClass="block text-balance" />
+ */
+import { site } from 'virtual:caracms/config';
+import type { HTMLTag } from 'astro/types';
+import type { BlockContext } from '../document.ts';
+import { contextMarker, isTypedOnPage, requireField } from './descriptor.ts';
+import { passThrough } from './attributes.ts';
+import { vividOf } from '../vivid.ts';
+
+interface Props {
+	cms: BlockContext;
+	field: string;
+	value: string;
+	as?: HTMLTag;
+	class?: string;
+	/** The lines rendering's class on each line's `<span>` (M9 Decision 10). */
+	lineClass?: string;
+	/** Anything else (such as the caller's scoped-style attribute) goes on the element. */
+	[attribute: string]: unknown;
+}
+
+const { cms, field, value, as, class: className, lineClass, ...given } = Astro.props;
+// M8 trial (item 4): a bare attribute stays bare, false is none (attributes.ts).
+const rest = passThrough(given);
+const descriptor = requireField(site, cms, field, 'text', 'Text');
+const Tag = as ?? (descriptor.heading ? (cms.h1Field === field ? 'h1' : 'h2') : 'p');
+const typed = value ? (descriptor.multiline ? value.split('\n') : [value]) : [];
+// M9 Decision 10: blank lines draw nothing, and two or more lines are a span each.
+// Each line is drawn trimmed, as Tina's toLines() did (port friction 7); the stored value keeps its spaces.
+const lines = descriptor.lines ? typed.map((line) => line.trim()).filter((line) => line !== '') : typed;
+const spans = descriptor.lines && lines.length > 1;
+const lineMarker = cms.preview ? { 'data-cms-line': '' } : {};
+// The preview writes a sidebar edit back as these lines (preview/field-text.ts → writeFieldText).
+const linesMarkers = cms.preview && descriptor.lines ? { 'data-cms-lines': '', ...(lineClass ? { 'data-cms-line-class': lineClass } : {}) } : {};
+// Vivid (vivid.ts): on a public page with the config's switch on, the field and its editor address.
+const vivid = vividOf(site, cms, Astro, import.meta.env.DEV)(field);
+const markers = cms.preview
+	? { 'data-cms-field': field, 'data-cms-kind': 'text', ...(isTypedOnPage(field) ? { contenteditable: 'plaintext-only' } : {}), ...contextMarker(cms) }
+	: {};
+---
+
+{
+	(lines.length > 0 || cms.preview) && (
+		<Tag class={className} {...rest} {...markers} {...linesMarkers} {...vivid}>
+			{spans
+				? lines.map((line) => (
+						<span class={lineClass} {...lineMarker}>
+							{line}
+						</span>
+					))
+				: lines.map((line, i) => (
+						<>
+							{i > 0 && <br />}
+							{line}
+						</>
+					))}
+		</Tag>
+	)
+}

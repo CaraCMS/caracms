@@ -1,0 +1,26 @@
+{
+  "$schema": "../../schemas/case-studies.schema.json",
+  "title": "A bakery",
+  "heading": ["A bakery", "That opens at six"],
+  "client": "A bakery",
+  "sector": "food",
+  "featured": true,
+  "launched": "2023-09-20",
+  "summary": "An example: a bakery that opens at six, and a site that says when the bread runs out.",
+  "body": [
+    { "p": "The bakery bakes one bread and does it well. Its site is just as plain: one colour, one typeface, three pages." },
+    { "h2": "The hours first" },
+    { "p": "The site starts with the opening hours and works outward, to the menu and a [contact page](/contact) that says when the bread runs out." }
+  ],
+  "credits": [
+    {
+      "role": "Website",
+      "name": "Dara"
+    },
+    {
+      "role": "Photography",
+      "name": "Ciarán"
+    }
+  ],
+  "related": ["a-coffee-roaster", "a-furniture-maker"]
+}

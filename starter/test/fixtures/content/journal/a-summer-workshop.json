@@ -1,0 +1,23 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "A summer workshop",
+  "date": "2025-06-27",
+  "tags": ["field", "type"],
+  "cover": { "key": "uploads/61e1f507072b/cafe-chairs.jpg", "alt": "An empty café with wooden chairs and tables", "focal": [0.92, 0.33], "w": 4000, "h": 2662 },
+  "excerpt": "Twelve students, two days and a room full of wooden type borrowed from a print museum.",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["A summer", "Workshop"],
+      "intro": "We ran our first lettering workshop in the café by the harbour.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "Ink everywhere",
+      "body": "Everyone set their own name by hand. Nobody got it right first time.",
+      "background": "light"
+    }
+  ]
+}

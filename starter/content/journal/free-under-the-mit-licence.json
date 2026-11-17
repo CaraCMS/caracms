@@ -1,0 +1,23 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "Free, under the MIT licence",
+  "date": "2026-01-09",
+  "tags": ["news"],
+  "cover": { "key": "uploads/e4c45074933b/studio-window.jpg", "alt": "Morning light through a window", "w": 1920, "h": 1280 },
+  "excerpt": "The caracms package is free to use and change, under the MIT licence, with no limits.",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Free, under", "The MIT licence"],
+      "intro": "The whole package, with nothing held back.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "No limits",
+      "body": "There are no caps on the free package, and nothing moves from free to paid.",
+      "background": "light"
+    }
+  ]
+}

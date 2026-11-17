@@ -1,0 +1,220 @@
+---
+/**
+ * The demo's page component (M3 Decision 3): a document in, a whole page out. The
+ * public routes render it through the package's RenderDocument, and so will the
+ * editor's preview (with `preview` on). It passes `preview` on to the block loop,
+ * which is how the package's components know to add their markers (Decision 17).
+ * M5a: `<Blocks>` renders any kind of document a page shows (a fields document
+ * through its collection's component, a shared block alone), so it takes `collection`.
+ *
+ * A shared block's own preview (M5a Decision 8) is the block alone in this page's
+ * frame (its fonts and styles), without the header and the colophon, and centred
+ * (the mockup's #shared-doc): it has no address, so it's never a page of the site.
+ *
+ * Edit in context (Decision 16): the footer is the page's footer slot, `<Slot name="footer">`, filled
+ * from Shared (the default, content/shared/footer.json). The header stays code: the fixture keeps
+ * one site that draws its own frame (Decision 13). A footer block's own preview draws it in its slot,
+ * below the header, with an empty `<main>`.
+ *
+ * A journal post's page fields (Decision 10a): its kicker, photo and photo credit, drawn here
+ * above its blocks and marked with the page's own context (`cms`); the credit is marked without the
+ * package drawing it (Decision 10b), its words around the value.
+ *
+ * No script on the public page (Spec → Visual editing), except a form's, a player's
+ * and the Google tag's (M6 Decision 17).
+ *
+ * M6: the title, the description, the canonical link, the share tags and the Google
+ * tag are the package's `<Head>` (Decision 15). No robots meta: the start server sends
+ * `X-Robots-Tag` by host (Decision 11), so a launched site can be indexed.
+ */
+import Blocks from 'caracms/components/Blocks.astro';
+import Fonts from 'caracms/components/Fonts.astro';
+import Head from 'caracms/components/Head.astro';
+import Block from 'caracms/components/Block.astro';
+import Media from 'caracms/components/Media.astro';
+import Slot from 'caracms/components/Slot.astro';
+import Text from 'caracms/components/Text.astro';
+import { site } from 'virtual:caracms/config';
+import type { PageProps } from 'caracms/document';
+
+type Props = PageProps;
+const { document, collection, preview = false, cms, data } = Astro.props;
+// Posts and tags, Decision 12: the page of a paged listing, passed on to the head and the blocks.
+const { listPage } = Astro.props;
+// A shared block's own preview: a body block alone, centred; a footer in its slot, under the header.
+const solo = document.kind === 'shared' && !(document.block.known && site.blocks[document.block.type]?.slot);
+// Only where the journal has them: a test's copy may give it page fields of its own.
+const post = collection === 'journal' && document.kind !== 'shared' && !!site.collections.journal?.fields?.kicker;
+const credit = typeof data.credit === 'string' ? data.credit : '';
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<Head document={document} collection={collection} preview={preview} listPage={listPage} />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" />
+		<Fonts />
+	</head>
+	<body>
+		{
+			solo ? null : (
+				<header class="site-header">
+					<a class="wordmark" href="/">CaraCMS</a>
+					<nav aria-label="Main">
+						<a href="/about">About</a>
+						<a href="/work">Work</a>
+						<a href="/services/branding">Services</a>
+						<a href="/contact">Contact</a>
+					</nav>
+				</header>
+			)
+		}
+		<main class:list={[{ solo }]}>
+			{
+				post && (data.kicker || data.photo || credit || preview) && (
+					<Block cms={cms} as="div" class="band post-head">
+						<div class="band-inner">
+							<Text cms={cms} field="kicker" value={data.kicker as string} class="post-kicker" />
+							{(data.photo || preview) && <Media cms={cms} field="photo" value={data.photo} sizes="(min-width: 1440px) 1312px, calc(100vw - 2 * var(--gutter))" ratio={16 / 9} class="post-photo" />}
+							{
+								(credit || preview) && (
+									<Block cms={cms} field="credit" as="p" class="post-credit">
+										Photo: <span>{credit}</span>
+									</Block>
+								)
+							}
+						</div>
+					</Block>
+				)
+			}
+			<Blocks document={document} collection={collection} preview={preview} listPage={listPage} />
+		</main>
+		<Slot name="footer" {...Astro.props} />
+	</body>
+</html>
+
+<style is:global>
+	*,
+	*::before,
+	*::after {
+		box-sizing: border-box;
+	}
+
+	:root {
+		--cream: #f4efe6;
+		--ink: #17241d;
+		--forest: #1f3a2e;
+		--moss: #8fae8b;
+		/* The demo's phone breakpoint is 640px; caracms.config.ts sets phoneLinesWidth to match. */
+		--gutter: 1.5rem;
+	}
+
+	@media (width >= 640px) {
+		:root {
+			--gutter: 4rem;
+		}
+	}
+
+	body {
+		margin: 0;
+		font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+		color: var(--ink);
+		background: var(--cream);
+	}
+
+	.site-header {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 0.5rem 1.5rem;
+		padding: 1.25rem var(--gutter);
+	}
+
+	.wordmark {
+		font-family: var(--font-display);
+		font-variation-settings: 'wght' 700, 'wdth' 100, 'opsz' 96;
+		font-optical-sizing: none;
+		font-size: 1.375rem;
+		letter-spacing: 0.02em;
+		text-transform: uppercase;
+		color: var(--forest);
+		text-decoration: none;
+	}
+
+	.site-header nav {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.25rem 1.25rem;
+	}
+
+	.site-header nav a {
+		color: inherit;
+		text-decoration: none;
+		font-size: 0.9375rem;
+	}
+
+	.post-head {
+		padding-block: 2rem 0;
+	}
+
+	.post-kicker,
+	.post-credit {
+		margin: 0;
+		font-size: 0.875rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.post-photo {
+		display: block;
+		width: 100%;
+		margin-block: 1rem 0.5rem;
+		border-radius: 0.75rem;
+	}
+
+	/* A shared block on its own: the block alone, centred in the window. */
+	main.solo {
+		min-height: 100vh;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+
+	/* A block's band: full-bleed background, content inside the gutter. */
+	.band {
+		padding-inline: var(--gutter);
+	}
+
+	.band-inner {
+		max-width: 82rem;
+		margin-inline: auto;
+	}
+
+	.bg-light {
+		--button-bg: var(--forest);
+		--button-ink: var(--cream);
+		background: var(--cream);
+		color: var(--ink);
+	}
+
+	.bg-dark {
+		--button-bg: var(--cream);
+		--button-ink: var(--forest);
+		background: var(--forest);
+		color: var(--cream);
+	}
+
+	.bg-photo {
+		--button-bg: var(--cream);
+		--button-ink: var(--forest);
+		background:
+			linear-gradient(180deg, rgb(10 20 15 / 0.35), rgb(10 20 15 / 0.55)),
+			url('/backgrounds/hills.svg') center / cover no-repeat,
+			var(--forest);
+		color: #fff;
+	}
+</style>

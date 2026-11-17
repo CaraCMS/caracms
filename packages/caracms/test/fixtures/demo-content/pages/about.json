@@ -1,0 +1,22 @@
+{
+  "$schema": "../../schemas/pages.schema.json",
+  "title": "About",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": {
+        "lines": ["A small studio", "with big ideas"],
+        "phone": ["A small", "studio with", "big ideas"]
+      },
+      "intro": "Six people, one long table, and a view of the hills.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "How we work",
+      "body": "One team stays with a project from the first call to launch.\nNo hand-offs, no account managers.",
+      "background": "light"
+    }
+  ]
+}

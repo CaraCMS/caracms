@@ -1,0 +1,19 @@
+{
+  "$schema": "../../../schemas/pages.schema.json",
+  "title": "Team",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Meet the team"],
+      "intro": "Designers, a writer and a developer who likes type a little too much.",
+      "layout": "left",
+      "background": "light"
+    },
+    {
+      "type": "text",
+      "heading": "Aoife, Ciarán, Maeve, Tomás, Niamh and Rory",
+      "body": "We have worked together for nine years, on projects large and small.",
+      "background": "dark"
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+---
+/**
+ * A whole page from a document, through the site's page component. Phase 2's
+ * preview route renders this with `preview` on:
+ *
+ *   const document = normaliseAnyDocument(posted, site, collection);   // document.ts
+ *   <RenderDocument document={document} collection="pages" preview />
+ *
+ * The document is any kind a page shows (M5a): a section builder's, a list-of-fields
+ * document (rendered through its collection's component) or a shared block alone.
+ * The page component passes `collection` on to `<Blocks>`.
+ *
+ * With `preview`, the package's components emit their `data-cms-*` markers and
+ * plain text fields are contenteditable (Decision 17). Without, it's the public page.
+ *
+ * M6c (G2): the page component also gets `data`, the document's own fields' render
+ * data (a section builder's page fields, a fields document's fields), read from the
+ * render's source as a block's are. M7 (Decision 13): and `settings`, Site Settings' render
+ * data from the same source (read.ts → settingsRenderData), so a preview shows the draft's.
+ *
+ * Posts and tags (Decision 12): a route may pass `listPage`, the page of a paged listing
+ * (`/journal/page/2` renders the journal page with `listPage={2}`); 1 by default, and always 1
+ * in a preview (but `caracms audit`'s, which asks for later pages: audit/paged.ts). The page component gets it, and `read`, the reader its blocks get.
+ *
+ * An adoption trial, item 2: the page component gets `path`, its document's address (head.ts →
+ * documentPath): a public render's from the address it's served at, a preview's from its
+ * document (`previewPath`, the preview route's `path`; else the GET's `?path=`).
+ *
+ * Edit in context (Decisions 10, 10a): the page component also gets `cms`, the document's own
+ * context (document.ts → pageContext: it marks only a section builder's document in a preview),
+ * and `settingsCms`, Site Settings' context (markers only in a preview).
+ *
+ * Vivid (the config's `vivid`, vivid.ts): on a public render with the switch on, both contexts carry
+ * their documents, found from the document's `readDocument` tag, so their fields get `data-vivid-*`.
+ */
+import { Page } from 'virtual:caracms/page';
+import { site } from 'virtual:caracms/config';
+import { documentAddress } from '../content.ts';
+import { own, pageContext, settingsContext, type AnyDocument, type PageProps } from '../document.ts';
+import { documentPath } from '../head.ts';
+import { pagedPreview } from '../audit/paged.ts';
+import { documentReader, renderFields, renderSourceOf, settingsRenderData } from '../read.ts';
+import { documentRefOf } from '../vivid.ts';
+
+/** Any document a reader gives (content.ts → readDocument); Site Settings has no page, so it's refused. */
+type Props = Omit<PageProps, 'document' | 'data' | 'settings' | 'listPage' | 'read' | 'path' | 'cms' | 'settingsCms'> & {
+	document: AnyDocument;
+	listPage?: number;
+	/** A preview's document path in its collection (`index`, `services/branding`): the preview route gives it, as a POST's URL has no `?path=`. */
+	previewPath?: string;
+};
+
+const { document, collection, preview = false } = Astro.props;
+// Posts and tags, Decision 12: a preview is always page 1; anything that isn't a whole number from 1 reads as 1.
+// caracms audit (review gaps): a preview is page 1, unless the audit's render asks for its later pages (audit/paged.ts).
+const listPage = (!preview || pagedPreview(Astro.locals)) && Number.isInteger(Astro.props.listPage) && Astro.props.listPage! >= 1 ? Astro.props.listPage! : 1;
+if (document.kind === 'settings') throw new Error('<RenderDocument>: Site Settings has no page of its own.');
+const fields = own(site.collections, collection)?.fields ?? null;
+const values = document.kind === 'shared' ? undefined : document.data;
+const source = renderSourceOf(Astro.locals);
+const reader = documentReader(site, source);
+const data = fields && values ? await renderFields(fields, values, reader) : {};
+const settings = await settingsRenderData(site, source, reader);
+const previewOf = Astro.props.previewPath ?? Astro.url.searchParams.get('path');
+const path = documentPath({
+	preview,
+	// Collections under pages: a held document's address is its holder's + its slug, read through the render's source.
+	previewUrl: preview && previewOf ? await documentAddress(site, collection, previewOf, source) : null,
+	pathname: Astro.url.pathname,
+	listPage,
+});
+// Vivid (vivid.ts): a public render with the config's switch on marks its fields with their documents; `readDocument` tagged this one.
+const vivid = site.vivid && !preview ? { ref: documentRefOf(document) } : null;
+const settingsCms = settingsContext(preview, reader, listPage, !!vivid);
+const cms = pageContext(collection, preview ? (previewOf ?? null) : null, document, preview, reader, settingsCms, listPage, vivid);
+---
+
+<Page document={document} collection={collection} path={path} preview={preview} data={data} settings={settings} listPage={listPage} read={reader} cms={cms} settingsCms={settingsCms} />

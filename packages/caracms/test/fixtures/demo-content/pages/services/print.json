@@ -1,0 +1,19 @@
+{
+  "$schema": "../../../schemas/pages.schema.json",
+  "title": "Print",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Print"],
+      "intro": "Books, posters, packaging and the odd beer label.",
+      "layout": "left",
+      "background": "photo"
+    },
+    {
+      "type": "text",
+      "heading": "Paper still matters",
+      "body": "We work with three local printers and visit every press check.",
+      "background": "light"
+    }
+  ]
+}

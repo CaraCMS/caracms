@@ -1,0 +1,24 @@
+---
+/**
+ * The Starlight fixture's page component: every CaraCMS page inside Starlight's <StarlightPage>, as
+ * a real docs site draws them. Starlight draws the page's title as its <h1> (outside the blocks), the pages'
+ * titles in the sidebar and in prev/next, and the page's marked headings again in its table of
+ * contents. The sidebar's group label, "Guides", is written here: words no field holds.
+ */
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import Blocks from 'caracms/components/Blocks.astro';
+import { pageHeadings } from 'caracms/content';
+import type { PageProps } from 'caracms/document';
+import { site } from 'virtual:caracms/config';
+
+type Props = PageProps;
+const { document, collection, preview = false, listPage, read } = Astro.props;
+const title = 'title' in document && typeof document.title === 'string' ? document.title : '';
+const pages = (await read.documents('pages')).filter((e) => e.url);
+const sidebar = [{ label: 'Guides', items: pages.map((e) => ({ label: e.title, link: e.url! })) }];
+const headings = await pageHeadings(site, document, { collection, read });
+---
+
+<StarlightPage frontmatter={{ title }} sidebar={sidebar} headings={headings}>
+	<Blocks document={document} collection={collection} preview={preview} listPage={listPage} />
+</StarlightPage>

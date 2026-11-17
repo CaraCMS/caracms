@@ -1,0 +1,16 @@
+{
+  "name": "caracms-repo",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.11.2",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "pnpm --filter caracms-starter dev",
+    "build": "pnpm --filter caracms-starter... build",
+    "start": "pnpm --filter caracms-starter start",
+    "test": "pnpm -r --workspace-concurrency=1 --if-present test",
+    "check": "pnpm -r --if-present check"
+  }
+}

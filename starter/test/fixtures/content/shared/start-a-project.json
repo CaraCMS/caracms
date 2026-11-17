@@ -1,0 +1,24 @@
+{
+  "$schema": "../../schemas/shared.schema.json",
+  "title": "Start a project",
+  "block": {
+    "type": "cta",
+    "heading": ["Worried?", "Why Wait?"],
+    "text": "Tell us what you are making. We reply within a day.",
+    "buttons": [
+      {
+        "label": "Start a project",
+        "href": "/contact",
+        "style": "primary"
+      },
+      {
+        "label": "See our work",
+        "href": "/work",
+        "style": "secondary"
+      }
+    ],
+    "background": "accent",
+    "spaceAbove": "default",
+    "spaceBelow": "default"
+  }
+}

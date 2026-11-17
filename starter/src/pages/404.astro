@@ -1,0 +1,40 @@
+---
+/**
+ * The site's 404 (M7 Decision 19), for any address that matches no page. Inside the
+ * shell like every page: it's a document built here, in code (its copy isn't the
+ * CMS's), rendered through the package's RenderDocument and so through Page.astro,
+ * header, footer and all. One block: a hero with an h1 in two lines, one line of
+ * text and a button home, with Extra space above and below (the template's 404), and an
+ * "Error 404" eyebrow above the heading (Page.astro draws it; see `Astro.locals.eyebrow`).
+ */
+import RenderDocument from 'caracms/components/RenderDocument.astro';
+import { parseDocumentText } from 'caracms/document';
+import { site } from 'virtual:caracms/config';
+
+// The mockup's "Error 404" eyebrow above the heading: Page.astro draws it (with the Extra room above),
+// so the hero below takes none above itself.
+(Astro.locals as { eyebrow?: string }).eyebrow = 'Error 404';
+
+export const prerender = true;
+
+const { document } = parseDocumentText(
+	JSON.stringify({
+		title: 'Page not found',
+		blocks: [
+			{
+				type: 'hero',
+				heading: ['This page', 'isn’t here.'],
+				intro: 'The address may have a typo, or the page may have moved.',
+				buttons: [{ label: 'Go to the home page', href: '/', style: 'primary' }],
+				layout: 'left',
+				background: 'light',
+				spaceAbove: 'none',
+				spaceBelow: 'extra',
+			},
+		],
+	}),
+	site,
+);
+---
+
+<RenderDocument document={document} collection="pages" />

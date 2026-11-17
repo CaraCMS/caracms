@@ -1,0 +1,451 @@
+---
+/**
+ * A public form (M6 Decision 17), from the site's config (`defineSite({ forms })`):
+ *
+ *   <Form form="contact" preview={cms.preview} state={cms.state} />
+ *
+ * Plain, accessible markup with classes the site styles (`.cms-form`, `.cms-form-field`,
+ * `.cms-form-label`, `.cms-form-help`, `.cms-form-error`, `.cms-form-status`). A field
+ * with a `prefix` wraps it and its input in `.cms-form-prefixed` (style the two as one
+ * box), the prefix in `.cms-form-prefix`; the input names it in `aria-describedby`, since
+ * the package can't know whether the label already says it. A `placeholder` goes on the
+ * input; the `<label>` stays either way (a site that hides labels hides them visually,
+ * never from screen readers). **It posts
+ * without JavaScript**, files included (`multipart/form-data` only when the form has a
+ * files field), to `POST /_caracms/form` with its hidden `form` and `return` fields and
+ * the honeypot (rules.ts → HONEYPOT, the name the endpoint reads). A field's error line
+ * shows by CSS alone (`:user-invalid`).
+ *
+ * One small script (form-client.ts, inlined by Astro) enhances it: `fetch`, the thanks line, the file
+ * limits, `?sent=1`, and the Turnstile widget when `TURNSTILE_SITE_KEY` was set at build.
+ * With it, a files field's picks add up, listed under the input (`.cms-form-files`, each
+ * `.cms-form-file` with its name, size and a Remove button); without it, the native input.
+ * Only a page with a form carries it.
+ *
+ * **Its words** (review gaps, Decisions 9–12) are Site Settings › Forms', then the props below
+ * (the site code's), then the config's, then the package's (forms/words.ts). In a preview each is
+ * drawn as its Site Settings field: a click opens Site Settings over the page at that word and
+ * typing edits it; a placeholder (a word in an attribute) is marked without its value, so a click
+ * focuses its box in the sidebar. **A sent heading** (Site Settings', or `sentHeading`): after a
+ * send the form gives way to `.cms-form-sent`, the heading (`.cms-form-sent-heading`) and the
+ * thanks line (`.cms-form-sent-line`); with none, the thanks line shows in the status line and
+ * the form stays, as before.
+ *
+ * **In a preview** the form never sends and never checks itself: it carries `novalidate`, its
+ * script does nothing (form-client.ts), its controls take no focus or typing (`readonly`,
+ * `tabindex="-1"`; the editor keeps a select from opening), its labels point at no input (a
+ * click on a label's words types them), and the button is `type="button"`.
+ *
+ * **Its states** (review gaps, Decision 14), for a block that declares them and passes `cms.state`
+ * on: `sent` (the sent panel, or the thanks line in the status line), `error` (the couldn't-send
+ * line in the status line, `.cms-form-failed`) and `invalid` (every required field's error line
+ * showing, `.cms-form-invalid` on its field). Only ever in a preview; null is the form as a
+ * visitor first sees it.
+ *
+ * An id that isn't one of the site's forms renders nothing (and says so in a preview, marked
+ * `data-cms-fixed`: it's the package's sentence, not the site's words).
+ *
+ * **A site that draws its own look** (M9 port friction 10) has these hooks, each optional;
+ * left out, the form renders exactly as above:
+ *
+ * - `class` and any other attribute (`data-*`, `id`, `aria-*`…) go on the `<form>`;
+ *   the ones the form sets itself (`action`, `method`, `enctype`, `novalidate`, its own
+ *   `data-caracms-*`, `data-max-*`, `data-file-kinds`, `data-thanks`, `data-failed`, `data-sending`) can't be replaced;
+ * - `submitClass`: classes on the submit button, beside `cms-form-submit`;
+ * - `submit`: the button's words (default "Send"); `sending`: its words while the message goes
+ *   (default "Sending…");
+ * - `thanks`: the line after a send (default "Thanks, we'll be in touch shortly.");
+ *   `sentHeading`: the sent panel's heading (default none: no panel);
+ *   `failed`: the line when a send fails without the endpoint's own sentence
+ *   (default "Something went wrong. Please email us directly.");
+ * - `choose`: a select's first line (default "Choose…"); `optional`: after an optional field's
+ *   label (default "(optional)");
+ * - `errors`: the error line by field type (`{ email: 'Please check your email.' }`),
+ *   in place of the package's wording; a field's own `error` in the config still wins;
+ * - `actions`: wrap the submit button and the status line in `<div class="cms-form-actions">`,
+ *   so site CSS can lay them out in a row;
+ * - `labelPlaceholders`: a text, email, tel or textarea field with no `placeholder` of its
+ *   own uses its label as one (the `<label>` stays in the markup).
+ *
+ * A textarea's height is its field's `rows` in the config (default 6).
+ *
+ * **A select** (form rows Decisions 2 and 15) lists its fixed options, then the documents its
+ * `source` offers (by title, the value each one's path); its blank first choice is the field's
+ * placeholder word (Site Settings', else the config's, else the form's "Choose…"). A text or tel
+ * field with a `suffix` draws it after the input in `.cms-form-suffix`, `aria-hidden` (the box is
+ * then `.cms-form-suffixed`, beside `.cms-form-prefixed` when it has both).
+ *
+ * **A rows field** (form rows Decision 12) is a `<fieldset class="cms-form-rows">`: its label as
+ * the legend, then `.cms-form-row-list` holding one `.cms-form-row` (its `.cms-form-row-label`,
+ * "Product 1", then a `.cms-form-cell` per column, each with its label, control and error line),
+ * then the add button (`.cms-form-add`) and the at-most line (`.cms-form-at-most`), both hidden
+ * until the script runs. Cells post as `<field>[<row>][<column>]`. As rendered, and without
+ * JavaScript, a narrowed column offers every option and the row's controls are `required` only
+ * when the rows field is. The script adds rows up to `max` (each from the second with a
+ * `.cms-form-row-remove`), renumbers them, and narrows a column to its row's pick; that script
+ * (form-rows-client.ts) is carried only by a form with a rows field. In a preview every rows word
+ * is drawn as its Site Settings field: "Add another", a Remove at the first row's end (where later
+ * rows have theirs) and the at-most line (Decision 14).
+ */
+import { site } from 'virtual:caracms/config';
+import { build } from 'virtual:caracms/public';
+import { settingsContext } from '../document.ts';
+import { cleanReturn, DEFAULT_MAX_ROWS, FILE_ACCEPT, FILE_KINDS, HONEYPOT, MAX_FILE_BYTES, MAX_FILES, rowCellName, type FormFieldType } from '../forms/rules.ts';
+// The script has the package's words: an attribute only for a word that differs, as 0.10.0's markup had.
+import { PACKAGE_WORDS, type FormWord } from '../forms/words.ts';
+import { documentReader, readFormWords, renderSourceOf } from '../read.ts';
+import { passThrough } from './attributes.ts';
+import FormEnd from './FormEnd.astro';
+import FormRowsScript from './FormRowsScript.astro';
+import Text from './Text.astro';
+
+interface Props {
+	/** The form's id in the site's config. */
+	form: string;
+	/** A preview render (the block's `cms.preview`). */
+	preview?: boolean;
+	/** Review gaps (Decision 14): the state to draw (the block's `cms.state`): `sent`, `error`, `invalid`, or null. */
+	state?: string | null;
+	/** The submit button's words. Default "Send". */
+	submit?: string;
+	/** The button's words while the message goes. Default "Sending…". */
+	sending?: string;
+	/** Classes on the `<form>`, beside `cms-form`. */
+	class?: string;
+	/** Classes on the submit button, beside `cms-form-submit`. */
+	submitClass?: string;
+	/** The line after a send. Default "Thanks, we'll be in touch shortly." */
+	thanks?: string;
+	/** The sent panel's heading: with one, the form gives way to it and the thanks line after a send. Default none. */
+	sentHeading?: string;
+	/** The line when a send fails and the endpoint gave no sentence of its own. Default "Something went wrong. Please email us directly." */
+	failed?: string;
+	/** A select's first line. Default "Choose…". */
+	choose?: string;
+	/** After an optional field's label. Default "(optional)". */
+	optional?: string;
+	/** The error line by field type, in place of the package's wording. A field's own `error` (config) still wins. */
+	errors?: Partial<Record<FormFieldType, string>>;
+	/** Wrap the submit button and the status line in `<div class="cms-form-actions">`. */
+	actions?: boolean;
+	/** A field that takes a placeholder and sets none uses its label as one. */
+	labelPlaceholders?: boolean;
+	/** Anything else (`data-*`, `id`, `aria-*`…) goes on the `<form>`. */
+	[attribute: string]: unknown;
+}
+
+const {
+	form: id,
+	preview = false,
+	state: asked = null,
+	submit,
+	sending,
+	class: className,
+	submitClass,
+	thanks,
+	sentHeading,
+	failed,
+	choose,
+	optional,
+	errors,
+	actions = false,
+	labelPlaceholders = false,
+	...given
+} = Astro.props;
+// The form's own attributes stay its own: a pass-through can't replace them.
+const OWN = new Set(['action', 'method', 'enctype', 'inert', 'novalidate', 'data-max-files', 'data-max-bytes', 'data-file-kinds', 'data-thanks', 'data-failed', 'data-sending']);
+const rest = passThrough(Object.fromEntries(Object.entries(given).filter(([name]) => !OWN.has(name.toLowerCase()) && !name.toLowerCase().startsWith('data-caracms-'))));
+const form = Object.hasOwn(site.forms, id) ? site.forms[id]! : null;
+const files = form?.fields.some((f) => f.type === 'files') ?? false;
+// Form rows Decision 12: the rows script only on a form with a rows field (form-client.ts stays inline).
+const hasRows = form?.fields.some((f) => f.type === 'rows') ?? false;
+const back = cleanReturn(preview ? '/' : Astro.url.pathname);
+const turnstileKey = build.turnstileSiteKey;
+const fieldId = (name: string) => `cms-form-${id}-${name}`;
+const source = renderSourceOf(Astro.locals);
+const words = form ? (await readFormWords(site, source, id, { submit, sending, sentHeading, thanks, failed, choose, optional, errors, labelPlaceholders }))! : null;
+// The words' context: Site Settings', marking in a preview (descriptor.ts finds `formWords.…` among its fields).
+const settings = settingsContext(preview, documentReader(site, source));
+// A state only in a preview, and only one the form has.
+const state = preview && (asked === 'sent' || asked === 'error' || asked === 'invalid') ? asked : null;
+const sentPanel = !!words?.sent.heading.value;
+const described = (name: string, prefix: boolean, help: boolean) => [prefix ? `${fieldId(name)}-prefix` : '', help ? `${fieldId(name)}-help` : '', `${fieldId(name)}-error`].filter(Boolean).join(' ');
+// A rows field's cell (form rows Decision 12): its id, and its name on the wire (rules.ts → rowCellName).
+const cellId = (field: string, column: string) => `${fieldId(field)}-0-${column}`;
+// A number cell's check in the browser: digits with an optional decimal part, above 0 (rules.ts → isRowNumber; the server checks again).
+const NUMBER_PATTERN = '(?=.*[1-9])(?:\\d+(?:\\.\\d+)?|\\.\\d+)';
+// A word in an attribute (a placeholder, a select's first line) is marked without its value (edit in context, 10b).
+const attrMark = (word: FormWord | null) => (preview && word?.field ? { 'data-cms-field': word.field, 'data-cms-source': 'settings' } : {});
+// The controls in a preview: no focus, no typing (the editor's click wins).
+const still = preview ? { readonly: true, tabindex: '-1' } : {};
+const stillSelect = preview ? { tabindex: '-1' } : {};
+// The Invalid state: each required field shows its error, and its control says so (as a failed submit's :user-invalid looks).
+const invalid = (f: { optional?: boolean }) => (state === 'invalid' && !f.optional ? { 'aria-invalid': 'true' as const } : {});
+---
+
+{
+	form && words ? (
+		<form
+			{...rest}
+			class:list={['cms-form', className]}
+			action="/_caracms/form"
+			method="post"
+			enctype={files ? 'multipart/form-data' : undefined}
+			novalidate={preview || undefined}
+			data-caracms-form={id}
+			data-max-files={files ? MAX_FILES : undefined}
+			data-max-bytes={files ? MAX_FILE_BYTES : undefined}
+			data-file-kinds={files ? FILE_KINDS : undefined}
+			data-thanks={words.sent.line.value !== PACKAGE_WORDS.thanks ? words.sent.line.value : undefined}
+			data-failed={words.failed.value !== PACKAGE_WORDS.failed ? words.failed.value : undefined}
+			data-sending={words.sending.value !== PACKAGE_WORDS.sending ? words.sending.value : undefined}
+		>
+			{state === 'sent' && sentPanel ? (
+				<div class="cms-form-sent" role="status">
+					<Text cms={settings} field={words.sent.heading.field!} value={words.sent.heading.value} class="cms-form-sent-heading" />
+					<Text cms={settings} field={words.sent.line.field!} value={words.sent.line.value} class="cms-form-sent-line" />
+				</div>
+			) : (
+				<>
+					<input type="hidden" name="form" value={id} />
+					<input type="hidden" name="return" value={back} />
+					<div class="cms-form-hp" aria-hidden="true">
+						<label>
+							{HONEYPOT}
+							<input type="text" name={HONEYPOT} tabindex="-1" autocomplete="off" />
+						</label>
+					</div>
+					{form.fields.map((f) => {
+						const w = words.fields[f.name]!;
+						const placeholder = w.placeholder?.value || undefined;
+						const hasHelp = !!w.help.value;
+						const labelWords = (
+							<>
+								{preview ? <Text cms={settings} field={w.label.field!} value={w.label.value} as="span" /> : w.label.value}
+								{w.optional && (
+									<span class="cms-form-optional">
+										{' '}
+										{preview ? <Text cms={settings} field={w.optional.field!} value={w.optional.value} as="span" /> : w.optional.value}
+									</span>
+								)}
+							</>
+						);
+						const helpLine = hasHelp && (preview ? <Text cms={settings} field={w.help.field!} value={w.help.value} class="cms-form-help" id={`${fieldId(f.name)}-help`} /> : <p class="cms-form-help" id={`${fieldId(f.name)}-help`}>{w.help.value}</p>);
+						// A rows field is a fieldset, its label the legend (form rows Decision 12).
+						if (f.type === 'rows') return (
+							<fieldset class:list={['cms-form-field', 'cms-form-rows', state === 'invalid' && !f.optional && 'cms-form-invalid']} data-type="rows" aria-describedby={hasHelp ? `${fieldId(f.name)}-help` : undefined}>
+								<legend class="cms-form-label">{labelWords}</legend>
+									<div class="cms-form-rows-body" data-caracms-rows={f.name} data-max={String(f.max ?? DEFAULT_MAX_ROWS)} data-remove={w.remove!.value} data-row-word={w.rowLabel!.value}>
+										<div class="cms-form-row-list">
+											<div class="cms-form-row" role="group" aria-labelledby={`${fieldId(f.name)}-0-label`} data-caracms-row>
+												<p class="cms-form-row-label" id={`${fieldId(f.name)}-0-label`}>
+													{preview ? <Text cms={settings} field={w.rowLabel!.field!} value={w.rowLabel!.value} as="span" /> : <span>{w.rowLabel!.value}</span>} <span class="cms-form-row-n" data-caracms-row-n>1</span>
+												</p>
+												{(f.columns ?? []).map((c) => {
+													const cw = w.columns![c.name]!;
+													const cid = cellId(f.name, c.name);
+													const name = rowCellName(f.name, 0, c.name);
+													const cellInvalid = state === 'invalid' ? { 'aria-invalid': 'true' as const } : {};
+													const affixed = !!(c.prefix || c.suffix);
+													const control =
+														c.type === 'select' ? (
+															<select
+																id={cid}
+																name={name}
+																required={!f.optional}
+																aria-describedby={`${cid}-error`}
+																data-column={c.name}
+																data-from={c.from?.column}
+																data-allowed={c.from ? JSON.stringify(cw.allowed ?? {}) : undefined}
+																data-else={c.from ? JSON.stringify(cw.else ?? []) : undefined}
+																{...cellInvalid}
+																{...stillSelect}
+																{...attrMark(cw.placeholder)}
+															>
+																{cw.placeholder && <option value="">{cw.placeholder.value}</option>}
+																{(cw.choices ?? []).map((o) => (
+																	<option value={o.value}>{o.label}</option>
+																))}
+															</select>
+														) : (
+															<input
+																id={cid}
+																type="text"
+																name={name}
+																required={!f.optional}
+																inputmode={c.type === 'number' ? 'decimal' : undefined}
+																pattern={c.type === 'number' ? NUMBER_PATTERN : undefined}
+																placeholder={cw.placeholder?.value || undefined}
+																aria-describedby={[c.prefix ? `${cid}-prefix` : '', `${cid}-error`].filter(Boolean).join(' ')}
+																data-column={c.name}
+																{...cellInvalid}
+																{...still}
+																{...attrMark(cw.placeholder)}
+															/>
+														);
+													return (
+														<div class="cms-form-cell" data-column={c.name} data-type={c.type}>
+															<label class="cms-form-label" for={preview ? undefined : cid}>
+																{preview ? <Text cms={settings} field={cw.label.field!} value={cw.label.value} as="span" /> : cw.label.value}
+															</label>
+															{affixed ? (
+																<div class:list={[c.prefix && 'cms-form-prefixed', c.suffix && 'cms-form-suffixed']}>
+																	{c.prefix && (
+																		<span class="cms-form-prefix" id={`${cid}-prefix`}>
+																			{c.prefix}
+																		</span>
+																	)}
+																	{control}
+																	{c.suffix && (
+																		<span class="cms-form-suffix" aria-hidden="true">
+																			{c.suffix}
+																		</span>
+																	)}
+																</div>
+															) : (
+																control
+															)}
+															{preview ? (
+																<Text cms={settings} field={cw.error.field!} value={cw.error.value} class="cms-form-error" id={`${cid}-error`} />
+															) : (
+																<p class="cms-form-error" id={`${cid}-error`}>
+																	{cw.error.value}
+																</p>
+															)}
+														</div>
+													);
+												})}
+												{preview && <Text cms={settings} field={w.remove!.field!} value={w.remove!.value} as="span" class="cms-form-row-remove" />}
+											</div>
+										</div>
+										{preview ? (
+											<Text cms={settings} field={w.add!.field!} value={w.add!.value} as="span" class="cms-form-add" />
+										) : (
+											<button type="button" class="cms-form-add" data-caracms-add hidden>
+												{w.add!.value}
+											</button>
+										)}
+										{preview ? (
+											<Text cms={settings} field={w.atMost!.field!} value={w.atMost!.value} class="cms-form-at-most" />
+										) : (
+											<p class="cms-form-at-most" data-caracms-at-most hidden>
+												{w.atMost!.value}
+											</p>
+										)}
+									</div>
+								{helpLine}
+							</fieldset>
+						);
+						return (
+							<div class:list={['cms-form-field', state === 'invalid' && !f.optional && 'cms-form-invalid']} data-type={f.type}>
+								<label class="cms-form-label" for={preview ? undefined : fieldId(f.name)}>
+									{preview ? <Text cms={settings} field={w.label.field!} value={w.label.value} as="span" /> : w.label.value}
+									{w.optional && (
+										<span class="cms-form-optional">
+											{' '}
+											{preview ? <Text cms={settings} field={w.optional.field!} value={w.optional.value} as="span" /> : w.optional.value}
+										</span>
+									)}
+								</label>
+								{f.type === 'textarea' ? (
+									<textarea id={fieldId(f.name)} name={f.name} rows={String(f.rows ?? 6)} required={!f.optional} autocomplete={f.autocomplete} placeholder={placeholder} aria-describedby={described(f.name, false, hasHelp)} {...invalid(f)} {...still} {...attrMark(w.placeholder)} />
+								) : f.type === 'select' ? (
+									<select id={fieldId(f.name)} name={f.name} required={!f.optional} autocomplete={f.autocomplete} aria-describedby={described(f.name, false, hasHelp)} {...invalid(f)} {...stillSelect} {...attrMark(w.placeholder)}>
+										<option value="">{w.placeholder?.value ?? words.choose.value}</option>
+										{(w.choices ?? []).map((o) => (
+											<option value={o.value}>{o.label}</option>
+										))}
+									</select>
+								) : f.type === 'files' ? (
+									<>
+										<input id={fieldId(f.name)} type="file" name={f.name} multiple accept={FILE_ACCEPT} required={!f.optional} aria-describedby={described(f.name, false, hasHelp)} {...invalid(f)} {...stillSelect} />
+										<ul class="cms-form-files" data-caracms-files aria-label={`${w.label.value}: chosen files`} hidden />
+									</>
+								) : f.prefix || f.suffix ? (
+									<div class:list={[f.prefix && 'cms-form-prefixed', f.suffix && 'cms-form-suffixed']}>
+										{f.prefix && (
+											<span class="cms-form-prefix" id={`${fieldId(f.name)}-prefix`}>
+												{f.prefix}
+											</span>
+										)}
+										<input id={fieldId(f.name)} type={f.type} name={f.name} required={!f.optional} autocomplete={f.autocomplete} placeholder={placeholder} aria-describedby={described(f.name, !!f.prefix, hasHelp)} {...invalid(f)} {...still} {...attrMark(w.placeholder)} />
+										{f.suffix && (
+											<span class="cms-form-suffix" aria-hidden="true">
+												{f.suffix}
+											</span>
+										)}
+									</div>
+								) : (
+									<input id={fieldId(f.name)} type={f.type} name={f.name} required={!f.optional} autocomplete={f.autocomplete} placeholder={placeholder} aria-describedby={described(f.name, false, hasHelp)} {...invalid(f)} {...still} {...attrMark(w.placeholder)} />
+								)}
+								{hasHelp && (preview ? <Text cms={settings} field={w.help.field!} value={w.help.value} class="cms-form-help" id={`${fieldId(f.name)}-help`} /> : <p class="cms-form-help" id={`${fieldId(f.name)}-help`}>{w.help.value}</p>)}
+								{preview ? (
+									<Text cms={settings} field={w.error.field!} value={w.error.value} class="cms-form-error" id={`${fieldId(f.name)}-error`} />
+								) : (
+									<p class="cms-form-error" id={`${fieldId(f.name)}-error`}>
+										{w.error.value}
+									</p>
+								)}
+							</div>
+						);
+					})}
+					{turnstileKey && !preview && <div class="cms-form-turnstile" data-caracms-turnstile data-sitekey={turnstileKey} />}
+					{actions ? (
+						<div class="cms-form-actions">
+							<FormEnd words={words} settings={settings} preview={preview} state={state} submitClass={submitClass} />
+						</div>
+					) : (
+						<FormEnd words={words} settings={settings} preview={preview} state={state} submitClass={submitClass} />
+					)}
+					{!preview && sentPanel && (
+						<div class="cms-form-sent" role="status" data-caracms-form-sent hidden>
+							<p class="cms-form-sent-heading">{words.sent.heading.value}</p>
+							<p class="cms-form-sent-line">{words.sent.line.value}</p>
+						</div>
+					)}
+				</>
+			)}
+		</form>
+	) : preview ? (
+		<p class="cms-form-missing" data-cms-fixed>
+			There's no form "{id}" in the site's config.
+		</p>
+	) : null
+}
+
+{hasRows && !preview && <FormRowsScript />}
+
+<script>
+	import { initForms } from './form-client.ts';
+
+	initForms();
+</script>
+
+<style is:global>
+	.cms-form-hp {
+		position: absolute;
+		left: -10000px;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+	}
+
+	.cms-form-error {
+		display: none;
+	}
+
+	.cms-form-field:not([data-type='rows']):has(:user-invalid) .cms-form-error,
+	.cms-form-cell:has(:user-invalid) .cms-form-error,
+	.cms-form-field.cms-form-invalid .cms-form-error {
+		display: block;
+	}
+
+	.cms-form-add[hidden],
+	.cms-form-at-most[hidden] {
+		display: none;
+	}
+
+	.cms-form-sent[hidden] {
+		display: none;
+	}
+</style>

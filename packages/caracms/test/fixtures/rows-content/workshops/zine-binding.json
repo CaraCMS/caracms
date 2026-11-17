@@ -1,0 +1,6 @@
+{
+  "$schema": "../../schemas/workshops.schema.json",
+  "title": "Zine binding",
+  "open": false,
+  "sessions": ["afternoon"]
+}

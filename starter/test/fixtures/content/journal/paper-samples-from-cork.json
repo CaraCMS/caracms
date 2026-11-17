@@ -1,0 +1,23 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "Paper samples from Cork",
+  "date": "2025-04-02",
+  "tags": ["print", "field"],
+  "cover": { "key": "uploads/a40fe31a6eeb/material-samples.png", "alt": "Paint swatches, fabric, stone and timber samples on marble", "w": 1200, "h": 1800 },
+  "excerpt": "A day at a paper merchant in Cork, and the three stocks we came home with.",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Paper samples", "From Cork"],
+      "intro": "A boot full of swatch books and a very patient merchant.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "What we chose",
+      "body": "An uncoated white, a warm cream and one heavy board for covers.",
+      "background": "light"
+    }
+  ]
+}

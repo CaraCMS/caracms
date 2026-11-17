@@ -1,0 +1,22 @@
+{
+  "$schema": "../../schemas/case-studies.schema.json",
+  "title": "A bike shop",
+  "heading": ["A bike", "Shop"],
+  "client": "A bike shop",
+  "sector": "retail",
+  "featured": false,
+  "launched": "2022-06-01",
+  "summary": "An example: a repair shop, with a booking site its mechanics can update themselves.",
+  "body": [
+    { "p": "The shop fixes bikes. Its site books repairs and says, in plain words, how long each one takes." },
+    { "h2": "Booking without the phone" },
+    { "ol": ["Pick the repair", "Pick a morning", "Drop the bike off"] }
+  ],
+  "credits": [
+    {
+      "role": "Website",
+      "name": "Niamh"
+    }
+  ],
+  "related": ["a-furniture-maker"]
+}

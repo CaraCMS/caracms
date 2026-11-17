@@ -1,0 +1,9 @@
+{
+  "title": "Footer",
+  "default": true,
+  "block": {
+    "type": "footer",
+    "links": [{ "label": "Join the newsletter", "href": "/newsletter" }],
+    "menuLabel": "More links"
+  }
+}

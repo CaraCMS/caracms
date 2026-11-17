@@ -1,0 +1,35 @@
+---
+/** The audit fixture's page component: a layout with words of its own, and the footer slot. */
+import Block from 'caracms/components/Block.astro';
+import Blocks from 'caracms/components/Blocks.astro';
+import Slot from 'caracms/components/Slot.astro';
+import type { PageProps } from 'caracms/document';
+
+type Props = PageProps;
+const { document, collection, preview = false, listPage, cms, settingsCms, settings } = Astro.props;
+const brand = (settings.brand as { name: string }).name;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>Head words never count</title>
+	</head>
+	<body>
+		<header class="site-header">
+			<a href="/contact">Talk to Maeve</a>
+			<a href="https://instagram.com/x">Instagram</a>
+			<Block cms={settingsCms} as="p" class="brand">{brand}</Block>
+			<span class="arrow">↘</span>
+			<span aria-hidden="true">Hidden from readers</span>
+			<div class="cms-form-hp"><label>Leave this empty</label></div>
+			<div class="calculator" data-cms-fixed><p>Monthly cost</p><button type="button">Work it out</button></div>
+		</header>
+		<main>
+			{document.kind !== 'fields' && document.kind !== 'shared' && <Block cms={cms} as="div" class="page-title"><span>{document.title}</span></Block>}
+			<Blocks document={document} collection={collection} preview={preview} listPage={listPage} />
+		</main>
+		<Slot name="footer" {...Astro.props} />
+	</body>
+</html>

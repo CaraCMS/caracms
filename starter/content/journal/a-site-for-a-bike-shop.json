@@ -1,0 +1,23 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "A site for a bike shop",
+  "date": "2025-10-01",
+  "tags": ["editing", "brand"],
+  "cover": { "key": "uploads/61e1f507072b/cafe-chairs.jpg", "alt": "An empty café with wooden chairs and tables", "focal": [0.92, 0.33], "w": 4000, "h": 2662 },
+  "excerpt": "An example: opening hours that change every season, kept where the shop can change them.",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["A site for", "A bike shop"],
+      "intro": "The opening hours change every season. Now the shop changes them itself.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "Editable between repairs",
+      "body": "Every page is made of blocks the staff can reorder in a lunch break.",
+      "background": "light"
+    }
+  ]
+}

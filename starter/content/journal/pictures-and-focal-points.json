@@ -1,0 +1,23 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "Pictures and focal points",
+  "date": "2025-04-02",
+  "tags": ["editing", "hosting"],
+  "cover": { "key": "uploads/a40fe31a6eeb/material-samples.png", "alt": "Paint swatches, fabric, stone and timber samples on marble", "w": 1200, "h": 1800 },
+  "excerpt": "Upload a picture once. The site asks for the sizes it needs, cropped around the point an editor picks.",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Pictures and", "Focal points"],
+      "intro": "One upload, every size.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "Where to crop",
+      "body": "The focal point keeps the subject in frame, wide or tall.",
+      "background": "light"
+    }
+  ]
+}

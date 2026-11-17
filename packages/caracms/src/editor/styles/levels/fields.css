@@ -1,0 +1,184 @@
+/* M5a's fields (Phase 4): rich text, link, buttons, toggle, number, date, list and reference, in the field
+   frame. Lifted as is from the mockup's revision (packages/caracms/test/mockups/m2-editor.html, its M5a field CSS), then the
+   few rules the real components need beyond it, at the end. Tokens only (M2 Decision 7); no side rails
+   (M2 Decision 10): a warned row or link is a wash and a full border. The date is the browser's own input
+   (M5a Decision 2), so the mockup's calendar isn't here. */
+
+/* Rich text, the one `richText` field (M5a): paragraphs, bold, italic, links, lists, line breaks; H2/H3 only when
+   the block's author switched headings on. Never an H1, no slash menu. Enter: new paragraph (in a list, a new item);
+   Shift+Enter: a line break inside the paragraph, heading or item. */
+.prose-wrap{position:relative;border:1px solid var(--border-strong);border-radius:var(--radius-md);background:var(--surface);transition:border-color var(--dur-fast),box-shadow var(--dur-fast)}
+.prose-wrap:focus-within{border-color:var(--select);box-shadow:0 0 0 3px var(--select-halo)}
+.tb{position:relative;display:flex;align-items:center;gap:2px;padding:3px;border-bottom:1px solid var(--border)}
+.tb>button{display:inline-grid;place-items:center;width:26px;height:24px;padding:0;border:0;border-radius:var(--radius-sm);background:none;color:var(--text-muted);font-size:var(--text-sm);font-weight:var(--weight-semibold)}
+.tb>button:hover:not(:disabled){background:var(--surface-hover);color:var(--text)}
+.tb>button[aria-pressed="true"],.tb>button[aria-expanded="true"]{background:var(--surface-pressed);color:var(--text)}
+.tb>.tb-style{display:inline-flex;gap:var(--space-1);width:auto;padding:0 var(--space-1-5) 0 var(--space-2);color:var(--text);font-weight:var(--weight-medium)}
+.tb .sep{width:1px;height:16px;margin:0 var(--space-1);background:var(--border)}
+.tb .menu{left:2px;top:calc(100% + 2px);min-width:180px}
+.tb .menu .st-p{font-size:var(--text-base)}
+.tb .menu .st-h2{font-size:var(--text-lg);font-weight:var(--weight-semibold);letter-spacing:var(--tracking-tight)}
+.tb .menu .st-h3{font-size:var(--text-md);font-weight:var(--weight-semibold)}
+.tb .menu button[aria-checked="true"]{background:var(--select-wash);color:var(--select-strong)}
+.prose{min-height:70px;padding:8px 10px;outline:0;line-height:var(--leading-loose)}
+.prose p+p{margin-top:8px}
+.rt{min-height:120px}
+.rt>*+*{margin-top:var(--space-2)}
+.rt h2,.rt h3{margin:var(--space-3) 0 0;font-weight:var(--weight-semibold);line-height:var(--leading-tight);letter-spacing:var(--tracking-tight)}
+.rt>h2:first-child,.rt>h3:first-child{margin-top:0}
+.rt h2{font-size:var(--text-lg)}
+.rt h3{font-size:var(--text-md)}
+.rt ul,.rt ol{margin-bottom:0;padding-left:var(--space-5)}
+.rt li+li{margin-top:var(--space-0-5)}
+.rt a{color:var(--select-strong);text-decoration:underline;text-decoration-color:color-mix(in srgb,currentColor 45%,transparent);text-underline-offset:2px}
+.rt .rt-sel{background:var(--select-halo);border-radius:2px;box-shadow:0 0 0 1px var(--select-halo)}
+.rt .is-caret{background:var(--surface-sunken);border-radius:var(--radius-xs);box-shadow:0 0 0 4px var(--surface-sunken)}
+/* Field messages that never block anything (amber), beside .field-err, which is for what does (red, Decision 12) */
+.field-warn{display:flex;align-items:flex-start;gap:var(--space-1-5);margin-top:var(--space-1-5);font-size:var(--text-sm);color:var(--status-warning);font-weight:var(--weight-medium)}
+.field-warn .i{margin-top:2px;color:var(--status-warning-dot)}
+.field-warn.quiet{font-weight:var(--weight-regular);color:var(--text-muted)}
+/* Repeatable list (M5a): repeatable groups of fields. A collapsed item shows a one-line summary; one opens at a time.
+   Add, remove (with Undo), reorder by drag and ⌥↑/⌥↓, as blocks are. No lists inside lists. */
+.items{display:flex;flex-direction:column;gap:var(--space-1)}
+.item{position:relative;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--surface);transition:border-color var(--dur-fast),box-shadow var(--dur-fast)}
+.item:hover{border-color:var(--border-hover)}
+.item.is-open{border-color:var(--border-strong);box-shadow:var(--shadow-edge)}
+.item.is-warn{background:var(--status-warning-wash);border-color:var(--status-warning-border)}
+.item-h{display:flex;align-items:center;gap:var(--space-0-5);min-height:32px;padding:0 var(--space-0-5) 0 var(--space-1)}
+.item-h .grip{display:inline-flex;opacity:1}
+.item-sum{flex:1;min-width:0;display:flex;align-items:center;gap:var(--space-1-5);height:30px;padding:0 var(--space-1);border:0;border-radius:var(--radius-sm);background:none;text-align:left;font-size:var(--text-base);white-space:nowrap}
+.item-sum:focus-visible{outline-offset:-2px}
+.item-sum .s{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.item-sum .s span{color:var(--text-muted)}
+.item-sum .s em{font-style:normal;color:var(--text-subtle)}
+.item-sum .wmark{flex:none}
+.item-sum>.i:last-child{margin-left:auto;color:var(--icon);transition:rotate var(--dur-fast) var(--ease-out)}
+.item.is-open .item-sum>.i:last-child{rotate:90deg}
+.item .ib{width:26px;height:26px}
+/* An open row's fields take its full width, the same inset each side: no indent under the drag handle, as its image never had one */
+.item-b{padding:0 var(--space-2-5) var(--space-2-5)}
+.item-b .sub-label:first-child{margin-top:var(--space-0-5)}
+.item .menu{right:2px;top:30px}
+.list-foot{display:flex;align-items:center;justify-content:space-between;gap:var(--space-2);margin-top:var(--space-2)}
+.list-empty{padding:var(--space-2-5) var(--space-3);border:1px dashed var(--border-strong);border-radius:var(--radius-md);font-size:var(--text-sm);color:var(--text-muted)}
+/* M7: a list inside a list, one level (Decisions 14–15). The inner list sits inside its open outer row, on a sunken wash
+   with its own label, count, Add and drag hint. Its rows are the same rows. Nesting reads from the inset and the wash,
+   never a side rail. */
+.sublist{margin-top:var(--space-2-5);padding:var(--space-2) var(--space-2) var(--space-1-5);border-radius:var(--radius-md);background:var(--surface-sunken)}
+.sublist-h{display:flex;align-items:baseline;gap:var(--space-2);margin:0 var(--space-0-5) var(--space-1-5)}
+.sublist-h .sub-label{margin:0}
+.sublist-h .field-meta{margin-left:auto}
+.sublist>.field-help{margin:0 var(--space-0-5) var(--space-1-5)}
+.sublist .list-foot{margin-top:var(--space-1-5);padding:0 var(--space-0-5)}
+.sublist .list-empty{background:var(--surface);padding:var(--space-2) var(--space-2-5)}
+/* Reference (M5a): picks a document from another collection. A list of them reorders like any list. */
+.refs{display:flex;flex-direction:column;gap:var(--space-1)}
+.ref{position:relative;display:flex;align-items:center;gap:var(--space-2);min-height:42px;padding:var(--space-1) var(--space-0-5) var(--space-1) var(--space-1);border:1px solid var(--border);border-radius:var(--radius-md);background:var(--surface)}
+.ref:hover{border-color:var(--border-hover)}
+.ref .grip{display:inline-flex;opacity:1}
+.ref>.i{color:var(--icon)}
+.ref .t{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.3}
+.ref .t b{font-weight:var(--weight-medium);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ref .t small{font:var(--text-xs)/1.35 var(--font-mono);color:var(--text-subtle);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ref .yr{font-size:var(--text-xs);color:var(--text-subtle);font-variant-numeric:tabular-nums}
+.ref .ib{width:26px;height:26px}
+.ref.is-missing{background:var(--status-warning-wash);border-color:var(--status-warning-border)}
+.ref.is-missing>.i{color:var(--status-warning-dot)}
+.ref.is-missing .t b{color:var(--status-warning-strong)}
+.ref.is-missing .t small{color:var(--status-warning)}
+/* Pickers that drop from a field: documents for a link or a reference */
+.lpop{position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:6;padding:var(--space-1);background:var(--surface);border-radius:var(--radius-lg);box-shadow:var(--shadow-pop);animation:pop-in var(--dur-base) var(--ease-out)}
+.lpop .find{margin:0 0 var(--space-1)}
+.lpop .find .input{min-height:30px}
+.lpop .sw-h{padding:var(--space-1-5) var(--space-2) var(--space-1)}
+.lpop .drow{min-height:32px}
+.lpop .drow .meta .mono{font-size:var(--text-2xs)}
+.lpop .drow.is-active{background:var(--surface-hover)}
+.lpop .drow:disabled{cursor:default;background:none;color:var(--text-subtle)}
+.lpop .drow:disabled .i{color:var(--border-hover)}
+.lpop-foot{margin-top:var(--space-1);padding:var(--space-2) var(--space-2) var(--space-1);border-top:1px solid var(--border);font-size:var(--text-xs);color:var(--text-subtle);line-height:1.5}
+/* Link (M5a): a label and where it goes — a document picked from the site, or a typed /path, https://, mailto:, tel: or #anchor */
+.lnk{position:relative}
+.lnk-box{display:flex;align-items:center;gap:var(--space-1-5);min-height:var(--control-h);padding:0 var(--space-0-5) 0 var(--space-2-5);border:1px solid var(--border-strong);border-radius:var(--radius-md);background:var(--surface);transition:border-color var(--dur-fast),box-shadow var(--dur-fast)}
+.lnk-box:hover{border-color:var(--border-hover)}
+.lnk-box:focus-within{border-color:var(--select);box-shadow:0 0 0 3px var(--select-halo)}
+.lnk-box>.i,.lnk-glyph{flex:none;color:var(--icon)}
+.lnk-glyph{width:16px;text-align:center;font:var(--weight-semibold) var(--text-sm)/1 var(--font-mono)}
+.lnk-box input{flex:1;min-width:0;height:30px;padding:0;border:0;outline:0;background:none}
+.lnk-box input::placeholder{color:var(--text-subtle)}
+.lnk-box .ib{width:26px;height:26px}
+.lnk-doc{flex:1;min-width:0;display:flex;align-items:baseline;gap:var(--space-1-5);white-space:nowrap;overflow:hidden}
+.lnk-doc b{font-weight:var(--weight-medium)}
+.lnk-doc .mono{font-size:var(--text-xs);color:var(--text-subtle);overflow:hidden;text-overflow:ellipsis}
+.lnk.is-missing .lnk-box{background:var(--status-warning-wash);border-color:var(--status-warning-border)}
+.lnk.is-missing .lnk-box>.i{color:var(--status-warning-dot)}
+.lnk.is-missing .lnk-doc b{color:var(--status-warning-strong)}
+.lnk.is-missing .lnk-doc span{color:var(--status-warning)}
+.lnk.is-bad .lnk-box{border-color:var(--status-warning-dot)}
+/* Buttons (M5a): up to two, each a label, a link and one of the site's styles */
+.btnf{padding:var(--space-2) var(--space-2-5) var(--space-2-5);border:1px solid var(--border);border-radius:var(--radius-md);background:var(--surface-sunken)}
+.btnf+.btnf{margin-top:var(--space-1-5)}
+.btnf.is-half{border-color:var(--status-warning-border);background:var(--status-warning-wash)}
+.btnf-h{display:flex;align-items:center;gap:var(--space-2);margin-bottom:var(--space-1-5)}
+.btnf-h .t{font-size:var(--text-xs);font-weight:var(--weight-semibold);color:var(--text-muted)}
+.btnf-h .ib{width:24px;height:24px;margin-left:auto}
+.btnf .mini-seg{margin:0 0 var(--space-1-5)}
+.btnf .mini-seg button{height:24px;padding:0 var(--space-2);font-size:var(--text-xs);white-space:nowrap}
+.btnf>.input{margin-bottom:var(--space-1-5)}
+/* Number: an optional min and max */
+.numf{display:flex;align-items:center;gap:var(--space-2)}
+.numf .input{width:96px}
+.numf .rng{font-size:var(--text-xs);color:var(--text-subtle)}
+.numf .input[aria-invalid="true"]{border-color:var(--frame-warning);box-shadow:var(--shadow-hard-warning);border-width:var(--frame-width)}
+.datef{position:relative}
+.datef .lnk-box{padding-left:var(--space-2-5)}
+
+/* ── Beyond the mockup ── */
+/* Tiptap mounts the editable element itself inside this wrapper; ProseMirror needs whitespace kept. */
+.rt-mount{display:block}
+.prose.rt{white-space:pre-wrap;word-wrap:break-word;font-variant-ligatures:none}
+.prose.rt[contenteditable="false"]{background:var(--surface-sunken);color:var(--text-muted);cursor:not-allowed}
+.tb-i{font-family:Georgia,serif}
+.tb>button:disabled{opacity:.5;cursor:not-allowed}
+.lpop .field-warn{margin:var(--space-1) var(--space-2) var(--space-1-5)}
+/* The date: typed in the link box, or picked from the mockup's calendar (react-day-picker's table, drawn as .cal's grid) */
+.datef .lnk-box:has(input[aria-invalid="true"]){border-color:var(--status-warning-dot);box-shadow:0 0 0 3px var(--status-warning-wash)}
+.cal{position:absolute;left:0;top:calc(100% + 4px);z-index:6;width:252px;padding:var(--space-3);background:var(--surface);border-radius:var(--radius-lg);box-shadow:var(--shadow-pop);animation:pop-in var(--dur-base) var(--ease-out)}
+.cal-m{display:grid;grid-template-columns:auto 1fr auto;align-items:center;row-gap:var(--space-1)}
+.cal-cap{text-align:center;font-weight:var(--weight-semibold)}
+.cal .cal-nav{width:26px;height:26px}
+.cal-nav[aria-disabled="true"]{color:var(--border-hover);cursor:not-allowed;background:none}
+.cal-g{grid-column:1 / -1;width:100%;border-collapse:separate;border-spacing:2px;table-layout:fixed;margin:-2px 0}
+.cal-g .wd{padding:var(--space-1) 0;font-size:var(--text-2xs);font-weight:var(--weight-semibold);letter-spacing:var(--tracking-caps);text-transform:uppercase;color:var(--text-subtle)}
+.cal-d{padding:0;text-align:center}
+.cal-db{width:100%;height:30px;padding:0;border:0;border-radius:var(--radius-sm);background:none;color:var(--text);font-size:var(--text-sm);font-variant-numeric:tabular-nums;transition:background var(--dur-fast)}
+.cal-db:hover{background:var(--surface-hover)}
+.cal-db:focus-visible{outline:2px solid var(--select);outline-offset:1px}
+.cal-d.out .cal-db{color:var(--text-subtle)}
+.cal-d.is-today .cal-db{box-shadow:inset 0 0 0 1px var(--border-hover)}
+.cal-d.is-sel .cal-db{background:var(--select);color:var(--on-fill);font-weight:var(--weight-semibold);box-shadow:none}
+.cal-f{display:flex;align-items:center;justify-content:space-between;margin-top:var(--space-2);padding-top:var(--space-2);border-top:1px solid var(--border)}
+/* Reordering list rows and references: the block list's ghost and full-width drop line */
+.item,.refs>[data-row]{position:relative}
+.refs>[data-row]{border-radius:var(--radius-md)}
+.refs>[data-row]:focus-visible{outline:2px solid var(--focus);outline-offset:1px}
+.item.is-ghost,.refs>.ref.is-ghost{background:none;border:1px dashed var(--border-strong);box-shadow:none}
+.item.is-ghost>*,.refs>.ref.is-ghost>*{visibility:hidden}
+.item.drop-before::before,.item.drop-after::after,.refs>.drop-before::before,.refs>.drop-after::after{content:"";position:absolute;left:6px;right:6px;height:2px;border-radius:2px;background:var(--select);box-shadow:0 0 0 2px var(--surface)}
+.item.drop-before::before,.refs>.drop-before::before{top:-4px}
+.item.drop-after::after,.refs>.drop-after::after{bottom:-4px}
+/* M6c (G8): a block's help, at the top of its level (a field's sits under its label, .field-help) */
+.field-help.block-help{margin:0 0 var(--space-4)}
+
+/* ── The restyle (the editor restyle): the soft brutal look's pressed edges and frames ── */
+/* Quiet controls: no edge, a pressed wash */
+.tb>button:active:not(:disabled),.cal-g button:active:not([aria-pressed="true"]),.item-sum:active{background:var(--surface-pressed)}
+/* ── Floating things: popovers, menus, pickers and dialogs take a thin warm frame and the neutral hard shadow
+   (the tokens above). The tooltip and the toast are dark, so they keep their own edge. ── */
+.lpop,.cal{border:1px solid var(--frame-neutral)}
+/* Field problems: the control or row that has the problem. Its message under it stays as M2 has it. */
+.ref.is-missing,.item.is-warn,.btnf.is-half,.lnk.is-missing .lnk-box{border:var(--frame-width) solid var(--frame-warning);box-shadow:var(--shadow-hard-warning)}
+.lnk.is-bad .lnk-box,.prose-wrap:has(+ .field-warn){border:var(--frame-width) solid var(--frame-warning);box-shadow:var(--shadow-hard-warning)}
+/* Focus still shows on a framed field: the tool's blue ring, the frame's shadow kept */
+.lnk.is-bad .lnk-box:focus-within,.lnk.is-missing .lnk-box:focus-within,.prose-wrap:has(+ .field-warn):focus-within{border-color:var(--select);box-shadow:0 0 0 3px var(--select-halo),var(--shadow-hard-warning)}
+.numf .input[aria-invalid="true"]:focus{border-color:var(--select);box-shadow:0 0 0 3px var(--select-halo),var(--shadow-hard-warning)}

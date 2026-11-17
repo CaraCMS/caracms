@@ -1,0 +1,23 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "Small sites that stay fast",
+  "date": "2025-05-19",
+  "tags": ["web"],
+  "cover": { "key": "uploads/e4c45074933b/studio-window.jpg", "alt": "Morning light through the studio window", "w": 1920, "h": 1280 },
+  "excerpt": "A short list of what we leave out of a website, so it loads before the kettle boils.",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Small sites", "That stay fast"],
+      "intro": "Most of the speed comes from what we never add.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "The list",
+      "body": "No sliders, no web fonts we do not need and no images bigger than the screen.",
+      "background": "light"
+    }
+  ]
+}

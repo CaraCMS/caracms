@@ -1,0 +1,23 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "A new editor",
+  "date": "2026-07-14",
+  "tags": ["editing"],
+  "cover": { "key": "uploads/e4c45074933b/studio-window.jpg", "alt": "Morning light through a window", "w": 1920, "h": 1280 },
+  "excerpt": "What a new editor needs on the first day: where to sign in, what a draft is, and what Publish does.",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["A new", "Editor"],
+      "intro": "Sign in at /admin, and the site’s own pages open.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "First day",
+      "body": "Change a word, look at the preview, publish. That is most of it.",
+      "background": "light"
+    }
+  ]
+}

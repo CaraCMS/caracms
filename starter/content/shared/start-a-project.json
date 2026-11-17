@@ -1,0 +1,24 @@
+{
+  "$schema": "../../schemas/shared.schema.json",
+  "title": "Try it",
+  "block": {
+    "type": "cta",
+    "heading": ["Try it", "On your own site"],
+    "text": "Two commands add CaraCMS to an Astro site: npm install caracms, then npx caracms init.",
+    "buttons": [
+      {
+        "label": "Read the questions",
+        "href": "/faq",
+        "style": "primary"
+      },
+      {
+        "label": "See examples",
+        "href": "/work",
+        "style": "secondary"
+      }
+    ],
+    "background": "accent",
+    "spaceAbove": "default",
+    "spaceBelow": "default"
+  }
+}

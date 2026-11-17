@@ -1,0 +1,5 @@
+{
+  "$schema": "../../schemas/tags.schema.json",
+  "title": "Type",
+  "description": "Text styles, lockups and the rules that keep headings tidy on screens of every size."
+}

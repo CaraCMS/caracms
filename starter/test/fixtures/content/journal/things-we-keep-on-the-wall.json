@@ -1,0 +1,22 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "Things we keep on the wall",
+  "tags": ["studio", "type"],
+  "cover": { "key": "uploads/e4c45074933b/studio-window.jpg", "alt": "Morning light through the studio window", "w": 1920, "h": 1280 },
+  "excerpt": "A short tour of the pin board by the kettle, which nobody has tidied in a year.",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Things we keep", "On the wall"],
+      "intro": "Old proofs, a few postcards and one very faded type specimen.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "Never tidied",
+      "body": "Everything on the wall has earned its place. Mostly by being forgotten.",
+      "background": "light"
+    }
+  ]
+}

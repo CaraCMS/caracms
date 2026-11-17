@@ -1,0 +1,23 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "Arranging pages",
+  "date": "2025-08-11",
+  "tags": ["editing", "publishing"],
+  "cover": { "key": "uploads/61e1f507072b/cafe-chairs.jpg", "alt": "An empty café with wooden chairs and tables", "focal": [0.92, 0.33], "w": 4000, "h": 2662 },
+  "excerpt": "Drag pages into order, nest them, then review every old and new address before anything changes.",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Arranging", "Pages"],
+      "intro": "Order, nest and rename, then apply it as one change.",
+      "layout": "left",
+      "background": "light"
+    },
+    {
+      "type": "text",
+      "heading": "Nothing until Apply",
+      "body": "Every old address is listed beside its new one, with one tick for redirects.",
+      "background": "dark"
+    }
+  ]
+}

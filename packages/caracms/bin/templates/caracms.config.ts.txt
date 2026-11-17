@@ -1,0 +1,22 @@
+import { defineSite, text } from 'caracms/config';
+
+/**
+ * caracms's config for this site, written by `caracms init`: its collections, blocks and
+ * text styles. astro.config passes it to the integration. The caracms-adopt and
+ * caracms-blocks skills say how it grows as the site's pages come in.
+ */
+export default defineSite({
+	collections: {
+		// content/pages/<path>.json is the page at /<path>; content/pages/index.json is Home.
+		pages: { kind: 'sections', folder: 'content/pages', urlBase: '/', nested: true },
+	},
+	blocks: {
+		text: {
+			label: 'Text',
+			component: 'src/components/caracms/TextBlock.astro',
+			fields: { text: text({ multiline: true }) },
+		},
+	},
+	textStyles: {},
+	page: 'src/components/caracms/Page.astro',
+});

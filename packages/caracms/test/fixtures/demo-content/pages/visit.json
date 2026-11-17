@@ -1,0 +1,53 @@
+{
+  "$schema": "../../schemas/pages.schema.json",
+  "title": "Visit",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Come and", "say hello"],
+      "intro": "The studio is above the harbour, up the stairs beside the bakery.",
+      "media": { "video": "a4nOgmxGWg6gULfcBbAa00gXyfcwPnAFldF8RdsNyk8M", "play": "player", "poster": 1.5, "name": "The kiln at dusk", "duration": 12.4, "w": 1920, "h": 1080 },
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "tm",
+      "body": [
+        { "h2": "Above the harbour" },
+        { "p": "The studio sits above the harbour, with the ferry slip below the windows." }
+      ],
+      "media": { "key": "uploads/3f9a1c07b2e4/harbour-wall.jpg", "alt": "The harbour wall at low tide", "focal": [0.4, 0.3], "w": 4000, "h": 2667 },
+      "side": "left",
+      "background": "light"
+    },
+    {
+      "type": "tm",
+      "body": [
+        { "h2": "Firing day" },
+        { "p": "Once a month the kiln is lit, and the whole street smells of wood smoke." }
+      ],
+      "media": { "video": "Qm3bXy02lTc6Zk4w8d9fJ00p1rSx7vU2gHn5aE6iKoL", "play": "player", "poster": 3, "name": "Firing day", "duration": 74.6, "w": 1920, "h": 1080 },
+      "side": "right",
+      "background": "light"
+    },
+    {
+      "type": "tm",
+      "body": [
+        { "p": "No picture here yet: this one is a single column of text." }
+      ],
+      "side": "left",
+      "background": "light"
+    },
+    {
+      "type": "gallery",
+      "heading": "Around the studio",
+      "images": [
+        { "key": "uploads/9c21d0e4aa13/bench.heic", "alt": "A workbench with clay tools", "w": 3024, "h": 4032 },
+        { "key": "uploads/51be7a2c09d4/glaze-texture.jpg", "alt": "", "decorative": true, "w": 3000, "h": 3750 },
+        { "key": "uploads/77ab03fe5c90/kiln.jpg", "alt": "", "focal": [0.62, 0.55], "w": 2400, "h": 3000 },
+        { "key": "uploads/0b6e2f91c4d8/spinning.gif", "alt": "The wheel turning", "w": 800, "h": 1000 }
+      ],
+      "background": "light"
+    }
+  ]
+}

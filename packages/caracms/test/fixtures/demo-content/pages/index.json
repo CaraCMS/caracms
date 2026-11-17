@@ -1,0 +1,33 @@
+{
+  "$schema": "../../schemas/pages.schema.json",
+  "title": "Home",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Building a better mousetrap", "For You"],
+      "intro": "A small design studio in the hills.\nWe make brands, websites and print that hold together at every size. Beep boop bop bang boom",
+      "layout": "left",
+      "background": "photo"
+    },
+    {
+      "type": "text",
+      "heading": "Work that lasts",
+      "body": "We start with the words, then the type, then everything else.\nMost of our clients stay for years, and so does the work.",
+      "background": "light"
+    },
+    {
+      "type": "cta",
+      "heading": ["Worried?", "Why Wait?"],
+      "text": "Tell us what you are making. We reply within a day.",
+      "button": "Start a project",
+      "background": "dark"
+    },
+    {
+      "type": "cases",
+      "heading": "Selected work",
+      "show": "featured",
+      "count": 3,
+      "background": "light"
+    }
+  ]
+}

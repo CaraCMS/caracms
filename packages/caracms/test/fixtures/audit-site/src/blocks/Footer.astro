@@ -1,0 +1,23 @@
+---
+/**
+ * The footer slot: its address is marked, its extra line isn't. Its menu's last items are built in
+ * code: two labels from its own text fields (in a link and a disclosure button) and a link whose
+ * words are code, all inside its root, so they're the frame's links; a button whose only words are
+ * its `aria-label`, from a text field; and the news label again as a plain heading (held, as it's
+ * one of the frame's link words).
+ */
+import Block from 'caracms/components/Block.astro';
+import Text from 'caracms/components/Text.astro';
+import type { BlockProps } from 'caracms/document';
+
+type Props = BlockProps<any>;
+const { block, cms } = Astro.props;
+---
+
+<Block cms={cms} as="footer">
+	<Text cms={cms} field="address" value={block.address} />
+	<small>{block.extra}</small>
+	<ul>{(block.links as { label: string; href: string }[]).map((l) => <li><a href={l.href}>{l.label}</a></li>)}</ul>
+	<nav>{(block.menu as { label: string; href: { href: string } | null }[]).map((m) => <a href={m.href?.href}>{m.label}</a>)}<a href="/news">{block.news}</a><button type="button">{block.more}</button><a href="/privacy">Privacy</a><button type="button" aria-label={block.menuLabel}>☰</button></nav>
+	<p class="group">{block.news}</p>
+</Block>

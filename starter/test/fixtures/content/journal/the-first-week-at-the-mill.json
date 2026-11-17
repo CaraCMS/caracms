@@ -1,0 +1,23 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "The first week at the Mill",
+  "date": "2025-01-20",
+  "tags": ["studio"],
+  "cover": { "key": "uploads/e4c45074933b/studio-window.jpg", "alt": "Morning light through the studio window", "w": 1920, "h": 1280 },
+  "excerpt": "Before the move: a week of measuring rooms, testing the light and arguing about desks.",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["The first week", "At the Mill"],
+      "intro": "We spent a week in the empty building before we signed anything.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "Light first",
+      "body": "We sat in every corner at every hour. The north room won, by a long way.",
+      "background": "light"
+    }
+  ]
+}

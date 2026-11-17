@@ -1,0 +1,12 @@
+{
+  "title": "Zebra crossings",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": {
+        "lines": ["A small studio", "with big ideas"],
+        "phone": ["A small", "studio with", "big ideas"]
+      }
+    }
+  ]
+}

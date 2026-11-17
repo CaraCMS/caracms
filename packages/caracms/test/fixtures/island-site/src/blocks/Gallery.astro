@@ -1,0 +1,14 @@
+---
+/** A body block drawn by a React island (server-rendered only on hydration): it hands the island the caption's marker. */
+import Block from 'caracms/components/Block.astro';
+import type { BlockProps } from 'caracms/document';
+import Caption from '../components/Caption';
+
+type Props = BlockProps<any>;
+const { block, cms } = Astro.props;
+const mark: Record<string, string> = cms.preview ? { 'data-cms-field': 'caption' } : {};
+---
+
+<Block cms={cms} class="gallery">
+	<Caption client:visible caption={block.caption} credit={block.credit} mark={mark} />
+</Block>

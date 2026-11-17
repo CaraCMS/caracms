@@ -1,0 +1,20 @@
+{
+  "v": 1,
+  "id": "2026-10-21T19-03-11-904Z_b4k8pz",
+  "form": "newsletter",
+  "receivedAt": "2026-10-21T19:03:11.904Z",
+  "fields": {
+    "firstName": "",
+    "lastName": "",
+    "email": "sam@example.org"
+  },
+  "readAt": "2026-10-21T20:00:00.000Z",
+  "email": {
+    "status": "failed",
+    "at": "2026-10-21T19:03:12.480Z",
+    "to": [
+      "owner@example.com"
+    ],
+    "error": "Resend: 429 rate limited"
+  }
+}

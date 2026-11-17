@@ -1,0 +1,39 @@
+{
+  "$schema": "../../schemas/pages.schema.json",
+  "title": "Contact",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Say hello"],
+      "intro": "hello@example.com\n+353 1 555 0142",
+      "layout": "centre",
+      "background": "light"
+    },
+    {
+      "type": "form",
+      "heading": "Tell us about it",
+      "intro": "A line or two is plenty. We answer within two working days, and never add you to a list.",
+      "form": "contact"
+    },
+    {
+      "type": "cta",
+      "heading": ["Drop by", "For coffee"],
+      "text": "Unit 4, The Old Mill, Cork. Weekdays, nine to five.",
+      "buttons": [
+        {
+          "label": "Get directions",
+          "href": "/studio/visit",
+          "style": "primary"
+        }
+      ],
+      "background": "dark",
+      "spaceAbove": "default",
+      "spaceBelow": "default"
+    },
+    { "shared": "start-a-project" }
+  ],
+  "seo": {
+    "title": "Contact CaraCMS",
+    "description": "Tell CaraCMS about your project and we will get back to you within a working day."
+  }
+}

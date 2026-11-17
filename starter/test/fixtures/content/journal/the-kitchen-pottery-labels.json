@@ -1,0 +1,23 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "The kitchen pottery labels",
+  "date": "2025-07-15",
+  "tags": ["print", "identity"],
+  "cover": { "key": "uploads/a40fe31a6eeb/material-samples.png", "alt": "Paint swatches, fabric, stone and timber samples on marble", "w": 1200, "h": 1800 },
+  "excerpt": "Labels for a pottery, printed letterpress on a stock that survives a damp shed.",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Kitchen pottery", "Labels"],
+      "intro": "A label has to last as long as the pot it sits on.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "Tested in the rain",
+      "body": "We left a sheet outside for a week. The ink held. The paper mostly did.",
+      "background": "light"
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+---
+/**
+ * A link field (M5a Decision 4): `{ label, href }` as an `<a>`.
+ *
+ *   <Link cms={cms} field="cta" value={block.cta} class="cta-link" />
+ *
+ * - Both a label and an href that passes the link rule: `<a href>label</a>`.
+ * - A label with an href that fails the rule: the label as plain text, in a
+ *   `<span>` (Decision 15: kept as typed, flagged on the field, ignored here).
+ * - Half a link (no label, or no href): nothing. The field says so.
+ * - The anchor's content is the label, or the default slot when given (an icon
+ *   beside it, say).
+ * - Preview render only (M3 Decision 17): `data-cms-field="<path>.label"
+ *   data-cms-kind="link"` on the element (Decision 16: `cta.label`). Edited in
+ *   the sidebar (Decision 13). `field` may be a dotted path into a list.
+ *
+ * M6c (G9): an address-only link (`link({ addressOnly: true })`) has no label: its
+ * value is `{ href }` or null, and the anchor's content is the default slot (an image,
+ * an icon). Without a usable href the slot shows in a `<span>`, unlinked. Its marker
+ * is `<path>.href`.
+ *
+ * M6c Decision 11: a file link carries the site's behaviour (`fileLinkAttributes`): a
+ * PDF without `?download` gets `target="_blank" rel="noopener"` and a visually hidden
+ * " (opens in a new tab)" after the content; any other file link gets `download`. The
+ * same in a preview render; the markers don't change. A class or attribute passed in
+ * wins over these.
+ */
+import { site } from 'virtual:caracms/config';
+import type { BlockContext } from '../document.ts';
+import { parseField, usableHref, type AddressValue, type LinkValue } from '../fields.ts';
+import { fileLinkAttributes, NEW_TAB_NOTE_HTML } from '../rich-text.ts';
+import { contextMarker, requireField } from './descriptor.ts';
+import { passThrough } from './attributes.ts';
+import { vividOf } from '../vivid.ts';
+
+interface Props {
+	cms: BlockContext;
+	field: string;
+	value: LinkValue | AddressValue | null;
+	class?: string;
+	[attribute: string]: unknown;
+}
+
+const { cms, field, value, class: className, ...given } = Astro.props;
+// M8 trial (item 4): a bare attribute stays bare, false is none (attributes.ts).
+const rest = passThrough(given);
+const descriptor = requireField(site, cms, field, 'link', 'Link');
+const addressOnly = descriptor.addressOnly === true;
+const link = parseField(descriptor, value) as LinkValue;
+const href = usableHref(link.href);
+const show = addressOnly || (link.label !== '' && link.href !== '');
+const file = href ? fileLinkAttributes(href) : { attributes: {}, newTab: false };
+const fileAttributes = Object.fromEntries(Object.entries(file.attributes).map(([name, v]) => [name, v === '' ? true : v]));
+const path = `${field}.${addressOnly ? 'href' : 'label'}`;
+// Vivid (vivid.ts): on a public page with the config's switch on, the field and its editor address.
+const markers = cms.preview ? { 'data-cms-field': path, 'data-cms-kind': 'link', ...contextMarker(cms) } : vividOf(site, cms, Astro, import.meta.env.DEV)(path);
+---
+
+{
+	show &&
+		(href ? (
+			<a href={href} class={className} {...fileAttributes} {...rest} {...markers}>
+				<slot>{link.label}</slot>
+				{file.newTab && <Fragment set:html={NEW_TAB_NOTE_HTML} />}
+			</a>
+		) : (
+			<span class={className} {...rest} {...markers}>
+				<slot>{link.label}</slot>
+			</span>
+		))
+}

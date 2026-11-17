@@ -1,0 +1,29 @@
+---
+/**
+ * Starlight's theme select, unchanged, plus one fix for CaraCMS's editor preview.
+ *
+ * Starlight sets the select to the stored choice once, on load. In the editor's preview an
+ * edit morphs `<body>` back to the server's render, so the select shows "Auto" again while
+ * the page stays in the chosen theme (`<html data-theme>` isn't morphed). After every morph
+ * (`caracms:rendered`, only ever fired in the preview) this sets the select back to the
+ * stored choice through Starlight's own `StarlightThemeProvider.updatePickers`.
+ *
+ * Assumes: registered as Starlight's `ThemeSelect` override; Starlight keeps the choice in
+ * localStorage under `starlight-theme` ('' or missing means auto), as 0.42 does.
+ */
+import Default from '@astrojs/starlight/components/ThemeSelect.astro';
+---
+
+<Default {...Astro.props} />
+
+<script>
+	type Theme = 'auto' | 'dark' | 'light';
+	document.addEventListener('caracms:rendered', () => {
+		const provider = (window as unknown as { StarlightThemeProvider?: { updatePickers(theme?: Theme): void } }).StarlightThemeProvider;
+		let stored: string | null = null;
+		try {
+			stored = localStorage.getItem('starlight-theme');
+		} catch {}
+		provider?.updatePickers(stored === 'light' || stored === 'dark' ? stored : 'auto');
+	});
+</script>

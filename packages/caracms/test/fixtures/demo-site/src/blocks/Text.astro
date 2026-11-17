@@ -1,0 +1,75 @@
+---
+/**
+ * The text block: a one-line heading and a rich-text body (M5a: headings and links
+ * on; a body written as plain text reads as rich text). Schema beside it in text.ts.
+ */
+import Block from 'caracms/components/Block.astro';
+import RichText from 'caracms/components/RichText.astro';
+import Text from 'caracms/components/Text.astro';
+import type { BlockProps } from 'caracms/document';
+import type { TextData } from './text.ts';
+
+type Props = BlockProps<TextData>;
+const { block, cms } = Astro.props;
+---
+
+<Block cms={cms} class={`band bg-${block.background} text-block`}>
+	<div class="band-inner">
+		<Text cms={cms} field="heading" value={block.heading} class="text-heading" />
+		<RichText cms={cms} field="body" value={block.body} class="text-body" />
+	</div>
+</Block>
+
+<style>
+	.text-block {
+		padding-block: 3.5rem;
+	}
+
+	.text-heading,
+	.text-body {
+		max-width: 46rem;
+	}
+
+	.text-heading {
+		margin: 0 0 1rem;
+		font-size: 1.75rem;
+		line-height: 1.2;
+		font-weight: 650;
+		text-wrap: balance;
+	}
+
+	.text-body {
+		margin: 0;
+		font-size: 1.0625rem;
+		line-height: 1.65;
+		text-wrap: pretty;
+	}
+
+	.text-body > :global(*) {
+		margin: 0 0 1em;
+	}
+
+	.text-body > :global(:last-child) {
+		margin-bottom: 0;
+	}
+
+	.text-body :global(h2),
+	.text-body :global(h3) {
+		margin-top: 1.5em;
+		line-height: 1.25;
+	}
+
+	.text-body :global(a) {
+		color: inherit;
+	}
+
+	@media (width >= 640px) {
+		.text-block {
+			padding-block: 5rem;
+		}
+
+		.text-heading {
+			font-size: 2.25rem;
+		}
+	}
+</style>

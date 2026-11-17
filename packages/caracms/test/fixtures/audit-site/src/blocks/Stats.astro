@@ -1,0 +1,20 @@
+---
+/** Marks each stat's label; the value is drawn unmarked. */
+import Block from 'caracms/components/Block.astro';
+import Text from 'caracms/components/Text.astro';
+import type { BlockProps } from 'caracms/document';
+
+type Props = BlockProps<any>;
+const { block, cms } = Astro.props;
+---
+
+<Block cms={cms} class="stats">
+	{
+		(block.stats as { value: string; label: string }[]).map((s, i) => (
+			<div>
+				<strong>{s.value}</strong>
+				<Text cms={cms} field={`stats.${i}.label`} value={s.label} as="span" />
+			</div>
+		))
+	}
+</Block>

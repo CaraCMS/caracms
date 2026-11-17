@@ -1,0 +1,55 @@
+{
+  "$schema": "../../schemas/pages.schema.json",
+  "title": "About",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": {
+        "lines": ["A small studio", "with big ideas"],
+        "phone": ["A small", "studio with", "big ideas"]
+      },
+      "intro": "Six people, one long table, and a view of the hills.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "How we work",
+      "body": "One team stays with a project from the first call to launch.\nNo hand-offs, no account managers.",
+      "background": "light"
+    },
+    {
+      "type": "features",
+      "heading": "What you can count on",
+      "intro": "No account managers and no hand-offs. The person who draws your mark is the one on the call.",
+      "perRow": "3",
+      "items": [
+        {
+          "heading": "One fixed fee",
+          "text": "You know the cost before we start, and it only changes if the brief does."
+        },
+        {
+          "heading": "Local printers",
+          "text": "Everything we print is made within an hour of the studio."
+        },
+        {
+          "heading": "Honest timelines",
+          "text": "We plan around real lead times and tell you early when something slips."
+        }
+      ],
+      "background": "light",
+      "spaceAbove": "default",
+      "spaceBelow": "default"
+    },
+    {
+      "type": "media",
+      "media": { "key": "uploads/61e1f507072b/cafe-chairs.jpg", "alt": "An empty café with wooden chairs and tables", "focal": [0.92, 0.33], "w": 4000, "h": 2662 },
+      "width": "content",
+      "caption": "The café on the harbour, where most of our first meetings happen.",
+      "background": "light",
+      "spaceAbove": "default",
+      "spaceBelow": "default"
+    },
+    { "shared": "start-a-project" }
+  ]
+}

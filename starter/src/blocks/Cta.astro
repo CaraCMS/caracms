@@ -1,0 +1,53 @@
+---
+/**
+ * The call to action: a lockup, then its text and up to two buttons. On desktop the
+ * heading takes the first 7 of 12 columns and the text and buttons the rest, along
+ * the bottom; stacked below 1024. Background Accent is the template's accent band.
+ * Schema beside it in cta.ts.
+ */
+import Block from 'caracms/components/Block.astro';
+import Buttons from 'caracms/components/Buttons.astro';
+import Lockup from 'caracms/components/Lockup.astro';
+import Text from 'caracms/components/Text.astro';
+import type { BlockProps } from 'caracms/document';
+import { bandClass } from './background.ts';
+import type { CtaData } from './cta.ts';
+
+type Props = BlockProps<CtaData>;
+const { block, cms } = Astro.props;
+---
+
+<Block cms={cms} class={bandClass(block)}>
+	<div class="content-container cta">
+		<div class="cta-heading">
+			<Lockup cms={cms} field="heading" value={block.heading} />
+		</div>
+		<div class="cta-aside grid content-end gap-6">
+			<Text cms={cms} field="text" value={block.text} class="text-lead fg-soft max-w-reading" />
+			<Buttons cms={cms} field="buttons" value={block.buttons} class="btn-row" buttonClass="btn" />
+		</div>
+	</div>
+</Block>
+
+<style>
+	.cta {
+		display: grid;
+		gap: calc(var(--spacing) * 6);
+	}
+
+	@media (min-width: 64rem) {
+		.cta {
+			grid-template-columns: repeat(12, minmax(0, 1fr));
+			column-gap: var(--spacing-grid);
+			align-items: end;
+		}
+
+		.cta-heading {
+			grid-column: 1 / span 7;
+		}
+
+		.cta-aside {
+			grid-column: 8 / -1;
+		}
+	}
+</style>

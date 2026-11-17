@@ -1,0 +1,23 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "A mark for the bakery",
+  "date": "2025-04-02",
+  "tags": ["identity"],
+  "cover": { "key": "uploads/61e1f507072b/cafe-chairs.jpg", "alt": "An empty café with wooden chairs and tables", "focal": [0.92, 0.33], "w": 4000, "h": 2662 },
+  "excerpt": "How a bakery's stamp became a wordmark, and why we kept the wobble.",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["A mark for", "The bakery"],
+      "intro": "The bakery already had a stamp. We only had to listen to it.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "Keep the wobble",
+      "body": "The hand-cut edge is the brand. We drew it again, but not straighter.",
+      "background": "light"
+    }
+  ]
+}

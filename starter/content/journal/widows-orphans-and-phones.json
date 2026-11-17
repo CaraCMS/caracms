@@ -1,0 +1,23 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "Widows, orphans and phones",
+  "date": "2026-08-05",
+  "tags": ["type", "editing"],
+  "cover": { "key": "uploads/a40fe31a6eeb/material-samples.png", "alt": "Paint swatches, fabric, stone and timber samples on marble", "w": 1200, "h": 1800 },
+  "excerpt": "The old rules for a tidy paragraph, and which of them still matter on a small screen.",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Widows, orphans", "And phones"],
+      "intro": "Some old typesetting rules travel well. Some do not.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "What still holds",
+      "body": "No single word on the last line of a heading. Body text can do as it likes.",
+      "background": "light"
+    }
+  ]
+}

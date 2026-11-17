@@ -1,0 +1,23 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "Back at the Ridge",
+  "date": "2026-06-30",
+  "tags": ["field", "print"],
+  "cover": { "key": "uploads/61e1f507072b/cafe-chairs.jpg", "alt": "An empty café with wooden chairs and tables", "focal": [0.92, 0.33], "w": 4000, "h": 2662 },
+  "excerpt": "The festival asked us back. This year the programme was smaller and the map was bigger.",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Back at", "The Ridge"],
+      "intro": "Second year, same field, a much better map.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "Bigger again",
+      "body": "We printed the stage times on the back of the map, so nobody needed both.",
+      "background": "light"
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+{
+  "$schema": "../../schemas/tags.schema.json",
+  "title": "Hosting",
+  "description": "Where a site runs: Railway, Render, Fly or a VPS, and what each of them needs."
+}

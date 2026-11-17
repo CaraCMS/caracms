@@ -1,0 +1,23 @@
+---
+/** A paged listing, one post a page (`cms.listPage`), each card marked as its post. */
+import Block from 'caracms/components/Block.astro';
+import Text from 'caracms/components/Text.astro';
+import type { BlockProps } from 'caracms/document';
+
+type Props = BlockProps<any>;
+const { block, cms } = Astro.props;
+const posts = (await cms.read.documents('posts')).sort((a, b) => a.title.localeCompare(b.title));
+const shown = posts.slice(cms.listPage - 1, cms.listPage);
+---
+
+<Block cms={cms} class="listing">
+	<Text cms={cms} field="heading" value={block.heading} as="h2" />
+	{
+		shown.map((p) => (
+			<Block cms={cms.of(p)} as="a" href={p.url ?? undefined}>
+				<span>{p.title}</span>
+				<Text cms={cms.of(p)} field="teaser" value={p.data.teaser as string} as="span" />
+			</Block>
+		))
+	}
+</Block>

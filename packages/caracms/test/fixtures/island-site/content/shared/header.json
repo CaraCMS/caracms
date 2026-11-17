@@ -1,0 +1,9 @@
+{
+  "title": "Header",
+  "default": true,
+  "block": {
+    "type": "header",
+    "links": [{ "label": "Visit us", "href": "/visit" }, { "label": "Our story", "href": "/about" }],
+    "menuLabel": "Open the menu"
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "title": "Home",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["An editor for", "Astro sites"],
+      "intro": "CaraCMS lets the people who run a site change it in its own pages.\nWhat they publish is JSON in the site’s git repository, which the site builds from.",
+      "buttons": [],
+      "media": { "key": "uploads/e4c45074933b/studio-window.jpg", "alt": "Morning light through a window", "w": 1920, "h": 1280 },
+      "layout": "left",
+      "background": "light",
+      "spaceAbove": "default",
+      "spaceBelow": "default"
+    },
+    {
+      "type": "text",
+      "heading": "Content in git",
+      "body": "Every page is a JSON file in the site’s own repository.\nA Publish is a commit to main, and the host deploys it like any other change.",
+      "background": "light"
+    },
+    {
+      "type": "cards",
+      "heading": "What it covers",
+      "intro": "Three parts of one package.",
+      "perRow": "3",
+      "items": [
+        {
+          "media": { "key": "uploads/a40fe31a6eeb/material-samples.png", "alt": "Paint swatches, fabric, stone and timber samples on marble", "w": 1200, "h": 1800 },
+          "heading": "Brand and settings",
+          "text": "The site’s name, accent, logo and contact details, in Site Settings.",
+          "button": [
+            {
+              "label": "Brand settings",
+              "href": "/services/branding",
+              "style": "link"
+            }
+          ]
+        },
+        {
+          "media": { "key": "uploads/e4c45074933b/studio-window.jpg", "alt": "Morning light through a window", "w": 1920, "h": 1280 },
+          "heading": "Pages and blocks",
+          "text": "Pages made of the site’s own blocks, edited where they sit, with a preview.",
+          "button": [
+            {
+              "label": "Editing",
+              "href": "/services/websites",
+              "style": "link"
+            }
+          ]
+        },
+        {
+          "media": null,
+          "heading": "Forms",
+          "text": "Forms the site defines in code. What a visitor sends is kept, and sent on by email.",
+          "button": []
+        }
+      ],
+      "background": "grey",
+      "spaceAbove": "default",
+      "spaceBelow": "default"
+    },
+    {
+      "type": "cases",
+      "heading": "Examples",
+      "show": "featured",
+      "count": 3,
+      "background": "light"
+    },
+    {
+      "type": "posts",
+      "heading": "From the journal",
+      "show": "latest",
+      "count": 3,
+      "background": "light"
+    },
+    { "shared": "start-a-project" }
+  ],
+  "$schema": "../../schemas/pages.schema.json"
+}

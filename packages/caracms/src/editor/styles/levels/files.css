@@ -1,0 +1,101 @@
+/* M6c G4: files in the library and in links (packages/caracms/test/mockups/m6c-downloads-grid.html → #library-files,
+   #file, #link-pdf, #link-docx, #rt-link-file, #link-missing, #replace…). No side rails: the file in this
+   link is a wash with a full ring, as every picked row. */
+:root {
+	--ftype-w: 28px;
+	--ftype-h: 34px;
+	--ftype-fold: 8px;
+	--file-row-h: 48px;
+}
+
+/* The type tile: a page with its corner folded and three ruled lines. Neutral for every type (red, green and blue
+   are status colours here); the type's label is text beside it. The large tile carries the label itself. */
+.ftype{position:relative;display:grid;place-items:end center;width:var(--ftype-w);height:var(--ftype-h);flex:none;padding-bottom:5px;border:1px solid var(--border-strong);border-radius:var(--radius-xs);background:var(--surface);color:var(--text-muted);font:var(--weight-semibold) 8.5px/1 var(--font-mono);letter-spacing:.02em;clip-path:polygon(0 0,calc(100% - var(--ftype-fold)) 0,100% var(--ftype-fold),100% 100%,0 100%)}
+.ftype:not(.lg){background:linear-gradient(var(--border-strong),var(--border-strong)) 6px 11px/calc(100% - 12px) 1px no-repeat,linear-gradient(var(--border-strong),var(--border-strong)) 6px 15px/calc(100% - 12px) 1px no-repeat,linear-gradient(var(--border-strong),var(--border-strong)) 6px 19px/calc(100% - 16px) 1px no-repeat,var(--surface)}
+.ftype.sm{background:linear-gradient(var(--border-strong),var(--border-strong)) 4px 8px/calc(100% - 8px) 1px no-repeat,linear-gradient(var(--border-strong),var(--border-strong)) 4px 11px/calc(100% - 8px) 1px no-repeat,var(--surface)}
+.ftype::before{content:"";position:absolute;right:-1px;top:-1px;width:var(--ftype-fold);height:var(--ftype-fold);background:var(--surface-pressed);border-bottom-left-radius:2px;box-shadow:-1px 1px 0 var(--border-strong)}
+.ftype.sm{--ftype-w:18px;--ftype-h:22px;--ftype-fold:6px;padding-bottom:3px;font-size:6.5px}
+.ftype.lg{--ftype-w:104px;--ftype-h:130px;--ftype-fold:24px;padding-bottom:18px;font:var(--weight-semibold) var(--text-md)/1 var(--font-ui);letter-spacing:0;border-radius:var(--radius-sm)}
+
+/* A file row: the tile, the name, then type · size · date · use */
+.flist{display:flex;flex-direction:column;gap:2px}
+.frow{display:flex;align-items:center;gap:var(--space-2-5);width:100%;min-height:var(--file-row-h);padding:var(--space-1-5) var(--space-2);border:1px solid transparent;border-radius:var(--radius-md);background:none;color:var(--text);text-align:left;font:inherit;transition:background var(--dur-fast)}
+button.frow{cursor:pointer}
+.frow:hover{background:var(--surface-hover)}
+div.frow{cursor:default}
+div.frow:hover{background:none}
+.frow.is-current{background:var(--select-wash);border-color:var(--select)}
+.frow.is-current .ft b{color:var(--select-strong)}
+.frow .ft{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px;line-height:1.35}
+.frow .ft b{font-weight:var(--weight-medium);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.frow .ft small{font-size:var(--text-xs);color:var(--text-subtle);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
+.frow .ft small .ty{color:var(--text-muted);font-weight:var(--weight-semibold)}
+.frow .ft small .new{color:var(--status-live);font-weight:var(--weight-semibold)}
+.frow .ft .mbar{position:relative;inset:auto;margin-top:5px}
+.frow .pcheck{position:static;display:grid;place-items:center;width:18px;height:18px;flex:none;border-radius:50%;background:var(--select);color:var(--on-fill)}
+.frow.mfailed .ft small{color:var(--status-danger);white-space:normal}
+
+/* A file's own level */
+.kv .addr{display:flex;align-items:flex-start;gap:var(--space-1)}
+.kv .addr .ib{width:22px;height:22px;margin-top:-3px;flex:none}
+.uses .drow .meta{max-width:52%;overflow:hidden;text-overflow:ellipsis}
+.file-acts{display:flex;gap:var(--space-2);margin-top:var(--space-4)}
+.stage-lb .ftype{margin-bottom:var(--space-3);border-color:var(--bar-border-hover)}
+.stage-lb h2{margin:0;font-size:var(--text-lg);font-weight:var(--weight-semibold);letter-spacing:var(--tracking-tight);color:var(--bar-text);overflow-wrap:anywhere;text-align:center}
+.stage-lb .fine{color:var(--bar-muted);font-size:var(--text-xs)}
+.stage-lb .btn{margin-top:var(--space-3);background:var(--bar-control);border-color:var(--bar-control);color:var(--bar-control-text)}
+
+/* A file in a link: what was picked, then how it opens. A PDF gets the toggle; anything else says it downloads */
+.lnk-row{display:flex;gap:var(--space-1-5);align-items:flex-start}
+.lnk-row>.lnk{flex:1;min-width:0}
+.lnk-file{display:flex;align-items:center;gap:var(--space-2);flex:1;min-width:0;padding:var(--space-1-5) 0}
+.lnk-doc.two{flex-direction:column;align-items:flex-start;gap:0;line-height:1.35;padding:var(--space-1) 0}
+.lnk-doc.two b{max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.opens{display:flex;align-items:center;gap:var(--space-2);margin-top:var(--space-2)}
+.opens .lbl{flex:none;font-size:var(--text-xs);font-weight:var(--weight-semibold);color:var(--text-muted)}
+.opens .mini-seg{flex:1;margin:0}
+.opens .mini-seg .i{width:13px;height:13px}
+.dl-note{display:flex;align-items:center;gap:var(--space-1-5);margin-top:var(--space-2);padding:var(--space-1-5) var(--space-2);border-radius:var(--radius-md);background:var(--surface-sunken);font-size:var(--text-xs);color:var(--text-muted)}
+.dl-note .i{color:var(--icon);flex:none}
+.dl-note b{color:var(--text);font-weight:var(--weight-semibold)}
+
+/* Rich text's popover with a file picked */
+.lpop .top{display:flex;gap:var(--space-1);margin-bottom:var(--space-1)}
+.lpop .top .find{flex:1;margin:0}
+.lpop .picked{display:flex;align-items:center;gap:var(--space-2);padding:var(--space-1-5) var(--space-1) var(--space-1-5) var(--space-2);border-radius:var(--radius-md);background:var(--surface-sunken)}
+.lpop .picked .ft{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.35}
+.lpop .picked b{font-weight:var(--weight-medium);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lpop .picked small{font-size:var(--text-xs);color:var(--text-subtle)}
+.lpop .opens{padding:0 var(--space-1)}
+.lpop .picked + .opens + .lpop-foot,.lpop .picked + .lpop-foot{margin-top:var(--space-2)}
+
+/* Replace: the old file → the new one, then what it changes */
+.swap{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--space-1);margin-top:var(--space-4)}
+.swap .frow{min-height:44px;border-color:var(--border);background:var(--surface)}
+.swap .frow.old .ft b{color:var(--text-muted)}
+.swap .frow.new{border-color:var(--border-strong)}
+.swap .arrow{display:flex;align-items:center;gap:var(--space-1-5);padding:0 var(--space-3);font-size:var(--text-xs);color:var(--text-subtle)}
+.swap .mdrop{cursor:pointer;font:inherit;font-size:var(--text-sm)}
+.frow .rthumb{width:40px;height:32px;flex:none;overflow:hidden;border-radius:var(--radius-sm);background:var(--surface-sunken)}
+.frow .rthumb img{display:block;width:100%;height:100%;object-fit:cover}
+.swap .mdrop:hover,.swap .mdrop.is-over{border-color:var(--border-hover)}
+.affects{margin-top:var(--space-4);padding:var(--space-3);border:1px solid var(--border);border-radius:var(--radius-lg);background:var(--surface-sunken)}
+.affects>b{display:block;font-weight:var(--weight-semibold)}
+.affects>p{margin-top:2px;font-size:var(--text-sm);color:var(--text-muted)}
+.affects ul{list-style:none;margin:var(--space-2) 0 0;padding:0;display:flex;flex-direction:column;gap:2px}
+.affects li{display:flex;align-items:center;gap:var(--space-2);min-height:28px;padding:0 var(--space-2);border-radius:var(--radius-sm);background:var(--surface);font-size:var(--text-sm)}
+.affects li .i{color:var(--icon)}
+.affects li .nm{font-weight:var(--weight-medium)}
+.affects li .meta{margin-left:auto;font-size:var(--text-xs);color:var(--text-subtle);white-space:nowrap}
+.affects li .dot{width:7px;height:7px;flex:none;border-radius:50%;background:var(--status-waiting)}
+.keeps{display:flex;gap:var(--space-2);margin-top:var(--space-3);font-size:var(--text-sm);color:var(--text-muted)}
+.keeps .i{margin-top:2px;color:var(--icon);flex:none}
+
+/* Three tabs (Images, Clips, Files) leave the sidebar too narrow for Show unused beside them: it goes under, whole */
+.lib-bar{flex-wrap:wrap;row-gap:var(--space-2)}
+.lib-bar>.switch{white-space:nowrap}
+a.btn{text-decoration:none}
+
+/* ── The restyle (the editor restyle): the soft brutal look's pressed edges and frames ── */
+/* Quiet controls: no edge, a pressed wash */
+.frow:active{background:var(--surface-pressed)}

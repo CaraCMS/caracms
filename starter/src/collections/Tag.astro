@@ -1,0 +1,49 @@
+---
+/**
+ * A tag's page (posts and tags, Decision 8): the collection's component, rendered in the page's
+ * frame by Page.astro's `<Blocks>`. Schema beside it in tags.ts. Its title (the page's h1), its
+ * description when it has one, then every post tagged with it as listing cards, in the post
+ * order. Not paged (Deferred). A tag with no posts says so, and is still a page.
+ */
+import Block from 'caracms/components/Block.astro';
+import Text from 'caracms/components/Text.astro';
+import type { FieldsDocumentProps } from 'caracms/document';
+import PostCard from '../components/PostCard.astro';
+import { gridSizes, perRowClass } from '../blocks/grid.ts';
+import { journalPosts } from './journal.ts';
+import type { TagData } from './tags.ts';
+
+type Props = FieldsDocumentProps<TagData>;
+const { document: tag, cms } = Astro.props;
+// The tag's own path: a post's reference to it is that path. A preview's request names it; a public page's
+// address is /tags/ + it (the collection's urlBase).
+const path = cms.preview ? Astro.url.searchParams.get('path') : decodeURIComponent(Astro.url.pathname.slice('/tags/'.length).replace(/\/+$/, '')) || null;
+const posts = path ? await journalPosts(cms.read, path) : [];
+---
+
+<Block cms={cms} as="article">
+	<header class="band pt-section">
+		<div class="content-container">
+			<p class="eyebrow fg-muted mb-6" data-cms-fixed>Tag</p>
+			<h1 class="text-h1">{tag.title}</h1>
+			{(tag.description || cms.preview) && <Text cms={cms} field="description" value={tag.description} class="text-lead fg-soft max-w-reading mt-6" />}
+		</div>
+	</header>
+	<section class="band py-section">
+		<div class="content-container">
+			{
+				posts.length > 0 ? (
+					<ul class={perRowClass('3')} role="list">
+						{posts.map((post) => (
+							<li>
+								<PostCard post={post} cms={cms} sizes={gridSizes(3)} />
+							</li>
+						))}
+					</ul>
+				) : (
+					<p class="fg-muted" data-cms-fixed>No posts yet.</p>
+				)
+			}
+		</div>
+	</section>
+</Block>

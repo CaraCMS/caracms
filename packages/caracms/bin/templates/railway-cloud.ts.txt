@@ -1,0 +1,73 @@
+import { defineRailway, github, preserve, project, redis, ref, service } from "railway/iac";
+
+// A caracms site's Railway project, as code (written by `caracms init` from the
+// template for a site on CaraCMS Cloud). From the site's root: `railway config
+// plan` shows what would change, `railway config apply` makes it so. Plan
+// first, every time.
+//
+// On CaraCMS Cloud the site's GitHub access, images, forms and email, and video
+// all come through CARACMS_CLOUD_KEY, so the project is the site and its Redis
+// (the editor's drafts and sessions): no buckets, no imgproxy.
+//
+// What this file doesn't do, set by hand on Railway: create the project, the
+// site's domain, Redis's volume and start command (Railway's Redis template
+// makes them), the secrets' values, and the optional secrets below until
+// they're wanted.
+
+// ---- The site's names: a new site edits this block and nothing else. ----
+const SITE = "{{SITE}}";
+// The repo Railway builds from (the editor's repo is the one linked in CaraCMS Cloud).
+const REPO = "{{GITHUB_REPO}}";
+// Railway's region for the services.
+const REGION = "europe-west4-drams3a";
+// The site is the repo's root: no watch paths, so every push to main deploys.
+const WATCH_PATHS: string[] = [];
+const BUILD_COMMAND = "{{BUILD}}";
+const START_COMMAND = "{{START}}";
+// -------------------------------------------------------------------------
+
+export default defineRailway(() => {
+  // The editor's drafts and sessions.
+  const kv = redis("Redis", { region: REGION });
+  // Sleeps when idle. redis() takes only a region, so it's set on the node.
+  kv.deploy = { ...kv.deploy, sleepApplication: true };
+
+  const site = service("site", {
+    source: github(REPO, { branch: "main", checkSuites: false }),
+    build: { buildCommand: BUILD_COMMAND, watchPatterns: WATCH_PATHS },
+    start: START_COMMAND,
+    healthcheck: "/health",
+    replicas: { [REGION]: 1 },
+    deploy: { restartPolicyMaxRetries: 3 },
+    env: {
+      // ---- Written here: literals and Railway references ----
+      NODE_ENV: "production",
+      // The public address (canonical links, the sitemap, og:url). At launch it
+      // becomes the client's domain, written out as "https://<domain>".
+      SITE_URL: "https://${{RAILWAY_PUBLIC_DOMAIN}}",
+      REDIS_URL: ref(kv, "REDIS_URL"),
+
+      // ---- Set by hand on Railway: names only, the values never live here ----
+      // On a fresh project these stay unset and the plan doesn't mention them.
+      // The site's key from app.caracms.com (a key labelled for this environment).
+      CARACMS_CLOUD_KEY: preserve(),
+      // The editor's sign-in.
+      CARACMS_SECRET: preserve(),
+      CARACMS_ALLOW: preserve(),
+      CARACMS_BACKUP_USER: preserve(),
+      CARACMS_BACKUP_PASSWORD: preserve(),
+      // Try again on a failed publish redeploys through this project token.
+      CARACMS_RAILWAY_TOKEN: preserve(),
+      // Optional. The form's spam check: the site key is baked in at build, so
+      // a change needs a redeploy.
+      TURNSTILE_SITE_KEY: preserve(),
+      TURNSTILE_SECRET_KEY: preserve(),
+      // Optional. Pre-launch password ("user:password"); unset means public.
+      CARACMS_PRELAUNCH: preserve(),
+    },
+  });
+
+  return project(SITE, {
+    resources: [site, kv],
+  });
+});

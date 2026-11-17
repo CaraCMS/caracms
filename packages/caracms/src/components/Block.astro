@@ -1,0 +1,76 @@
+---
+/**
+ * A block's root element. Use it as the outermost element of every block
+ * component; it adds the block's markers in preview renders (Decision 17) and
+ * nothing at all in the public render.
+ *
+ *   <Block cms={cms} as="section" class="hero">…</Block>
+ *
+ * Preview markers: `data-cms-block="<index>"` (the block's position in the
+ * document, the editor's index) and `data-cms-type="<type>"`. A click maps to its
+ * block with `el.closest('[data-cms-block]')`, and to its field with
+ * `el.closest('[data-cms-field]')`; a lockup's line set with `[data-cms-lines]`.
+ *
+ * M5a:
+ * - **A fields document's component** uses it as its root too (Decision 7): there it
+ *   carries `data-cms-document="<collection>"` in place of `data-cms-block` (Decision
+ *   16), and the fields' markers sit under it.
+ * - **A shared block on a page** (Decision 8): in a preview its root carries
+ *   `data-cms-block="<index>"`, `data-cms-type` and `data-cms-shared="<name>"`, so the
+ *   editor selects, moves and removes it as the page's block; its fields carry
+ *   `data-cms-source="shared/<name>"` (its context's `source`), as a card's entry does, so a
+ *   click on them opens the shared block over the page.
+ *
+ * Edit in context:
+ * - **A source context's root** (`<Block cms={cms.settings}>`, `<Block cms={cms.of(entry)}>`, a
+ *   slot's block) carries `data-cms-source="settings"`, `"shared/<path>"` or
+ *   `"<collection>/<path>"`, never `data-cms-document` or `data-cms-block` (Decision 10).
+ * - **The page's own context's root** (`<Block cms={cms}>` in the page component, Decision 10a)
+ *   carries `data-cms-page`, on each region it wraps; never `data-cms-block` or `data-cms-document`.
+ * - **`field`**: marks the element as that field without drawing its value (Decisions 10, 10b):
+ *   `<Block cms={cms.settings} field="contact.email" as="a" href={…}>…</Block>`. It carries
+ *   `data-cms-field` only (and its context's `data-cms-source` or `data-cms-page`): no
+ *   `data-cms-kind`, never contenteditable, so the editor picks the field in the sidebar and never
+ *   writes into the site's own markup. The path must name a field of the context's document.
+ *   On a public page with the config's `vivid` on, it carries `data-vivid-field` and
+ *   `data-vivid-edit` instead, as the field components do (vivid.ts). A block's root never does.
+ */
+import { site } from 'virtual:caracms/config';
+import type { HTMLTag } from 'astro/types';
+import { sourceKey, type BlockContext } from '../document.ts';
+import { passThrough } from './attributes.ts';
+import { contextMarker, descriptorAt, whose } from './descriptor.ts';
+import { vividOf } from '../vivid.ts';
+
+interface Props {
+	cms: BlockContext;
+	as?: HTMLTag;
+	class?: string;
+	/** A field this element shows without the package drawing its value (Decisions 10, 10b). */
+	field?: string;
+	[attribute: string]: unknown;
+}
+
+const { cms, as: Tag = 'section', class: className, field, ...given } = Astro.props;
+// M8 trial (item 4): a bare attribute stays bare, false is none (attributes.ts).
+const rest = passThrough(given);
+if (field !== undefined && !descriptorAt(site, cms, field)) throw new Error(`<Block field>: ${whose(cms)} has no field "${field}"`);
+const markers =
+	field !== undefined
+		? cms.preview
+			? { 'data-cms-field': field, ...contextMarker(cms) }
+			: vividOf(site, cms, Astro, import.meta.env.DEV)(field)
+		: cms.shared?.preview
+			? { 'data-cms-block': String(cms.index), 'data-cms-type': cms.type, 'data-cms-shared': cms.shared.name }
+			: !cms.preview
+				? {}
+				: cms.source
+					? { 'data-cms-source': sourceKey(cms.source) }
+					: cms.page
+						? { 'data-cms-page': '' }
+						: cms.collection
+							? { 'data-cms-document': cms.collection }
+							: { 'data-cms-block': String(cms.index), 'data-cms-type': cms.type };
+---
+
+<Tag class={className} {...rest} {...markers}><slot /></Tag>

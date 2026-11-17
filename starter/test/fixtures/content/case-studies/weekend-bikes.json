@@ -1,0 +1,22 @@
+{
+  "$schema": "../../schemas/case-studies.schema.json",
+  "title": "Weekend bike shop",
+  "heading": ["Weekend", "Bikes"],
+  "client": "Weekend bike shop",
+  "sector": "retail",
+  "featured": false,
+  "launched": "2022-06-01",
+  "summary": "A repair shop by the river, with a booking site its mechanics can update themselves.",
+  "body": [
+    { "p": "Weekend bike shop fixes bikes. The website books repairs and says, in plain words, how long each one takes." },
+    { "h2": "Booking without the phone" },
+    { "ol": ["Pick the repair", "Pick a morning", "Drop the bike off"] }
+  ],
+  "credits": [
+    {
+      "role": "Website",
+      "name": "Niamh"
+    }
+  ],
+  "related": ["oak-furniture"]
+}

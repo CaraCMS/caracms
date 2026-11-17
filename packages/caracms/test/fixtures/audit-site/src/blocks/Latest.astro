@@ -1,0 +1,20 @@
+---
+/** Reads Posts, a collection with pages of its own. */
+import Block from 'caracms/components/Block.astro';
+import Text from 'caracms/components/Text.astro';
+import type { BlockProps } from 'caracms/document';
+
+type Props = BlockProps<any>;
+const { block, cms } = Astro.props;
+const posts = await cms.read.documents('posts');
+---
+
+<Block cms={cms} class="latest">
+	<Text cms={cms} field="heading" value={block.heading} as="h2" />
+	{posts.map((p) => (
+		<div>
+			<span class="title">{p.title}</span>
+			<Block cms={cms.of(p)} as="p"><Text cms={cms.of(p)} field="answer" value={p.data.answer as string} /></Block>
+		</div>
+	))}
+</Block>

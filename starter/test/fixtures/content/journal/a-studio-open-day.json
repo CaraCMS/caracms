@@ -1,0 +1,23 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "A studio open day",
+  "date": "2026-09-12",
+  "tags": ["studio", "field"],
+  "cover": { "key": "uploads/61e1f507072b/cafe-chairs.jpg", "alt": "An empty café with wooden chairs and tables", "focal": [0.92, 0.33], "w": 4000, "h": 2662 },
+  "excerpt": "We opened the Old Mill for an afternoon. Sixty people came, and most of them stayed for tea.",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["A studio", "Open day"],
+      "intro": "Proofs on the walls, type on the tables and a lot of scones.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "Who came",
+      "body": "Clients, neighbours and two people who thought we were still a mill.",
+      "background": "light"
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "$schema": "../schemas/site-settings.schema.json",
+  "title": "Site Settings",
+  "editors": ["niamh@example.com"],
+  "brand": {
+    "name": "CaraCMS",
+    "accent": "#8a3b2a"
+  },
+  "seo": {
+    "title": "CaraCMS — an editor for Astro sites",
+    "description": "CaraCMS is a visual editor for Astro sites. Editors change a site in its own pages; what they publish is JSON in the site’s git repository.",
+    "image": { "key": "uploads/e4c45074933b/studio-window.jpg", "w": 1920, "h": 1280 }
+  },
+  "googleTag": "G-TEST000001",
+  "formRecipients": {
+    "contact": ["hello@example.com"]
+  },
+  "collectionOrder": {
+    "case-studies": ["a-pottery", "a-travel-company", "a-documentary-studio", "a-small-publisher", "a-furniture-maker", "a-coffee-roaster", "a-bakery", "a-bike-shop"],
+    "workshops": ["getting-started", "modelling-content", "moving-a-site-in"]
+  },
+  "formWords": {
+    "contact": {
+      "sent": {
+        "heading": "Thanks, it’s sent"
+      }
+    }
+  },
+  "contact": {
+    "email": "hello@example.com",
+    "phone": "+353 21 000 0000",
+    "address": "4 Example Lane\nCork\nIreland"
+  },
+  "socials": [
+    {
+      "network": "instagram",
+      "href": {
+        "href": "https://instagram.example.com/caracms"
+      }
+    },
+    {
+      "network": "linkedin",
+      "href": {
+        "href": "https://linkedin.example.com/company/caracms"
+      }
+    },
+    {
+      "network": "youtube",
+      "href": {
+        "href": "https://youtube.example.com/@caracms"
+      }
+    }
+  ]
+}

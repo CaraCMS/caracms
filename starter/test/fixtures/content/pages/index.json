@@ -1,0 +1,79 @@
+{
+  "$schema": "../../schemas/pages.schema.json",
+  "title": "Home",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Building a better mousetrap", "For You"],
+      "intro": "A small design studio in the hills.\nWe make brands, websites and print that hold together at every size. Beep boop bop bang boom bing",
+      "buttons": [],
+      "media": { "key": "uploads/e4c45074933b/studio-window.jpg", "alt": "Morning light through the studio window", "w": 1920, "h": 1280 },
+      "layout": "left",
+      "background": "light",
+      "spaceAbove": "default",
+      "spaceBelow": "default"
+    },
+    {
+      "type": "text",
+      "heading": "Work that lasts",
+      "body": "We start with the words, then the type, then everything else.\nMost of our clients stay for years, and so does the work.",
+      "background": "light"
+    },
+    {
+      "type": "cards",
+      "heading": "What we make",
+      "intro": "Three kinds of work, often for the same client.",
+      "perRow": "3",
+      "items": [
+        {
+          "media": { "key": "uploads/a40fe31a6eeb/material-samples.png", "alt": "Paint swatches, fabric, stone and timber samples on marble", "w": 1200, "h": 1800 },
+          "heading": "Identities",
+          "text": "Names, marks and the type that carries them, drawn to work at every size.",
+          "button": [
+            {
+              "label": "Branding",
+              "href": "/services/branding",
+              "style": "link"
+            }
+          ]
+        },
+        {
+          "media": { "key": "uploads/e4c45074933b/studio-window.jpg", "alt": "Morning light through the studio window", "w": 1920, "h": 1280 },
+          "heading": "Websites",
+          "text": "Quick, plain sites that the people who run them can edit themselves.",
+          "button": [
+            {
+              "label": "Websites",
+              "href": "/services/websites",
+              "style": "link"
+            }
+          ]
+        },
+        {
+          "media": null,
+          "heading": "Print",
+          "text": "Catalogues, menus and posters, run off on our risograph or sent to a printer we trust.",
+          "button": []
+        }
+      ],
+      "background": "grey",
+      "spaceAbove": "default",
+      "spaceBelow": "default"
+    },
+    {
+      "type": "cases",
+      "heading": "Selected work",
+      "show": "featured",
+      "count": 3,
+      "background": "light"
+    },
+    {
+      "type": "posts",
+      "heading": "From the journal",
+      "show": "latest",
+      "count": 3,
+      "background": "light"
+    },
+    { "shared": "start-a-project" }
+  ]
+}

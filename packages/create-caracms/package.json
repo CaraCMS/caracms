@@ -1,0 +1,39 @@
+{
+  "name": "create-caracms",
+  "version": "0.2.0",
+  "description": "Start a caracms site: npm create caracms makes a blank Astro site with caracms on it.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CaraCMS/caracms.git",
+    "directory": "packages/create-caracms"
+  },
+  "homepage": "https://github.com/CaraCMS/caracms#readme",
+  "bugs": {
+    "url": "https://github.com/CaraCMS/caracms/issues"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "bin": {
+    "create-caracms": "index.js"
+  },
+  "files": [
+    "index.js",
+    "lib.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "caracms",
+    "astro",
+    "cms"
+  ],
+  "scripts": {
+    "test": "node --test test/"
+  },
+  "dependencies": {
+    "@clack/prompts": "^1.9.0"
+  }
+}

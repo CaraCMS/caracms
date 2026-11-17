@@ -1,0 +1,29 @@
+/* Review gaps (Decisions 9 and 9a): Site Settings › Forms (pane/levels/FormWords.tsx; the mockup's #forms-settings
+   and #forms-options). A group per form: its fields (a list's collapsed rows, one open at a time), its button and
+   messages, then who gets its emails. A blank box shows the word it uses in grey; a changed one says so and can go back. */
+details.fgroup.fm{margin-top:0}
+details.fgroup.fm+details.fgroup.fm{border-top:0}
+details.fgroup.fm>summary{color:var(--text);font-size:var(--text-base)}
+details.fgroup.fm>summary .s{font-size:var(--text-sm)}
+.fm-part{margin:var(--space-2) 0 var(--space-5)}
+.fm-part:last-child{margin-bottom:var(--space-3)}
+.fm-part-h{display:flex;align-items:baseline;gap:var(--space-2);margin:0 0 var(--space-2)}
+.fm-part-h b{font-size:var(--text-sm);font-weight:var(--weight-semibold)}
+.fm-part-h .field-meta{margin-left:auto}
+.fm-part .item-b{padding:var(--space-2) var(--space-2-5) var(--space-1)}
+.chip.set{height:18px;background:var(--select-wash);color:var(--select-strong);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--select) 35%,transparent);font-size:var(--text-2xs)}
+.item-sum .chip{flex:none}
+.fm-sec .field.w{margin-bottom:var(--space-3)}
+.fm-sec .field-frame:last-child .field.w{margin-bottom:var(--space-1)}
+.fm-sec .w .field-head{margin-bottom:var(--space-1)}
+.fm-sec .w .field-head label,.fm-sec .w .field-head .field-label{font-size:var(--text-xs);color:var(--text-muted)}
+.fm-sec .w .field-meta .linkbtn{font-size:var(--text-xs)}
+.fm-sec .w .input{min-height:30px;padding:5px 9px;font-size:var(--text-base)}
+.fm-sec .w textarea.input{min-height:54px}
+.fm-sec .w .input::placeholder{color:var(--text-subtle);opacity:.85}
+.fm-sec .w .w-help{margin:var(--space-1) 0 0;font-size:var(--text-xs);color:var(--text-subtle)}
+.fm-sec .w.is-set .field-head label{color:var(--text)}
+.fm-sec .w-opts{display:flex;flex-direction:column;gap:var(--space-1)}
+.fm-sec .w-opt .field-head label{font-family:var(--font-mono)}
+.fm-sec .field-frame.is-picked .w .field-head label{color:var(--select-strong);font-weight:var(--weight-semibold)}
+.fm-sec .rcpt{margin-bottom:0}

@@ -1,0 +1,17 @@
+---
+/** A note drawn with Starlight's <Aside>, whose default title is `Astro.locals.t('aside.note')`: its body marked, its credit not. */
+import { Aside } from '@astrojs/starlight/components';
+import Block from 'caracms/components/Block.astro';
+import Text from 'caracms/components/Text.astro';
+import type { BlockProps } from 'caracms/document';
+
+type Props = BlockProps<any>;
+const { block, cms } = Astro.props;
+---
+
+<Block cms={cms} as="div">
+	<Aside type="note">
+		<Text cms={cms} field="body" value={block.body} />
+		<small>{block.credit}</small>
+	</Aside>
+</Block>

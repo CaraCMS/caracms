@@ -1,0 +1,23 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "An identity for Tiny publisher",
+  "date": "2026-04-22",
+  "tags": ["identity", "print"],
+  "cover": { "key": "uploads/a40fe31a6eeb/material-samples.png", "alt": "Paint swatches, fabric, stone and timber samples on marble", "w": 1200, "h": 1800 },
+  "excerpt": "A small publisher, a new colophon and the rules for using it on a spine two centimetres wide.",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["An identity for", "Tiny publisher"],
+      "intro": "A mark has to work at the size of a thumbnail on a spine.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "Spine first",
+      "body": "We drew it smallest first, then scaled it up for the website.",
+      "background": "light"
+    }
+  ]
+}

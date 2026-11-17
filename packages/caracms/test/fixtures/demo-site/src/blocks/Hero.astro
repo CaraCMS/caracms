@@ -1,0 +1,121 @@
+---
+/**
+ * The hero: a lockup, a several-line intro, up to two buttons (M5a), a layout and a background.
+ * M5b: an image or a loop fills the band behind the text (the background still sets
+ * the text's treatment), with a scrim so the text stays readable. The band's height
+ * comes from its text, so the image is `rs:fit` at the viewport's width and
+ * `object-fit: cover` trims it (anchored on its focal point).
+ * Schema beside it in hero.ts. Markers, the h1 and the fit come from the package's
+ * components (Block, Lockup, Text).
+ */
+import Block from 'caracms/components/Block.astro';
+import Buttons from 'caracms/components/Buttons.astro';
+import Lockup from 'caracms/components/Lockup.astro';
+import Media from 'caracms/components/Media.astro';
+import Text from 'caracms/components/Text.astro';
+import type { BlockProps } from 'caracms/document';
+import type { HeroData } from './hero.ts';
+
+type Props = BlockProps<HeroData>;
+const { block, cms } = Astro.props;
+---
+
+<Block cms={cms} class={`band bg-${block.background} hero hero--${block.layout}${block.media ? ' hero--media' : ''}`}>
+	{block.media && <Media cms={cms} field="media" value={block.media} sizes="100vw" class="hero-media" />}
+	<div class="band-inner">
+		<Lockup cms={cms} field="heading" value={block.heading} />
+		<Text cms={cms} field="intro" value={block.intro} class="hero-intro" />
+		<Buttons cms={cms} field="buttons" value={block.buttons} class="hero-buttons" buttonClass="hero-button" />
+	</div>
+</Block>
+
+<style>
+	.hero {
+		padding-block: 4.5rem 4rem;
+	}
+
+	/* M5b: the media fills the band behind the text, under a scrim. */
+	.hero--media {
+		position: relative;
+		isolation: isolate;
+		overflow: hidden;
+		color: #fff;
+	}
+
+	.hero--media :global(.hero-media) {
+		position: absolute;
+		inset: 0;
+		z-index: -2;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.hero--media::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		background: linear-gradient(180deg, rgb(10 12 10 / 0.12), rgb(10 12 10 / 0.58));
+	}
+
+	.hero--centre {
+		text-align: center;
+	}
+
+	/* A centred lockup: each line is its own fit-content block, so centre it. */
+	.hero--centre :global(.cms-lockup-line) {
+		margin-inline: auto;
+	}
+
+	.hero-intro {
+		margin: 1.75rem 0 0;
+		max-width: 36rem;
+		font-size: 1.125rem;
+		line-height: 1.55;
+		text-wrap: pretty;
+	}
+
+	.hero--centre .hero-intro {
+		margin-inline: auto;
+	}
+
+	.hero-buttons {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		margin-top: 2rem;
+	}
+
+	.hero--centre .hero-buttons {
+		justify-content: center;
+	}
+
+	.hero-buttons :global(.hero-button) {
+		display: inline-block;
+		padding: 0.875rem 1.5rem;
+		border: 2px solid var(--button-bg);
+		border-radius: 999px;
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	.hero-buttons :global(.hero-button--primary) {
+		background: var(--button-bg);
+		color: var(--button-ink);
+	}
+
+	.hero-buttons :global(.hero-button--secondary) {
+		color: inherit;
+	}
+
+	@media (width >= 640px) {
+		.hero {
+			padding-block: 7rem 6rem;
+		}
+
+		.hero-intro {
+			font-size: 1.25rem;
+		}
+	}
+</style>

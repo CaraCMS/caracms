@@ -1,0 +1,78 @@
+---
+/**
+ * The hero: a lockup at display size, a several-line intro, up to two buttons (M5a),
+ * left or centred, on its Background with its Spacing (M7 Decision 11).
+ *
+ * M5b: an image or a loop fills the band behind the text, under a flat scrim, the text
+ * at the bottom in the media scheme (white), whatever Background says. That hero sits
+ * flush under the header whatever Space above says (a layout rule, in code), with its
+ * own room above the text; Space below is the room under it, inside the media. With no
+ * media it's a plain hero (Acceptance 27), never an empty dark band.
+ *
+ * The image is `rs:fit` at the viewport's width and `object-fit: cover` trims it
+ * (anchored on its focal point). Schema beside it in hero.ts. Markers, the h1 and the
+ * fit come from the package's components (Block, Lockup, Text).
+ */
+import Block from 'caracms/components/Block.astro';
+import Buttons from 'caracms/components/Buttons.astro';
+import Lockup from 'caracms/components/Lockup.astro';
+import Media from 'caracms/components/Media.astro';
+import Text from 'caracms/components/Text.astro';
+import type { BlockProps } from 'caracms/document';
+import { bandClass } from './background.ts';
+import type { HeroData } from './hero.ts';
+
+type Props = BlockProps<HeroData>;
+const { block, cms } = Astro.props;
+const behind = Boolean(block.media);
+const centre = block.layout === 'centre';
+---
+
+<Block cms={cms} class:list={[bandClass(block, { flush: behind, media: behind }), 'hero', { 'hero--behind': behind, 'text-center': centre }]}>
+	{
+		behind && (
+			<>
+				<Media cms={cms} field="media" value={block.media} sizes="100vw" class="hero-media" />
+				<div class="hero-scrim" aria-hidden="true" />
+			</>
+		)
+	}
+	<div class:list={['content-container grid gap-5', { 'pt-section-extra': behind }]}>
+		<Lockup cms={cms} field="heading" value={block.heading} />
+		<Text cms={cms} field="intro" value={block.intro} class:list={['text-lead fg-soft max-w-reading', { 'mx-auto': centre }]} />
+		<Buttons cms={cms} field="buttons" value={block.buttons} class:list={['btn-row mt-3', { 'justify-center': centre }]} buttonClass="btn" />
+	</div>
+</Block>
+
+<style>
+	/* The media fills the band behind the text, under the scrim. */
+	.hero--behind {
+		position: relative;
+		isolation: isolate;
+		display: grid;
+		align-items: end;
+		min-height: clamp(30rem, 85svh, 56rem);
+	}
+
+	.hero--behind :global(.hero-media) {
+		position: absolute;
+		inset: 0;
+		z-index: -2;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		background: var(--color-grey-800);
+	}
+
+	.hero-scrim {
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		background: var(--color-scrim);
+	}
+
+	/* A centred lockup: each line is its own fit-content block, so centre it. */
+	.text-center :global(.cms-lockup-line) {
+		margin-inline: auto;
+	}
+</style>

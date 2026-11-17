@@ -1,0 +1,26 @@
+{
+  "$schema": "../../schemas/case-studies.schema.json",
+  "title": "Tiny publisher",
+  "heading": ["Tiny", "Publisher"],
+  "client": "Tiny publisher",
+  "sector": "culture",
+  "featured": true,
+  "launched": "2025-03-14",
+  "summary": "A small publisher of essays, and a series design that leaves room for the words.",
+  "body": [
+    { "p": "Tiny publisher publishes four short books a year, each one an essay that started as a talk." },
+    { "h2": "One grid, every cover" },
+    { "p": "Every cover is set on the same grid, so the series reads as one shelf. The *titles* change; the frame never does." }
+  ],
+  "credits": [
+    {
+      "role": "Series design",
+      "name": "Niamh"
+    },
+    {
+      "role": "Typesetting",
+      "name": "Aoife"
+    }
+  ],
+  "related": ["high-street-coffee"]
+}

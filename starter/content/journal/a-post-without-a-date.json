@@ -1,0 +1,22 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "A post without a date",
+  "tags": ["news", "type"],
+  "cover": { "key": "uploads/e4c45074933b/studio-window.jpg", "alt": "Morning light through a window", "w": 1920, "h": 1280 },
+  "excerpt": "This post has no date, so it sorts after the dated ones.",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["A post", "Without a date"],
+      "intro": "Its card shows no date, and it lists last.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "Still published",
+      "body": "A post goes live when it’s published, whatever its date, or without one.",
+      "background": "light"
+    }
+  ]
+}

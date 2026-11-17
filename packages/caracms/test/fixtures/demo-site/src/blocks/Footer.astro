@@ -1,0 +1,86 @@
+---
+/**
+ * The footer (M5a Decision 17): an address, an email and a list of links. It fills the
+ * page's footer slot (edit in context, Decision 16): the page component draws it with
+ * `<Slot name="footer">`, from the shared block content/shared/footer.json, the default, so a
+ * change to that file changes every page. Schema beside it in footer.ts.
+ *
+ * The email is marked as its field without the package drawing it (Decision 10), a link the
+ * site builds itself.
+ */
+import Block from 'caracms/components/Block.astro';
+import Link from 'caracms/components/Link.astro';
+import Text from 'caracms/components/Text.astro';
+import type { BlockProps } from 'caracms/document';
+import type { FooterData } from './footer.ts';
+
+type Props = BlockProps<FooterData>;
+const { block, cms } = Astro.props;
+---
+
+<Block cms={cms} as="footer" class="band bg-dark footer-block">
+	<div class="band-inner footer-grid">
+		<p class="footer-name">CaraCMS</p>
+		<Text cms={cms} field="address" value={block.address} class="footer-address" />
+		{
+			block.email && (
+				<Block cms={cms} field="email" as="a" class="footer-email" href={`mailto:${block.email}`}>
+					{block.email}
+				</Block>
+			)
+		}
+		<ul class="footer-links">
+			{
+				block.links.map((l, i) => (
+					<li>
+						<Link cms={cms} field={`links.${i}`} value={l} />
+					</li>
+				))
+			}
+		</ul>
+	</div>
+</Block>
+
+<style>
+	.footer-block {
+		padding-block: 3rem;
+		font-size: 0.9375rem;
+	}
+
+	.footer-grid {
+		display: grid;
+		gap: 1rem 3rem;
+	}
+
+	.footer-name {
+		margin: 0;
+		font-family: var(--font-display);
+		font-variation-settings: 'wght' 700, 'wdth' 100, 'opsz' 96;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+	}
+
+	.footer-address {
+		margin: 0;
+		line-height: 1.5;
+	}
+
+	.footer-email,
+	.footer-links :global(a) {
+		color: inherit;
+	}
+
+	.footer-links {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		line-height: 1.8;
+	}
+
+	@media (width >= 640px) {
+		.footer-grid {
+			grid-template-columns: repeat(4, auto);
+			justify-content: space-between;
+		}
+	}
+</style>

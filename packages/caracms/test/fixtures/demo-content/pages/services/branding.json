@@ -1,0 +1,26 @@
+{
+  "$schema": "../../../schemas/pages.schema.json",
+  "title": "Branding",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Branding"],
+      "intro": "Names, marks, type and the rules that hold them together.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "What you get",
+      "body": "A logo, a type system, a colour palette and a short guide your team will actually read.",
+      "background": "light"
+    },
+    {
+      "type": "cta",
+      "heading": ["Need a name?", "We can help"],
+      "text": "Naming is where most of our branding work starts.",
+      "button": "Talk to us",
+      "background": "dark"
+    }
+  ]
+}

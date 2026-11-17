@@ -1,0 +1,63 @@
+---
+/**
+ * Text and media (M5b Decision 10): rich text beside an image or a clip at 3:2. Two
+ * equal columns from 768px, the text centred on the media (the side select puts the
+ * media left or right); one column below, the media first. An empty slot leaves the
+ * text alone, at the left, with no empty frame (Acceptance 27). Rich text's H2 draws at
+ * h2 size here, H3 at h4.
+ *
+ * `sizes`, from this CSS: the content column is 100vw less the gutters (20px a side
+ * below 768, 32 from 768, 48 from 1024), up to 1200px (from 1296 wide); from 768 the
+ * media is one of two columns with a gap of twice the grid gap (48, then 64).
+ */
+import Block from 'caracms/components/Block.astro';
+import Media from 'caracms/components/Media.astro';
+import RichText from 'caracms/components/RichText.astro';
+import type { BlockProps } from 'caracms/document';
+import { bandClass } from './background.ts';
+import type { TmData } from './tm.ts';
+
+type Props = BlockProps<TmData>;
+const { block, cms } = Astro.props;
+const SIZES = '(min-width: 1296px) 568px, (min-width: 1024px) calc((100vw - 160px) / 2), (min-width: 768px) calc((100vw - 112px) / 2), calc(100vw - 40px)';
+---
+
+<Block cms={cms} class={bandClass(block)}>
+	<div class:list={['content-container tm', { 'tm--media': block.media, 'tm--right': block.side === 'right' }]}>
+		{block.media && <Media cms={cms} field="media" value={block.media} sizes={SIZES} ratio={3 / 2} class="tm-media frame frame-landscape" />}
+		<RichText cms={cms} field="body" value={block.body} class="tm-body prose" />
+	</div>
+</Block>
+
+<style>
+	.tm {
+		display: grid;
+		gap: calc(var(--spacing) * 8);
+	}
+
+	.tm :global(.tm-media) {
+		order: -1;
+	}
+
+	.tm-body :global(h2) {
+		font-size: var(--text-h2);
+		line-height: var(--text-h2--line-height);
+		letter-spacing: var(--text-h2--letter-spacing);
+	}
+
+	.tm-body > :global(p) {
+		color: var(--fg-soft);
+	}
+
+	@media (min-width: 48rem) {
+		.tm--media {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: calc(var(--spacing-grid) * 2);
+			align-items: center;
+		}
+
+		.tm--right :global(.tm-media) {
+			order: 2;
+		}
+	}
+</style>

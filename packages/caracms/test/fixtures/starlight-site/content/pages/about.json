@@ -1,0 +1,4 @@
+{
+  "title": "About",
+  "blocks": [{ "type": "text", "body": [{ "h2": "Before you start" }, { "p": "Sign in with your work account." }] }]
+}

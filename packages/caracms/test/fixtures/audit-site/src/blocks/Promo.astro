@@ -1,0 +1,14 @@
+---
+/** A body block kept in Shared: its line is marked, its note isn't. */
+import Block from 'caracms/components/Block.astro';
+import Text from 'caracms/components/Text.astro';
+import type { BlockProps } from 'caracms/document';
+
+type Props = BlockProps<any>;
+const { block, cms } = Astro.props;
+---
+
+<Block cms={cms} class="promo">
+	<Text cms={cms} field="line" value={block.line} />
+	<p>{block.note}</p>
+</Block>

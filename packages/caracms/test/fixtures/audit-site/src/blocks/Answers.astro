@@ -1,0 +1,22 @@
+---
+/** Reads FAQ (the only block that does), each entry drawn as its own source. */
+import Block from 'caracms/components/Block.astro';
+import Text from 'caracms/components/Text.astro';
+import type { BlockProps } from 'caracms/document';
+
+type Props = BlockProps<any>;
+const { block, cms } = Astro.props;
+const faq = await cms.read.documents('faq');
+---
+
+<Block cms={cms} class="answers">
+	<Text cms={cms} field="heading" value={block.heading} as="h2" />
+	{
+		faq.map((entry) => (
+			<Block cms={cms.of(entry)} as="div">
+				<h3>{entry.title}</h3>
+				<Text cms={cms.of(entry)} field="answer" value={entry.data.answer as string} />
+			</Block>
+		))
+	}
+</Block>

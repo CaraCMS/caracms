@@ -1,0 +1,26 @@
+---
+/**
+ * A workshop (form rows and sourced selects, the Exit): the collection's component. Workshops have
+ * no pages of their own; this is what the editor's preview shows of one: its title, whether it's
+ * open for booking, and its sessions.
+ */
+import Block from 'caracms/components/Block.astro';
+import type { FieldsDocumentProps } from 'caracms/document';
+import type { WorkshopData } from './workshops.ts';
+
+type Props = FieldsDocumentProps<WorkshopData>;
+const { document: workshop, cms } = Astro.props;
+const sessions = (workshop.sessions ?? []).map((s) => (s === 'morning' ? 'Morning' : s === 'afternoon' ? 'Afternoon' : s));
+---
+
+<Block cms={cms} as="article">
+	<section class="band py-section">
+		<div class="content-container">
+			<p class="eyebrow fg-muted mb-6" data-cms-fixed>Workshop</p>
+			<h1 class="text-h1">{workshop.title}</h1>
+			<p class="text-lead fg-soft max-w-reading mt-6" data-cms-fixed>
+				{workshop.open ? 'Open for booking' : 'Not open for booking'} · {sessions.length ? sessions.join(' and ') : 'Morning or afternoon'}
+			</p>
+		</div>
+	</section>
+</Block>

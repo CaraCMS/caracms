@@ -1,0 +1,23 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "A new intern",
+  "date": "2026-07-14",
+  "tags": ["studio"],
+  "cover": { "key": "uploads/e4c45074933b/studio-window.jpg", "alt": "Morning light through the studio window", "w": 1920, "h": 1280 },
+  "excerpt": "Aoife joins us for the summer, straight from art college and already better at InDesign than we are.",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["A new", "Intern"],
+      "intro": "Aoife is with us until September.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "First week",
+      "body": "She redrew our invoice template on day two. Nobody had asked. It is much better.",
+      "background": "light"
+    }
+  ]
+}

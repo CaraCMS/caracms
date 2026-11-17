@@ -1,0 +1,34 @@
+{
+  "$schema": "../../schemas/pages.schema.json",
+  "title": "Examples",
+  "holds": "case-studies",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Examples", "Of sites"],
+      "intro": "Sketches of the kinds of site CaraCMS suits, and how each might be set up.",
+      "layout": "left",
+      "background": "light"
+    },
+    {
+      "type": "text",
+      "heading": "Opening hours",
+      "body": "Kept in Site Settings, so a shop changes them without a developer.",
+      "background": "light"
+    },
+    {
+      "type": "text",
+      "heading": "A programme",
+      "body": "A festival’s acts as a collection, one entry each, listed on the page that holds them.",
+      "background": "dark"
+    },
+    {
+      "type": "cases",
+      "heading": "All examples",
+      "show": "in-order",
+      "count": 6,
+      "background": "light"
+    },
+    { "shared": "start-a-project" }
+  ]
+}

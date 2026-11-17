@@ -1,0 +1,742 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Site Settings",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "editors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The email addresses of the people who can sign in to the editor."
+    },
+    "brand": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "accent": {
+          "type": "string"
+        },
+        "logo": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "w": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "h": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "focal": {
+                  "type": "array",
+                  "items": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  "minItems": 2,
+                  "maxItems": 2
+                }
+              },
+              "required": [
+                "key"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "icon": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "w": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "h": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "focal": {
+                  "type": "array",
+                  "items": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  "minItems": 2,
+                  "maxItems": 2
+                }
+              },
+              "required": [
+                "key"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "seo": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "image": {
+          "type": "object",
+          "properties": {
+            "key": {
+              "type": "string",
+              "minLength": 1
+            },
+            "w": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "h": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "focal": {
+              "type": "array",
+              "items": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "minItems": 2,
+              "maxItems": 2
+            }
+          },
+          "required": [
+            "key"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "googleTag": {
+      "type": "string"
+    },
+    "formRecipients": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "redirects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "string"
+          },
+          "to": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "from",
+          "to"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "pageOrder": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "description": "The Pages tree's order in the editor: a parent's path (\"\" for the top level) → its children's slugs. Written by Arrange pages."
+    },
+    "pageFolders": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "pages": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "id",
+            "name",
+            "pages"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "description": "The Pages tree's folders in the editor (they never change an address): a level's path (\"\" for the top level) → its folders, each { id, name, pages }. A folder's place is \"(<id>)\" in that level's pageOrder list. Written by Arrange pages."
+    },
+    "collectionOrder": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "description": "The hand order of each collection with order: 'manual': its name → its documents' paths, first to last. Written by dragging in the editor's list."
+    },
+    "formWords": {
+      "title": "Forms",
+      "type": "object",
+      "properties": {
+        "contact": {
+          "title": "Contact",
+          "type": "object",
+          "properties": {
+            "fields": {
+              "title": "Fields",
+              "type": "object",
+              "properties": {
+                "name": {
+                  "title": "Your name",
+                  "type": "object",
+                  "properties": {
+                    "label": {
+                      "title": "Label",
+                      "description": "Also names this answer in emails and Submissions.",
+                      "type": "string"
+                    },
+                    "placeholder": {
+                      "title": "Placeholder",
+                      "description": "Grey words in the empty box. Blank: none.",
+                      "type": "string"
+                    },
+                    "help": {
+                      "title": "Help",
+                      "description": "Under the box. Blank: none.",
+                      "type": "string"
+                    },
+                    "error": {
+                      "title": "Error message",
+                      "description": "Shown when it’s left empty or filled in wrong.",
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "email": {
+                  "title": "Email",
+                  "type": "object",
+                  "properties": {
+                    "label": {
+                      "title": "Label",
+                      "description": "Also names this answer in emails and Submissions.",
+                      "type": "string"
+                    },
+                    "placeholder": {
+                      "title": "Placeholder",
+                      "description": "Grey words in the empty box. Blank: none.",
+                      "type": "string"
+                    },
+                    "help": {
+                      "title": "Help",
+                      "description": "Under the box. Blank: none.",
+                      "type": "string"
+                    },
+                    "error": {
+                      "title": "Error message",
+                      "description": "Shown when it’s left empty or filled in wrong.",
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "phone": {
+                  "title": "Phone",
+                  "type": "object",
+                  "properties": {
+                    "label": {
+                      "title": "Label",
+                      "description": "Also names this answer in emails and Submissions.",
+                      "type": "string"
+                    },
+                    "placeholder": {
+                      "title": "Placeholder",
+                      "description": "Grey words in the empty box. Blank: none.",
+                      "type": "string"
+                    },
+                    "help": {
+                      "title": "Help",
+                      "description": "Under the box. Blank: none.",
+                      "type": "string"
+                    },
+                    "error": {
+                      "title": "Error message",
+                      "description": "Shown when it’s filled in wrong.",
+                      "type": "string"
+                    },
+                    "optional": {
+                      "title": "After the label",
+                      "description": "Says the field can be left empty.",
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "kind": {
+                  "title": "What’s it for?",
+                  "type": "object",
+                  "properties": {
+                    "label": {
+                      "title": "Label",
+                      "description": "Also names this answer in emails and Submissions.",
+                      "type": "string"
+                    },
+                    "placeholder": {
+                      "title": "Before a choice is made",
+                      "description": "The first line of this choice. Blank: the form’s “Choose…”.",
+                      "type": "string"
+                    },
+                    "help": {
+                      "title": "Help",
+                      "description": "Under the box. Blank: none.",
+                      "type": "string"
+                    },
+                    "error": {
+                      "title": "Error message",
+                      "description": "Shown when it’s left empty or filled in wrong.",
+                      "type": "string"
+                    },
+                    "options": {
+                      "title": "Options",
+                      "type": "object",
+                      "properties": {
+                        "identity": {
+                          "title": "identity",
+                          "type": "string"
+                        },
+                        "website": {
+                          "title": "website",
+                          "type": "string"
+                        },
+                        "print": {
+                          "title": "print",
+                          "type": "string"
+                        },
+                        "other": {
+                          "title": "other",
+                          "type": "string"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "message": {
+                  "title": "Tell us about it",
+                  "type": "object",
+                  "properties": {
+                    "label": {
+                      "title": "Label",
+                      "description": "Also names this answer in emails and Submissions.",
+                      "type": "string"
+                    },
+                    "placeholder": {
+                      "title": "Placeholder",
+                      "description": "Grey words in the empty box. Blank: none.",
+                      "type": "string"
+                    },
+                    "help": {
+                      "title": "Help",
+                      "description": "Under the box. Blank: none.",
+                      "type": "string"
+                    },
+                    "error": {
+                      "title": "Error message",
+                      "description": "Shown when it’s left empty or filled in wrong.",
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "files": {
+                  "title": "Anything to show us?",
+                  "type": "object",
+                  "properties": {
+                    "label": {
+                      "title": "Label",
+                      "description": "Also names this answer in emails and Submissions.",
+                      "type": "string"
+                    },
+                    "help": {
+                      "title": "Help",
+                      "description": "Under the box. Blank: none.",
+                      "type": "string"
+                    },
+                    "error": {
+                      "title": "Error message",
+                      "description": "Shown when it’s filled in wrong.",
+                      "type": "string"
+                    },
+                    "optional": {
+                      "title": "After the label",
+                      "description": "Says the field can be left empty.",
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "additionalProperties": false
+            },
+            "submit": {
+              "title": "Button",
+              "type": "string"
+            },
+            "sending": {
+              "title": "While sending",
+              "description": "On the button while the message goes.",
+              "type": "string"
+            },
+            "sent": {
+              "title": "Sent",
+              "type": "object",
+              "properties": {
+                "heading": {
+                  "title": "Sent: heading",
+                  "description": "Shown in place of the form once it’s sent. Blank: the line alone, under the button.",
+                  "type": "string"
+                },
+                "line": {
+                  "title": "Sent: line",
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            },
+            "failed": {
+              "title": "Couldn’t send",
+              "description": "Under the button when the message doesn’t go. Nothing typed is lost.",
+              "type": "string"
+            },
+            "choose": {
+              "title": "Before a choice is made",
+              "description": "The first line of every choice.",
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "workshop": {
+          "title": "Riso workshop",
+          "type": "object",
+          "properties": {
+            "fields": {
+              "title": "Fields",
+              "type": "object",
+              "properties": {
+                "given": {
+                  "title": "First name",
+                  "type": "object",
+                  "properties": {
+                    "label": {
+                      "title": "Label",
+                      "description": "Also names this answer in emails and Submissions.",
+                      "type": "string"
+                    },
+                    "placeholder": {
+                      "title": "Placeholder",
+                      "description": "Grey words in the empty box. Blank: none.",
+                      "type": "string"
+                    },
+                    "help": {
+                      "title": "Help",
+                      "description": "Under the box. Blank: none.",
+                      "type": "string"
+                    },
+                    "error": {
+                      "title": "Error message",
+                      "description": "Shown when it’s left empty or filled in wrong.",
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "family": {
+                  "title": "Last name",
+                  "type": "object",
+                  "properties": {
+                    "label": {
+                      "title": "Label",
+                      "description": "Also names this answer in emails and Submissions.",
+                      "type": "string"
+                    },
+                    "placeholder": {
+                      "title": "Placeholder",
+                      "description": "Grey words in the empty box. Blank: none.",
+                      "type": "string"
+                    },
+                    "help": {
+                      "title": "Help",
+                      "description": "Under the box. Blank: none.",
+                      "type": "string"
+                    },
+                    "error": {
+                      "title": "Error message",
+                      "description": "Shown when it’s left empty or filled in wrong.",
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "email": {
+                  "title": "Email",
+                  "type": "object",
+                  "properties": {
+                    "label": {
+                      "title": "Label",
+                      "description": "Also names this answer in emails and Submissions.",
+                      "type": "string"
+                    },
+                    "placeholder": {
+                      "title": "Placeholder",
+                      "description": "Grey words in the empty box. Blank: none.",
+                      "type": "string"
+                    },
+                    "help": {
+                      "title": "Help",
+                      "description": "Under the box. Blank: none.",
+                      "type": "string"
+                    },
+                    "error": {
+                      "title": "Error message",
+                      "description": "Shown when it’s left empty or filled in wrong.",
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "date": {
+                  "title": "Which Saturday?",
+                  "type": "object",
+                  "properties": {
+                    "label": {
+                      "title": "Label",
+                      "description": "Also names this answer in emails and Submissions.",
+                      "type": "string"
+                    },
+                    "placeholder": {
+                      "title": "Before a choice is made",
+                      "description": "The first line of this choice. Blank: the form’s “Choose…”.",
+                      "type": "string"
+                    },
+                    "help": {
+                      "title": "Help",
+                      "description": "Under the box. Blank: none.",
+                      "type": "string"
+                    },
+                    "error": {
+                      "title": "Error message",
+                      "description": "Shown when it’s left empty or filled in wrong.",
+                      "type": "string"
+                    },
+                    "options": {
+                      "title": "Options",
+                      "type": "object",
+                      "properties": {
+                        "2026-11-08": {
+                          "title": "2026-11-08",
+                          "type": "string"
+                        },
+                        "2026-11-22": {
+                          "title": "2026-11-22",
+                          "type": "string"
+                        },
+                        "2026-12-06": {
+                          "title": "2026-12-06",
+                          "type": "string"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "places": {
+                  "title": "Places",
+                  "type": "object",
+                  "properties": {
+                    "label": {
+                      "title": "Label",
+                      "description": "Also names this answer in emails and Submissions.",
+                      "type": "string"
+                    },
+                    "placeholder": {
+                      "title": "Before a choice is made",
+                      "description": "The first line of this choice. Blank: the form’s “Choose…”.",
+                      "type": "string"
+                    },
+                    "help": {
+                      "title": "Help",
+                      "description": "Under the box. Blank: none.",
+                      "type": "string"
+                    },
+                    "error": {
+                      "title": "Error message",
+                      "description": "Shown when it’s left empty or filled in wrong.",
+                      "type": "string"
+                    },
+                    "options": {
+                      "title": "Options",
+                      "type": "object",
+                      "properties": {
+                        "1": {
+                          "title": "1",
+                          "type": "string"
+                        },
+                        "2": {
+                          "title": "2",
+                          "type": "string"
+                        },
+                        "3": {
+                          "title": "3",
+                          "type": "string"
+                        },
+                        "4": {
+                          "title": "4",
+                          "type": "string"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "notes": {
+                  "title": "Anything we should know?",
+                  "type": "object",
+                  "properties": {
+                    "label": {
+                      "title": "Label",
+                      "description": "Also names this answer in emails and Submissions.",
+                      "type": "string"
+                    },
+                    "placeholder": {
+                      "title": "Placeholder",
+                      "description": "Grey words in the empty box. Blank: none.",
+                      "type": "string"
+                    },
+                    "help": {
+                      "title": "Help",
+                      "description": "Under the box. Blank: none.",
+                      "type": "string"
+                    },
+                    "error": {
+                      "title": "Error message",
+                      "description": "Shown when it’s filled in wrong.",
+                      "type": "string"
+                    },
+                    "optional": {
+                      "title": "After the label",
+                      "description": "Says the field can be left empty.",
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "additionalProperties": false
+            },
+            "submit": {
+              "title": "Button",
+              "type": "string"
+            },
+            "sending": {
+              "title": "While sending",
+              "description": "On the button while the message goes.",
+              "type": "string"
+            },
+            "sent": {
+              "title": "Sent",
+              "type": "object",
+              "properties": {
+                "heading": {
+                  "title": "Sent: heading",
+                  "description": "Shown in place of the form once it’s sent. Blank: the line alone, under the button.",
+                  "type": "string"
+                },
+                "line": {
+                  "title": "Sent: line",
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            },
+            "failed": {
+              "title": "Couldn’t send",
+              "description": "Under the button when the message doesn’t go. Nothing typed is lost.",
+              "type": "string"
+            },
+            "choose": {
+              "title": "Before a choice is made",
+              "description": "The first line of every choice.",
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "title"
+  ],
+  "additionalProperties": false
+}

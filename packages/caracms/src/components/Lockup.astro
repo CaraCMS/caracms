@@ -1,0 +1,120 @@
+---
+/**
+ * A lockup field: display text set as lines that never wrap; the text gets smaller
+ * instead (Spec → Text → Lockups; lifted from M1's Lockup.astro).
+ *
+ *   <Lockup cms={cms} field="heading" value={block.heading} />
+ *
+ * - One heading element. It's the page's `h1` when this field holds the page's
+ *   first heading (Decision 16, from `cms.h1Field`), otherwise `h2`; `as` overrides.
+ * - Main lines, and phone lines when the value has them (Decisions 10–11): both
+ *   sets inside the one heading, each its own size container with its own
+ *   `--longest-line`, each measured on its own; a media query at the site's
+ *   phone-lines width shows one and sets the other `display: none` (lockup-css.ts).
+ * - Measured here, during render, from the font file (measure.ts), so the
+ *   prerendered page and the preview render share one code path.
+ * - The fit: `min(var(--cms-size), calc(100cqi / var(--longest-line)))`, no floor.
+ *
+ * Preview renders only (Decision 17), for the editor (Phases 3 and E7's warning):
+ *   on the heading   data-cms-field="<field>" data-cms-kind="lockup"
+ *                    data-cms-style, data-cms-size (design px), data-cms-min-size (px)
+ *   on each set      data-cms-lines="main" | "phone", data-cms-longest (em),
+ *                    data-cms-uncovered='["✨"]' (Decision 15; only when some are)
+ * The size a set computed is `getComputedStyle(set.querySelector('.cms-lockup-fit')).fontSize`
+ * (in px); compare it with `data-cms-min-size`. In the 375 preview the visible set
+ * is the phone set when there is one, the main set otherwise.
+ * A lockup is edited in the sidebar only (Decision 12), so never contenteditable.
+ * `field` may be a dotted path into a list (M5a Decision 16): the marker carries it.
+ */
+import 'virtual:caracms/lockup.css';
+import { site } from 'virtual:caracms/config';
+import { own, type BlockContext } from '../document.ts';
+import { contextMarker, requireField } from './descriptor.ts';
+import type { LockupValue } from '../fields.ts';
+import { measureLockup } from '../measure.ts';
+import { variationSettings } from '../text-styles.ts';
+import { passThrough } from './attributes.ts';
+import { vividOf } from '../vivid.ts';
+
+interface Props {
+	cms: BlockContext;
+	/** The field's key in the block's schema, or a dotted path into a list (`team.0.name`). */
+	field: string;
+	value: LockupValue;
+	/** The heading element. Default: `h1` for the page's first heading, otherwise `h2`. */
+	as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p';
+	class?: string;
+	/** Anything else (such as the caller's scoped-style attribute) goes on the heading. */
+	[attribute: string]: unknown;
+}
+
+const { cms, field, value, as, class: className, ...given } = Astro.props;
+// M8 trial (item 4): a bare attribute stays bare, false is none (attributes.ts).
+const rest = passThrough(given);
+const descriptor = requireField(site, cms, field, 'lockup', 'Lockup');
+const style = own(site.textStyles, descriptor.style)!;
+const Tag = as ?? (cms.h1Field === field ? 'h1' : 'h2');
+
+const main = measureLockup(value?.lines ?? [], style);
+const phone = value?.phone ? measureLockup(value.phone, style) : null;
+const hasPhone = !!phone && phone.lines.length > 0;
+
+/** Round the fitting width up, never down: four decimals is well under 0.01% of a line. */
+const fitWidth = (em: number) => (Math.ceil(em * 1e4) / 1e4).toFixed(4);
+
+const vars = [
+	`--cms-size: ${style.sizePx}px`,
+	`--cms-tracking: ${style.trackingEm}em`,
+	`--cms-leading: ${style.leading}`,
+	`--cms-transform: ${style.textTransform}`,
+	`--cms-variation: ${variationSettings(style)}`,
+	`--cms-weight: ${style.axes.wght ?? 400}`,
+	`--cms-family: var(${style.cssVariable})`,
+].join('; ');
+
+const p = cms.preview;
+// Vivid (vivid.ts): on a public page with the config's switch on, the field and its editor address.
+const vivid = vividOf(site, cms, Astro, import.meta.env.DEV)(field);
+const headingMarkers = p
+	? {
+			'data-cms-field': field,
+			'data-cms-kind': 'lockup',
+			'data-cms-style': style.name,
+			'data-cms-size': String(style.sizePx),
+			'data-cms-min-size': String(style.minSizePx),
+			...contextMarker(cms),
+		}
+	: {};
+const setMarkers = (name: 'main' | 'phone', m: { longest: number; uncovered: string[] }) =>
+	p
+		? {
+				'data-cms-lines': name,
+				'data-cms-longest': m.longest.toFixed(4),
+				...(m.uncovered.length > 0 ? { 'data-cms-uncovered': JSON.stringify(m.uncovered) } : {}),
+			}
+		: {};
+
+const sets = [
+	{ name: 'main' as const, m: main },
+	...(hasPhone ? [{ name: 'phone' as const, m: phone! }] : []),
+];
+---
+
+{
+	main.lines.length > 0 && (
+		<Tag class:list={['cms-lockup', hasPhone && 'cms-lockup--has-phone', className]} style={vars} {...rest} {...headingMarkers} {...vivid}>
+			{sets.map(({ name, m }) => (
+				<span class={`cms-lockup-set cms-lockup-${name}`} style={`--longest-line: ${fitWidth(m.longest)}`} {...setMarkers(name, m)}>
+					<span class="cms-lockup-fit">
+						{m.lines.map((line, i) => (
+							<>
+								{i > 0 && ' '}
+								<span class="cms-lockup-line">{line.text}</span>
+							</>
+						))}
+					</span>
+				</span>
+			))}
+		</Tag>
+	)
+}

@@ -1,0 +1,54 @@
+{
+  "$schema": "../schemas/site-settings.schema.json",
+  "title": "Site Settings",
+  "editors": ["niamh@example.com"],
+  "brand": {
+    "name": "CaraCMS",
+    "accent": "#8a3b2a",
+    "logo": { "key": "uploads/1fb083002e3a/mark.svg", "w": 32, "h": 32 }
+  },
+  "seo": {
+    "title": "CaraCMS — a small design studio",
+    "description": "A small design studio in the hills, making brands, websites and print that hold together at every size.",
+    "image": { "key": "uploads/e4c45074933b/studio-window.jpg", "w": 1920, "h": 1280 }
+  },
+  "googleTag": "G-TEST000001",
+  "formRecipients": {
+    "contact": ["hello@example.com"]
+  },
+  "formWords": {
+    "contact": {
+      "sent": {
+        "heading": "Thanks, it’s sent"
+      }
+    }
+  },
+  "collectionOrder": {
+    "case-studies": ["tiny-publisher", "kitchen-pottery", "local-travel", "nature-films", "oak-furniture", "high-street-coffee", "sourdough-bakery", "weekend-bikes"]
+  },
+  "contact": {
+    "email": "studio@example.com",
+    "phone": "+353 21 000 0000",
+    "address": "4 Example Lane\nCork\nIreland"
+  },
+  "socials": [
+    {
+      "network": "instagram",
+      "href": {
+        "href": "https://instagram.example.com/example"
+      }
+    },
+    {
+      "network": "linkedin",
+      "href": {
+        "href": "https://linkedin.example.com/company/example"
+      }
+    },
+    {
+      "network": "youtube",
+      "href": {
+        "href": "https://youtube.example.com/@example"
+      }
+    }
+  ]
+}

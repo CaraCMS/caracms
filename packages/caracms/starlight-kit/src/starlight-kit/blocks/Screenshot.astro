@@ -1,0 +1,49 @@
+---
+/**
+ * The screenshot block (screenshot.ts). With a picture: the picture and its caption, its alt
+ * text the picture's own or, when that's empty, "What to capture". Without one: nothing for
+ * visitors, and in the editor's preview a "Screenshot to add: …" placeholder with the
+ * block's "What to capture" text and the picture's empty slot to upload into.
+ */
+import Block from 'caracms/components/Block.astro';
+import Media from 'caracms/components/Media.astro';
+import Text from 'caracms/components/Text.astro';
+import type { BlockProps } from 'caracms/document';
+import type { ScreenshotData } from './screenshot.ts';
+
+type Props = BlockProps<ScreenshotData>;
+const { block, cms } = Astro.props;
+const capture = block.capture?.trim() ?? '';
+// An empty alt falls back to what the picture was meant to show (Acceptance 12).
+const image = block.image && 'key' in block.image && !block.image.alt.trim() && !block.image.decorative ? { ...block.image, alt: capture } : block.image;
+---
+
+{block.image ? (
+	<Block cms={cms} as="figure">
+		<Media cms={cms} field="image" value={image} sizes="(min-width: 50rem) 45rem, 100vw" />
+		{(block.caption || cms.preview) && <figcaption><Text cms={cms} field="caption" value={block.caption} as="span" /></figcaption>}
+	</Block>
+) : cms.preview ? (
+	<Block cms={cms} as="figure" class="sl-kit-screenshot-empty">
+		<Media cms={cms} field="image" value={block.image} />
+		<p class="sl-kit-screenshot-label">Screenshot to add: <Text cms={cms} field="capture" value={block.capture} as="span" /></p>
+	</Block>
+) : null}
+
+<style>
+	figure :global(img) {
+		border-radius: 0.5rem;
+		border: 1px solid var(--sl-color-hairline);
+	}
+	figcaption {
+		font-size: var(--sl-text-sm);
+		color: var(--sl-color-gray-3);
+		margin-top: 0.5rem;
+	}
+	.sl-kit-screenshot-empty {
+		border: 1px dashed var(--sl-color-gray-4);
+		border-radius: 0.5rem;
+		padding: 1rem;
+		color: var(--sl-color-gray-3);
+	}
+</style>

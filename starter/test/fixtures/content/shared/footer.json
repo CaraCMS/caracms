@@ -1,0 +1,52 @@
+{
+  "$schema": "../../schemas/shared.schema.json",
+  "title": "Footer",
+  "default": true,
+  "block": {
+    "type": "siteFooter",
+    "columns": [
+      {
+        "heading": "Studio",
+        "links": [
+          {
+            "label": "About",
+            "href": "/about"
+          },
+          {
+            "label": "Team",
+            "href": "/about/team"
+          },
+          {
+            "label": "Work",
+            "href": "/work"
+          },
+          {
+            "label": "Contact",
+            "href": "/contact"
+          }
+        ]
+      },
+      {
+        "heading": "Elsewhere",
+        "links": [
+          {
+            "label": "Field notes",
+            "href": "/field-notes"
+          },
+          {
+            "label": "Visit",
+            "href": "/studio/visit"
+          },
+          {
+            "label": "Questions",
+            "href": "/faq"
+          },
+          {
+            "label": "Privacy",
+            "href": "/privacy"
+          }
+        ]
+      }
+    ]
+  }
+}

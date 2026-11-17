@@ -1,0 +1,23 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "One accent colour",
+  "date": "2026-04-22",
+  "tags": ["brand", "type"],
+  "cover": { "key": "uploads/a40fe31a6eeb/material-samples.png", "alt": "Paint swatches, fabric, stone and timber samples on marble", "w": 1200, "h": 1800 },
+  "excerpt": "Site Settings holds one accent colour, and every block’s Accent background uses it.",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["One accent", "Colour"],
+      "intro": "Change it once, and every accent band follows.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "One place",
+      "body": "The accent is the brand’s, so it sits with the name and the logo.",
+      "background": "light"
+    }
+  ]
+}

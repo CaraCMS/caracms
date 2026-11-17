@@ -1,0 +1,67 @@
+---
+/**
+ * A rich-text field (M5a Decision 3): semantic HTML with no classes and no script.
+ *
+ *   <RichText cms={cms} field="body" value={block.body} class="text-body" />
+ *
+ * - `<p>`, `<h2>`, `<h3>`, `<ul>`/`<ol>` with `<li>`; `<strong>`, `<em>`, `<br>`;
+ *   `<a href>` for a link that passes the link rule, its text otherwise (Decision 4).
+ *   A heading with a break renders as Text's multi-line heading does: its lines
+ *   joined by `<br>`.
+ * - A kind the field doesn't allow renders as `<p>`, and a link where the field
+ *   has links off as its text (the field warns; rich-text.ts reads them so).
+ * - The blocks sit in one wrapper element, `as` (default `div`; a heading field's below), which takes
+ *   `class` and any other attribute. Public render: nothing at all for an empty value.
+ * - Preview render only (M3 Decision 17): the wrapper is always there, with
+ *   `data-cms-field="<path>" data-cms-kind="richText"`. A top-level field is typed
+ *   on the page (on-page rich text, Decisions 1 and 5): it also gets `tabindex="0"`,
+ *   so Tab and a tap can reach it, and /admin mounts its page editor on this very
+ *   element (preview/page-editor.ts). Never contenteditable in the render: the page
+ *   editor adds that while mounted, and takes it away again. A nested path
+ *   (`items.0.body`) is edited in the sidebar only, so it has no tabindex. The public
+ *   render has none of these.
+ * - `field` is the field's key, or a dotted path into a list (Decision 16).
+ * - **Heading ids** (heading-ids.ts): each `<h2>`/`<h3>` has an `id`, GitHub's slug of its
+ *   text, unique across the page's blocks (`-1`, `-2`…), from `cms.headingIds[field]`, which
+ *   Blocks.astro works out from the document. `pageHeadings` gives a site the same list.
+ * - **A heading field** (`richText({ heading: true })`, M9 Decision 11): the element is
+ *   `as`, or `h1` when it holds the page's first heading and `h2` otherwise (as Text's
+ *   heading), and inside it each paragraph's runs, the paragraphs joined by `<br>`: no
+ *   `<p>`. Bold is `<strong>`, so the site styles it (`h1 strong { … }`).
+ *
+ *     <RichText cms={cms} field="statement" value={block.statement} class="board-statement" />
+ */
+import { site } from 'virtual:caracms/config';
+import type { HTMLTag } from 'astro/types';
+import type { BlockContext } from '../document.ts';
+import { parseField } from '../fields.ts';
+import { richHeadingHtml, richTextHtml, type RichTextValue } from '../rich-text.ts';
+import { contextMarker, isTypedOnPage, requireField } from './descriptor.ts';
+import { passThrough } from './attributes.ts';
+import { vividOf } from '../vivid.ts';
+
+interface Props {
+	cms: BlockContext;
+	field: string;
+	value: RichTextValue;
+	as?: HTMLTag;
+	class?: string;
+	[attribute: string]: unknown;
+}
+
+const { cms, field, value, as, class: className, ...given } = Astro.props;
+// M8 trial (item 4): a bare attribute stays bare, false is none (attributes.ts).
+const rest = passThrough(given);
+const descriptor = requireField(site, cms, field, 'richText', 'RichText');
+const Tag = as ?? (descriptor.heading ? (cms.h1Field === field ? 'h1' : 'h2') : 'div');
+// Re-read through the field, so a value from anywhere renders by the field's rules.
+const parsed = parseField(descriptor, value) as RichTextValue;
+// Heading ids (heading-ids.ts): numbered across the page, up front in Blocks.astro; this field's by its path.
+const headingIds = cms.headingIds?.[field];
+const html = descriptor.heading ? richHeadingHtml(parsed) : richTextHtml(parsed, { fileLinks: true, ...(headingIds ? { headingIds } : {}) });
+// Vivid (vivid.ts): on a public page with the config's switch on, the field and its editor address.
+const vivid = vividOf(site, cms, Astro, import.meta.env.DEV)(field);
+const markers = cms.preview ? { 'data-cms-field': field, 'data-cms-kind': 'richText', ...(isTypedOnPage(field) ? { tabindex: '0' } : {}), ...contextMarker(cms) } : {};
+---
+
+{(html !== '' || cms.preview) && <Tag class={className} {...rest} {...markers} {...vivid} set:html={html} />}

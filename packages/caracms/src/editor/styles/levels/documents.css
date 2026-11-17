@@ -1,0 +1,9 @@
+/* The documents level and a collection's level (Phase 4), beyond the mockup's CSS in ../editor.css.
+   Tokens only (M2 Decision 7); no side rails (M2 Decision 10): a warned row is an icon, not a stripe. */
+
+/* A file that can't be opened (Decisions 8–9): listed, muted, with its warning mark; clicking says why. */
+.drow.is-warned{cursor:default}
+.drow.is-warned .nm{color:var(--text-muted)}
+.drow.is-warned:hover{background:var(--surface-hover)}
+.doc-why{margin:var(--space-1) 0 var(--space-2)}
+.doc-why p{overflow-wrap:anywhere}

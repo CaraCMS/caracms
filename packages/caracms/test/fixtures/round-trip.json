@@ -1,0 +1,40 @@
+{
+  "title": "Round trip",
+  "blocks": [
+    {
+      "type": "gallery",
+      "images": ["harbour.jpg", "hills.jpg"],
+      "columns": 3,
+      "caption": {
+        "text": "Kept as read",
+        "align": "left"
+      }
+    },
+    {
+      "intro": "Keys out of order, and a trailing space. ",
+      "type": "hero",
+      "heading": ["Play Hard", "Work Hard"],
+      "flourish": true,
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "Second block",
+      "body": "One line\nand another",
+      "background": "light"
+    },
+    {
+      "type": "cta",
+      "heading": {
+        "lines": ["Building a better mousetrap", "For You"],
+        "phone": ["Building a", "better mousetrap", "For You"]
+      },
+      "text": "Phone lines in the object form.",
+      "button": "Go",
+      "background": "photo"
+    }
+  ],
+  "seo": {
+    "description": "An unknown top-level key, kept."
+  }
+}

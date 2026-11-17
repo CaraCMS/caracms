@@ -1,0 +1,127 @@
+---
+/**
+ * The starter's page component (M3 Decision 3): a document in, a whole page out. The
+ * public routes render it through the package's RenderDocument, and so does the
+ * editor's preview (with `preview` on). It passes `preview` on to the block loop,
+ * which is how the package's components know to add their markers (Decision 17).
+ * M5a: `<Blocks>` renders any kind of document a page shows (a fields document
+ * through its collection's component, a shared block alone), so it takes `collection`.
+ *
+ * A shared block's own preview (M5a Decision 8) is the block alone in this page's
+ * frame (its fonts and styles), without the header and the footer, and centred: it
+ * has no address, so it's never a page of the site. The header's or the footer's own
+ * preview draws it in its slot, with the other slot's default and an empty `<main>`.
+ *
+ * M7: the look is the tokens (site.css imports src/styles/tokens.css); this file and
+ * the blocks are layout only. The header and footer are the page's slots (edit in context,
+ * Decision 16): `<Slot>` draws the shared block each one uses (the page's pick, else the
+ * default: content/shared/header.json and footer.json), through src/blocks/Header.astro and
+ * Footer.astro, marked as their documents in a preview. They read Site Settings (the name,
+ * the contact details) from the render's source: the draft's in a preview, the published in
+ * a build. The current page is the page's own address (`path`).
+ *
+ * Scripts on the public page: one module of the site's, the motion setup (Decision 20:
+ * Locomotive and GSAP, with no effects) and the header's menu (Decision 17), and a
+ * form's, a player's and the Google tag's where they're used (M6 Decision 17). No React.
+ *
+ * Posts and tags (Decisions 11, 12, 16): a journal post shows its date and its tags (each a
+ * link to its tag's page) above its blocks, and its older and newer neighbours in the post order
+ * (collections/journal.ts) at the bottom. A paged listing's page number (`listPage`) goes on
+ * to `<Head>` (" — page N" in the title) and `<Blocks>` (the Posts block's page).
+ *
+ * M6: the title, the description, the canonical link, the share tags and the Google
+ * tag are the package's `<Head>` (Decision 15). No robots meta: the start server sends
+ * `X-Robots-Tag` by host (Decision 11), so a launched site can be indexed.
+ */
+import Block from 'caracms/components/Block.astro';
+import Blocks from 'caracms/components/Blocks.astro';
+import Fonts from 'caracms/components/Fonts.astro';
+import Head from 'caracms/components/Head.astro';
+import type { PageProps } from 'caracms/document';
+import Slot from 'caracms/components/Slot.astro';
+import { site } from 'virtual:caracms/config';
+import { formatDay } from '../collections/case-studies.ts';
+import { asPostData, postFrame } from '../collections/journal.ts';
+import './site.css';
+
+type Props = PageProps;
+const { document, collection, preview = false, listPage, read } = Astro.props;
+// A body block's own preview: the block alone, centred. A header's or footer's draws in its slot.
+const solo = document.kind === 'shared' && !(document.block.known && site.blocks[document.block.type]?.slot);
+// A page built in code can put a small label above its first block (the 404's "Error 404"), by
+// setting `Astro.locals.eyebrow` before it renders the document. It sits in the content column,
+// with the Extra room above that the block would have had; that block takes none above itself.
+const eyebrow = (Astro.locals as { eyebrow?: string }).eyebrow;
+// Posts and tags (Decision 11): a journal post's date and tags above its blocks, and its
+// neighbours in the post order at the bottom.
+const post = collection === 'journal' && document.kind !== 'shared' ? await postFrame(read, asPostData(Astro.props.data), Astro.props.path) : null;
+---
+
+<!doctype html>
+<html lang="en" data-preview={preview ? '' : undefined}>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<Head document={document} collection={collection} preview={preview} listPage={listPage} />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" />
+		<Fonts />
+	</head>
+	<body>
+		<Slot name="header" {...Astro.props} />
+		<main class:list={[solo && 'flex min-h-svh flex-col justify-center']}>
+			{eyebrow && (
+				<div class="content-container pt-section-extra pb-5">
+					<p class="eyebrow fg-muted">{eyebrow}</p>
+				</div>
+			)}
+			{post && (post.date || post.tags.length > 0) && (
+				<div class="content-container flex flex-wrap items-baseline gap-x-6 gap-y-2 pt-section-tight pb-6">
+					{
+						post.date && (
+							<Block cms={Astro.props.cms} field="date" as="time" class="eyebrow fg-muted" datetime={post.date}>
+								{formatDay(post.date)}
+							</Block>
+						)
+					}
+					{post.tags.length > 0 && (
+						<ul class="flex flex-wrap gap-x-4 gap-y-1 text-small" role="list" aria-label="Tags">
+							{post.tags.map((t) => (
+								<li>
+									<Block cms={Astro.props.cms.of(t.entry)} as="a" class="link" href={t.url ?? undefined}>{t.title}</Block>
+								</li>
+							))}
+						</ul>
+					)}
+				</div>
+			)}
+			<Blocks document={document} collection={collection} preview={preview} listPage={listPage} />
+			{post && (post.older || post.newer) && (
+				<nav class="band py-section-tight" aria-label="More posts">
+					<div class="content-container grid gap-6 md:grid-cols-2">
+						{post.older ? (
+							<Block cms={Astro.props.cms.of(post.older.entry)} as="a" class="group grid gap-1 no-underline" rel="prev" href={post.older.url ?? undefined}>
+								<span class="eyebrow fg-muted" data-cms-fixed>Older post</span>
+								<span class="text-h4 underline-offset-[0.2em] group-hover:underline group-hover:decoration-1">{post.older.title}</span>
+							</Block>
+						) : <span />}
+						{post.newer && (
+							<Block cms={Astro.props.cms.of(post.newer.entry)} as="a" class="group grid gap-1 no-underline md:text-right" rel="next" href={post.newer.url ?? undefined}>
+								<span class="eyebrow fg-muted" data-cms-fixed>Newer post</span>
+								<span class="text-h4 underline-offset-[0.2em] group-hover:underline group-hover:decoration-1">{post.newer.title}</span>
+							</Block>
+						)}
+					</div>
+				</nav>
+			)}
+		</main>
+		<Slot name="footer" {...Astro.props} />
+		<script>
+			import { initSmoothScroll } from '../scripts/motion/smoothScroll.ts';
+			import { initSiteMenu } from '../scripts/siteMenu.ts';
+
+			initSmoothScroll({ preview: document.documentElement.hasAttribute('data-preview') });
+			initSiteMenu();
+		</script>
+	</body>
+</html>

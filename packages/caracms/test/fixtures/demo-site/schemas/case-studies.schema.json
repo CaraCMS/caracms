@@ -1,0 +1,282 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Case studies",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "frame": {
+      "description": "The page's own picks for its frame, each a shared block's path; a slot it doesn't name gets the site's default.",
+      "type": "object",
+      "properties": {
+        "footer": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "heading": {
+      "title": "Heading",
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        {
+          "type": "object",
+          "properties": {
+            "lines": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "phone": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "lines"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "client": {
+      "title": "Client",
+      "type": "string"
+    },
+    "sector": {
+      "title": "Sector",
+      "enum": [
+        "food",
+        "culture",
+        "retail",
+        "health",
+        "travel",
+        "craft"
+      ]
+    },
+    "featured": {
+      "title": "Featured",
+      "type": "boolean"
+    },
+    "launched": {
+      "title": "Launched",
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "summary": {
+      "title": "Summary",
+      "type": "string"
+    },
+    "cover": {
+      "title": "Cover image",
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "key": {
+              "type": "string",
+              "minLength": 1
+            },
+            "alt": {
+              "type": "string"
+            },
+            "decorative": {
+              "type": "boolean"
+            },
+            "focal": {
+              "type": "array",
+              "items": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "w": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "h": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            }
+          },
+          "required": [
+            "key"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "body": {
+      "title": "Story",
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "p": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "p"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "h2": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "h2"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "ul": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "ul"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "ol": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "ol"
+                ],
+                "additionalProperties": false
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "credits": {
+      "title": "Credits",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "title": "Role",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "related": {
+      "title": "Related work",
+      "type": "array",
+      "items": {
+        "title": "Case study",
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "The path of a document in \"case-studies\"."
+      }
+    },
+    "seo": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "image": {
+          "type": "object",
+          "properties": {
+            "key": {
+              "type": "string",
+              "minLength": 1
+            },
+            "w": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "h": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "focal": {
+              "type": "array",
+              "items": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "minItems": 2,
+              "maxItems": 2
+            }
+          },
+          "required": [
+            "key"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "title"
+  ],
+  "additionalProperties": false
+}

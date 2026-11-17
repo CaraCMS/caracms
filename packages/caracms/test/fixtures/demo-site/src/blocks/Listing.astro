@@ -1,0 +1,37 @@
+---
+/**
+ * The paged list (listing.ts): one page of the journal's posts, the page number from
+ * `cms.listPage` (Decision 12), with a plain-link pager. Only in `caracms.paged.config.ts`.
+ */
+import Block from 'caracms/components/Block.astro';
+import Text from 'caracms/components/Text.astro';
+import type { BlockProps } from 'caracms/document';
+import { PAGE_SIZE, pageCount, postOrder, type ListingData } from './listing.ts';
+
+type Props = BlockProps<ListingData>;
+const { block, cms } = Astro.props;
+const posts = (await cms.read.documents('journal')).sort(postOrder);
+const pages = pageCount(posts.length);
+const page = Math.min(cms.listPage, pages);
+const shown = posts.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+const base = Astro.url.pathname.replace(/\/page\/\d+\/?$/, '').replace(/\/$/, '');
+const at = (n: number) => (n === 1 ? base || '/' : `${base}/page/${n}`);
+---
+
+<Block cms={cms} class="band listing">
+	<div class="band-inner">
+		<Text cms={cms} field="heading" value={block.heading} />
+		<ol class="listing-posts">
+			{shown.map((p) => <li><a href={p.url ?? undefined}>{p.title}</a>{typeof p.data.date === 'string' && <time datetime={p.data.date}>{p.data.date}</time>}</li>)}
+		</ol>
+		{
+			pages > 1 && (
+				<nav class="listing-pager" aria-label="Pages">
+					{page > 1 && <a rel="prev" href={at(page - 1)}>Newer posts</a>}
+					<span>Page {page} of {pages}</span>
+					{page < pages && <a rel="next" href={at(page + 1)}>Older posts</a>}
+				</nav>
+			)
+		}
+	</div>
+</Block>

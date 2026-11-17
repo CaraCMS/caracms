@@ -1,0 +1,23 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "Choosing a text face",
+  "date": "2025-09-08",
+  "tags": ["type"],
+  "cover": { "key": "uploads/e4c45074933b/studio-window.jpg", "alt": "Morning light through the studio window", "w": 1920, "h": 1280 },
+  "excerpt": "How we pick a typeface for long reading, and the paragraph we test every candidate on.",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Choosing a", "Text face"],
+      "intro": "One paragraph, set in ten faces, printed and pinned to the wall.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "The test",
+      "body": "We read each one at arm’s length on a grey afternoon. Most fail by the third line.",
+      "background": "light"
+    }
+  ]
+}

@@ -1,0 +1,97 @@
+/* M5a Phase 5's screens, lifted as is from the mockup (packages/caracms/test/mockups/m2-editor.html): the
+   shared-block panel's list, New shared block's type grid, the in-use dialog's list, Site
+   Settings' form, and the stage's dimmed aside while a document with no page of its own
+   (Site Settings) is open. Tokens only (M2 Decision 7). */
+.used{display:flex;flex-wrap:wrap;gap:var(--space-1);margin-top:var(--space-2)}
+.used-in{margin-top:2px}
+.used-in .linkbtn{color:var(--select-strong)}
+/* A block type picked in a dialog (New shared block) */
+.tgrid{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-1-5)}
+.ptype.sm{flex-direction:row;align-items:center;gap:var(--space-2);padding:var(--space-1-5) var(--space-2)}
+.ptype.sm .i{color:var(--icon)}
+.ptype[aria-checked="true"]{border-color:var(--select);background:var(--select-wash)}
+.ptype[aria-checked="true"] b,.ptype[aria-checked="true"] .i{color:var(--select-strong)}
+/* Collections under pages (Decision 9): Change address…'s list of every address that changes */
+.mv-list{list-style:none;margin:var(--space-2) 0 0;padding:var(--space-1) var(--space-2);max-height:11rem;overflow:auto;border:1px solid var(--border);border-radius:var(--radius-md);font-size:var(--text-sm);line-height:1.6}
+.mv-list li{overflow-wrap:anywhere}
+/* In a short window the dialog stays inside it, the list the part that gives (down to about
+   two addresses), so Cancel and Change address always show. A column, not a scrolling dialog:
+   the Inside picker's popover must not be clipped. The margins keep the block layout's gaps
+   (no margins collapse in a column). */
+.dialog[data-dialog="move"]{display:flex;flex-direction:column;max-height:calc(100dvh - 2 * var(--space-4))}
+.dialog[data-dialog="move"]>form{display:flex;flex-direction:column;min-height:0}
+.dialog[data-dialog="move"]>form>*{flex:none}
+.dialog[data-dialog="move"]>form>h2+.field{margin-top:var(--space-2)}
+.dialog[data-dialog="move"]>form>.field>:last-child{margin-bottom:0}
+.dialog[data-dialog="move"]>form>[data-moving]{flex:0 1 auto;display:flex;flex-direction:column;min-height:0}
+.dialog[data-dialog="move"]>form>[data-moving]>*{flex:none}
+.dialog[data-dialog="move"]>form>[data-moving]>.mv-list{flex:0 1 auto;min-height:3rem;margin-top:0}
+.dlg-list{display:flex;flex-direction:column;gap:2px;margin-top:var(--space-3);padding:var(--space-1);border:1px solid var(--border);border-radius:var(--radius-md)}
+/* Site Settings (M5a): a fixed form with no page of its own */
+.set-sec{margin:0 calc(-1 * var(--space-4));padding:var(--space-4) var(--space-4) var(--space-1);border-top:1px solid var(--border)}
+.set-sec:first-child{padding-top:var(--space-1);border-top:0}
+.set-sec h3{margin:0 0 var(--space-1);font-size:var(--text-md);font-weight:var(--weight-semibold)}
+.set-sec .lead{margin-bottom:var(--space-3);font-size:var(--text-sm);color:var(--text-muted)}
+.eds{border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden}
+.ed{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-2);min-height:44px;padding:var(--space-1-5) var(--space-1) var(--space-1-5) var(--space-2)}
+.ed+.ed{border-top:1px solid var(--border)}
+.ed .tile{display:grid;place-items:center;width:24px;height:24px;flex:none;border-radius:var(--radius-sm);background:var(--surface-sunken);color:var(--icon);font:var(--weight-semibold) var(--text-sm)/1 var(--font-mono)}
+.ed .t{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.3}
+.ed .t b{font:var(--weight-medium) var(--text-sm)/1.35 var(--font-mono);overflow-wrap:anywhere}
+.ed .t small{font-size:var(--text-xs);color:var(--text-subtle)}
+.ed .ib{width:26px;height:26px}
+.ed.is-confirm{background:var(--status-warning-wash);box-shadow:inset 0 0 0 var(--frame-width) var(--frame-warning)}
+.ed-q{flex-basis:100%;padding:0 var(--space-1) var(--space-1) 32px;font-size:var(--text-sm);color:var(--status-warning-strong)}
+.ed-q .acts{display:flex;flex-wrap:wrap;gap:var(--space-1-5);margin-top:var(--space-2)}
+.ed-add{display:flex;gap:var(--space-1-5);margin-top:var(--space-2)}
+.ed-add .input{flex:1;min-width:0}
+.ed-add .input[aria-invalid="true"]{border-color:var(--frame-danger);box-shadow:var(--shadow-hard-danger);border-width:var(--frame-width)}
+.fixed-line{display:grid;grid-template-columns:16px minmax(0,1fr);gap:var(--space-2);margin-top:var(--space-3);padding:var(--space-2) var(--space-2-5);border-radius:var(--radius-md);background:var(--surface-sunken);font-size:var(--text-sm);color:var(--text-muted)}
+.fixed-line .i{margin-top:2px;color:var(--icon)}
+/* Site Settings' accent picker (editor restyle, Decision 12): presets only, a radio group of swatches. Each swatch is
+   its colour with brand.ts's border for it, set inline as --sw, --sw-edge, --sw-ink. The chosen one is ringed (a gap
+   of surface, then an ink ring) and carries a check in its label colour; focus is the tool's blue ring, outside that.
+   A stored colour that isn't a preset comes first as "Current", set apart by a hairline. */
+.presets{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-2);padding:var(--space-1)}
+.preset{display:grid;place-items:center;width:var(--swatch-size);height:var(--swatch-size);flex:none;padding:0;border:1px solid var(--sw-edge);border-radius:var(--radius-md);background:var(--sw);color:var(--sw-ink);cursor:pointer;transition:box-shadow var(--dur-fast)}
+.preset .i{opacity:0}
+.preset:hover{box-shadow:0 0 0 2px var(--surface),0 0 0 3px var(--border-hover)}
+.preset[aria-checked="true"]{box-shadow:0 0 0 2px var(--surface),0 0 0 4px var(--text)}
+.preset[aria-checked="true"] .i{opacity:1}
+.preset:focus-visible{outline:2px solid var(--focus);outline-offset:5px}
+.presets-sep{width:1px;height:20px;margin:0 var(--space-0-5);background:var(--border-strong)}
+.field-meta b{color:var(--text);font-weight:var(--weight-semibold)}
+.presets + .field-help{margin-top:var(--space-2)}
+.accent-try{display:flex;align-items:center;gap:var(--space-2);margin-top:var(--space-2);padding:var(--space-2) var(--space-2-5) calc(var(--space-2) + var(--press-depth));border-radius:var(--radius-md);background:var(--surface-sunken);color:var(--text-muted);font-size:var(--text-sm);border:1px solid var(--border)}
+.accent-try .nm{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.accent-try .btn{flex:none;margin-left:auto;pointer-events:none}
+/* A document with no page of its own (Site Settings): the last page stays, dimmed, with a way back (M5a) */
+.stage-aside{position:absolute;inset:0;z-index:3;display:none;place-items:center;padding:var(--space-6);background:var(--stage-dim);color:var(--bar-text);text-align:center}
+.stage.is-aside .stage-aside{display:grid;animation:fade-in var(--dur-base) var(--ease-out)}
+.stage-aside .in{max-width:340px}
+.stage-aside .in>.i{width:22px;height:22px;margin-bottom:var(--space-3);color:var(--bar-muted)}
+.stage-aside h2{margin:0 0 var(--space-1-5);font-size:var(--text-lg);font-weight:var(--weight-semibold);letter-spacing:var(--tracking-tight)}
+.stage-aside p{color:var(--bar-muted);font-size:var(--text-sm)}
+.stage-aside .btn{margin-top:var(--space-4);background:var(--bar-control);border-color:var(--bar-control);color:var(--bar-control-text);box-shadow:0 var(--press-depth) 0 var(--edge-bar-control)}
+.stage-aside :focus-visible{outline-color:var(--focus-on-dark)}
+/* New page's and Change address…'s Inside: a field that opens a
+   searchable tree of groups and pages, on the reference picker's popover (.lpop). */
+.inside-pick{position:relative}
+.input.inside-btn{display:flex;align-items:center;gap:var(--space-2);text-align:left;cursor:pointer}
+.inside-btn .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.inside-btn .meta{max-width:45%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:var(--text-2xs);color:var(--text-subtle)}
+.inside-btn .i{flex:none;color:var(--icon)}
+.inside-list{max-height:min(320px,45vh);overflow:auto}
+.inside-list .drow{cursor:pointer}
+.inside-list .drow .meta{max-width:50%;overflow:hidden}
+.inside-list .drow .meta .mono{overflow:hidden;text-overflow:ellipsis}
+.inside-list .drow.is-on .nm{color:var(--select-strong);font-weight:var(--weight-medium)}
+.inside-new{margin-top:var(--space-1);padding-top:var(--space-1);border-top:1px solid var(--border)}
+/* Review gaps (Decision 7): a block's states, named at the top of its level (the "Also shows from" line's look). */
+.states-line{display:grid;grid-template-columns:16px minmax(0,1fr);gap:var(--space-2);margin:0 0 var(--space-5);padding:var(--space-2) var(--space-2-5);border-radius:var(--radius-md);background:var(--surface-sunken);font-size:var(--text-sm);color:var(--text-muted)}
+.states-line .i{margin-top:2px;color:var(--icon)}
+.states-line b{color:var(--text);font-weight:var(--weight-semibold)}
+
+/* ── The restyle (the editor restyle): the soft brutal look's pressed edges and frames ── */
+.ed-add .input[aria-invalid="true"]:focus{border-color:var(--status-danger);box-shadow:0 0 0 3px var(--status-danger-halo),var(--shadow-hard-danger)}
+.stage-aside .btn:active:not(:disabled){translate:0 var(--press-depth);box-shadow:0 0 0 var(--edge-bar-control)}

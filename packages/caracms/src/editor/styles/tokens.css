@@ -1,0 +1,161 @@
+/*
+ * The editor's design tokens, lifted as is from packages/caracms/test/mockups/m2-editor.html's
+ * :root (M2 → What's built: "lift it as is"). Semantic custom properties, light
+ * only (M2 Decision 7); components use these, never raw colours.
+ * The values are the editor restyle's: the
+ * consoles' "soft brutal" look on the editor's own names, with the neutral chrome
+ * half as warm, hard unblurred shadows and the pressed edge (Decision 1).
+ * The brand slots (--accent, --accent-ink, --accent-edge) are overridden per site
+ * on <html> by the admin route (ink and edge computed by contrast, brand.ts);
+ * --edge-accent follows --accent in CSS, so anything that sets --accent on a lower
+ * element sets --edge-accent there too (Decision 12).
+ */
+/* ══════════════════════════════════════════════════════════════════════════
+   TOKENS — semantic custom properties M3 lifts as-is (Decision 1, 7).
+   Light only; a dark set would redefine these names, never the components.
+   ══════════════════════════════════════════════════════════════════════════ */
+:root{
+  /* Colour · neutral chrome */
+  --surface:#fffefc;              /* sidebar, popovers, cards, inputs */
+  --surface-sunken:#f6f4ee;       /* trail, strips, sign-in page */
+  --surface-tab:#ebe8e0;          /* levels stacked in the drill-down trail */
+  --surface-tab-near:#f1eee7;     /* the level just above the current one */
+  --surface-hover:#f2efe7;
+  --surface-pressed:#e9e5dc;      /* also the quiet buttons' pressed wash */
+  --border:#e6e2d8;
+  --border-strong:#c8c2b5;        /* inputs and buttons */
+  --border-hover:#aaa494;
+  --text:#26231c;
+  --text-muted:#5f574c;           /* 7.1:1 on surface, 5.7 on tab */
+  --text-subtle:#665e52;          /* 6.4:1 on surface, 5.0 on pressed: meta text only */
+  --icon:#72685a;                 /* 4.9:1 on sunken, where it's also text; 4.3 on tab */
+  --ink-hover:#3d372e;            /* the ink button's hover */
+  --on-fill:#ffffff;              /* text and icons on a filled colour: danger, phone, ink tags, avatars */
+  --scrim:rgba(38,32,24,.48);
+  --backdrop:#14110e;             /* behind the editor when it's sized smaller than the window */
+  --frame-bg:#ffffff;             /* a preview frame before its page paints */
+  /* Colour · stage (behind the preview) and the one bar */
+  --stage:#2c2620;
+  --stage-dim:rgba(44,38,32,.86);  /* over the held preview when a document has none of its own (Site Settings, M5a) */
+  --bar-bg:#1f1b16;
+  --bar-raised:#332d26;
+  --bar-raised-hover:#3f382f;
+  --bar-border:#3b342c;
+  --bar-border-strong:#554b3f;
+  --bar-border-hover:#726656;
+  --tooltip-bg:#15120f;
+  --bar-text:#f4efe6;
+  --bar-muted:#b8ad9c;            /* 7.7:1 on bar-bg, 5.2 on raised-hover */
+  --bar-control:#f4efe6;          /* the off-white control on the dark bar */
+  --bar-control-text:#26231c;
+  --bar-off:#38312a;              /* a control that's visibly off */
+  --bar-off-text:#aca190;
+  /* Colour · tool colours: fixed, never the brand */
+  --select:#1463f3; --select-strong:#0f56d9; --select-wash:#ebf2ff; --select-halo:rgba(20,99,243,.2);
+  --phone:#0a7266; --phone-strong:#075e54; --phone-wash:#e7f4f1; --phone-field:#f7fbfa; --phone-border:#9dd2c8; --phone-halo:rgba(10,114,102,.2);
+  --focus:#1463f3; --focus-on-dark:#8fb8ff;
+  /* Colour · status: fixed, never the brand (Decision 5) */
+  --status-warning:#94500a; --status-warning-strong:#6b3a06; --status-warning-dot:#e08a00; --status-warning-wash:#fdf2da; --status-warning-border:#e8c682;
+  --status-warning-on-dark:#ffc46b; --status-warning-dark-wash:#3a2a10; --status-warning-dark-border:#6b4a14;
+  --status-danger:#b42318;  --status-danger-strong:#8a1a12; --status-danger-hover:#9a1d14; --status-danger-dot:#e5372a; --status-danger-wash:#fdeee9; --status-danger-border:#eebbb0; --status-danger-halo:rgba(180,35,24,.14);
+  --status-danger-on-dark:#ff9a90; --status-danger-dark-border:#7a2a22;
+  --status-live:#17743d;    --status-live-dot:#2fa45a;    --status-live-wash:#e9f3e6;    --status-live-border:#b5d6b4;   --status-live-on-dark:#7bdb9c;
+  --status-waiting:#5b42c9; --status-waiting-dot:#7a5ae6; --status-waiting-wash:#f2eefd; --status-waiting-border:#d4c9f7; --status-waiting-on-dark:#bdabff;
+  --status-locked:#4f5866;  --status-locked-wash:#eeebe5; --status-locked-border:#d6d0c5;
+  /* Colour · preview overlays, drawn inside the iframes over any site (Decision 6) */
+  --ov:#1463f3;                   /* outline core */
+  --ov-text:#0f56d9;
+  --ov-halo:rgba(255,255,255,.95);/* the second tone, both sides of the core */
+  --ov-on:#ffffff;                /* text on a filled overlay tag */
+  --ov-surface:#ffffff;           /* hover tags and insert-point pills */
+  --ov-wash:rgba(20,99,243,.07);  /* hover fill */
+  --ov-phone:#0a7266;             /* phone lines */
+  --ov-warn:#e08a00; --ov-warn-text:#6e3c05; --ov-warn-wash:#fff6e3;
+  --ov-ring:rgba(20,99,243,.18);  /* the soft ring while typing on the page */
+  --ov-lift:rgba(0,0,0,.28);      /* shadow under insert points */
+  --ov-veil-a:rgba(255,255,255,.28); --ov-veil-b:rgba(17,17,15,.16); /* the lock veil's two-tone hatch */
+  --ov-pop:rgba(20,20,18,.2); --ov-pop-line:rgba(20,20,18,.12); /* on the page: the formatting bar's and its popovers' shadow and hairline (--shadow-pop's, the hairline a touch stronger over a busy page) */
+  /* Colour · people (avatars) */
+  --p-niamh:#4f6aa8; --p-aoife:#a24f7c; --p-ciaran:#8a6a2e;
+  /* Brand slots (Site Settings › Editor branding). Set by the brand switcher; ink and edge are computed by contrast */
+  --accent:#1f2f57; --accent-ink:#ffffff; --accent-edge:#1f2f57;
+  /* The accent presets Site Settings offers (Decision 12), in order; navy first, the default. Each is dark: its ink is --on-fill, its edge itself (client/accent-presets.ts) */
+  --preset-navy:#1f2f57; --preset-slate:#46607a; --preset-petrol:#1d4e63; --preset-plum:#6e2f72; --preset-walnut:#5c3d2a; --preset-ink:#2e2a24;
+  /* The hard-edge geometry (the consoles'). Every hard shadow is unblurred and at most 2px. */
+  --press-depth:2px;              /* a button's bottom edge, and how far it sinks when pressed */
+  --hard-offset:2px;              /* a framed or floating object's shadow */
+  --frame-width:1.5px;            /* the border of a framed (needs-you) object */
+  --swatch-size:28px;             /* an accent preset in Site Settings (Decision 12): Current and six presets fit the 276px field */
+
+  /* Edges: a button's pressed edge, darker than its face (new) */
+  --edge-secondary:#aa9e8b;       /* .btn, .ib.boxed */
+  --edge-ink:#0f0d0a;             /* anything still drawn in ink (since Decision 12 .btn.ink wears the accent and --edge-accent) */
+  --edge-danger:#7a170f;          /* .btn.danger */
+  --edge-phone:#04463e;           /* .btn.phone */
+  /* The brand's: a darker shade of whatever accent the site has, pale or dark, toward a warm near-black.
+     Pure CSS, so it follows --accent wherever it's set (the route, sign-in, Site Settings' live accent) with
+     no new slot in brand.ts. #1f2f57 navy gives #1d2337; #f6e27f yellow gives #9b8c4f. */
+  --edge-accent:color-mix(in oklab,var(--accent) 62%,#140d06);
+  /* Publish: a fixed caracms green whatever the site's brand, since it's the "goes live" action (2026-10-29;
+     replaces M2 Decision 5's accent on the Publish count and the final Publish button). From the live green family,
+     a touch deeper than --status-live (#17743d) to sit with the warm neutrals. White on it is 6.4:1, 8.0 on hover. */
+  --publish:#1c6d3a;
+  --publish-hover:#185c30;
+  --publish-ink:#ffffff;
+  --publish-edge:#123d1f;         /* its pressed edge and border: a darker, warm-leaning green */
+  /* On the dark bar: the edge is lighter than the bar, so it still reads (the consoles' dark mode does the same) */
+  --edge-bar:#5c5246;             /* raised dark controls: the document button, Publish */
+  --edge-bar-control:#a69a86;     /* the off-white control on dark: the toast's and the stage's buttons */
+
+  /* Frames: the border of a needs-you object, and of floating ones (new) */
+  --frame-neutral:#b5a994;        /* popovers, menus, dialogs */
+  --frame-warning:#c99c48;        /* field problems, warning notices */
+  --frame-danger:#d4897a;         /* errors, danger notices, a destructive or lose-work dialog */
+  --frame-warning-on-dark:#a67d33;/* Preview not updated, on the bar */
+  --frame-danger-on-dark:#c95646; /* Can't reach the server, Not kept, Publish failed, on the bar */
+
+  /* Hard shadows, tinted to the object's own colour (new) */
+  --shadow-hard-neutral:var(--hard-offset) var(--hard-offset) 0 #aa9e8b;
+  --shadow-hard-warning:var(--hard-offset) var(--hard-offset) 0 #d6ae62;
+  --shadow-hard-danger:var(--hard-offset) var(--hard-offset) 0 #dc9a8c;
+  --shadow-hard-warning-on-dark:var(--hard-offset) var(--hard-offset) 0 #5e4517;
+  --shadow-hard-danger-on-dark:var(--hard-offset) var(--hard-offset) 0 #6a2419;
+  --shadow-edge:0 1px 0 #ddd4c4;  /* the soft 1px edge under a card at rest (an open list item, the sign-in card) */
+  /* Type */
+  --font-ui:"Instrument Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --font-mono:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --text-2xs:10.5px; --text-xs:11px; --text-sm:12px; --text-base:13px; --text-md:14px; --text-lg:16px; --text-xl:19px; --text-2xl:24px;
+  --leading-tight:1.2; --leading:1.45; --leading-loose:1.55;
+  --weight-regular:400; --weight-medium:500; --weight-semibold:600; --weight-bold:700;
+  --tracking-caps:.06em; --tracking-tight:-.01em;
+  /* Space */
+  --space-0-5:2px; --space-1:4px; --space-1-5:6px; --space-2:8px; --space-2-5:10px; --space-3:12px; --space-4:16px; --space-5:20px; --space-6:24px; --space-8:32px; --space-10:40px;
+  /* Radius */
+  --radius-xs:3px; --radius-sm:5px; --radius-md:7px; --radius-lg:10px; --radius-xl:14px; --radius-pill:999px;
+  /* Shadow: hard and unblurred (the restyle; M2's were soft) */
+  --shadow-control:0 var(--press-depth) 0 var(--edge-secondary);  /* a secondary button's pressed edge */
+  --shadow-raised:0 1px 0 var(--edge-secondary);   /* a switch knob, the chosen segment */
+  --shadow-pop:var(--shadow-hard-neutral);  /* popovers and menus, with a --frame-neutral border */
+  --shadow-drag:var(--shadow-hard-neutral);  /* a block lifted to reorder */
+  --shadow-modal:var(--shadow-hard-neutral);  /* a dialog, with a --frame-neutral border */
+  --shadow-frame:0 0 0 1px rgba(255,242,222,.08),var(--hard-offset) var(--hard-offset) 0 #15120e; /* the preview on the stage, the submission sheet */
+  /* Motion (all zero under reduced motion) */
+  --dur-fast:120ms; --dur-base:180ms; --dur-slow:320ms; --dur-pulse:900ms;
+  --ease-out:cubic-bezier(.2,.8,.2,1); --ease-in-out:cubic-bezier(.45,0,.25,1);
+  /* Layout */
+  --bar-h:44px; --sidebar-w:320px; --row-h:30px; --control-h:32px; --control-h-sm:26px; --pop-gap:8px; --frame-pad:16px;
+  /* Pages tree (M3 Decision 8): the twisty (at a row's end), and one step of indent (a child's icon starts where its parent's ends) */
+  --tree-twisty:16px; --tree-indent:16px;
+  /* Media (M5b): a slot's thumbnail, the library's grid (columns at the sidebar's width), the focal point's ring */
+  --thumb-w:64px; --thumb-h:48px; --lib-cols:3; --focal-ring:22px; --focal-max-h:220px;
+  /* The grid (M6c G5): a card's narrowest width (the stage fits as many as it can), the gaps, the card's own padding,
+     the text card's paper and the picture's box while its image is on its way (the ratio is the collection's, set inline) */
+  --card-min:208px; --card-gap-x:var(--space-3); --card-gap-y:var(--space-4); --card-pad:var(--space-1-5);
+  --card-text-bg:var(--surface-tab-near); --card-loading-bg:var(--surface-sunken);
+  /* Submissions (M6): the unread mark, a submission's sheet in the stage, its label column */
+  --unread:var(--select); --sub-sheet-w:640px; --sub-label-w:168px;
+  /* Layers */
+  --z-frame:1; --z-bar:20; --z-pop:40; --z-toast:45; --z-modal:60; --z-screen:80;
+}
+@media (prefers-reduced-motion:reduce){:root{--dur-fast:0ms;--dur-base:0ms;--dur-slow:0ms;--dur-pulse:0ms}}
+:root[data-motion="reduce"]{--dur-fast:0ms;--dur-base:0ms;--dur-slow:0ms;--dur-pulse:0ms}

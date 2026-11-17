@@ -1,0 +1,52 @@
+{
+  "$schema": "../../schemas/shared.schema.json",
+  "title": "Footer",
+  "default": true,
+  "block": {
+    "type": "siteFooter",
+    "columns": [
+      {
+        "heading": "CaraCMS",
+        "links": [
+          {
+            "label": "About",
+            "href": "/about"
+          },
+          {
+            "label": "Who does what",
+            "href": "/about/team"
+          },
+          {
+            "label": "Examples",
+            "href": "/work"
+          },
+          {
+            "label": "Contact",
+            "href": "/contact"
+          }
+        ]
+      },
+      {
+        "heading": "Elsewhere",
+        "links": [
+          {
+            "label": "Field notes",
+            "href": "/field-notes"
+          },
+          {
+            "label": "Try it locally",
+            "href": "/studio/visit"
+          },
+          {
+            "label": "Questions",
+            "href": "/faq"
+          },
+          {
+            "label": "Privacy",
+            "href": "/privacy"
+          }
+        ]
+      }
+    ]
+  }
+}

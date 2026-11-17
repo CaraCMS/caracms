@@ -1,0 +1,33 @@
+{
+  "$schema": "../../schemas/pages.schema.json",
+  "title": "Work",
+  "holds": "case-studies",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Selected work", "2019 to now"],
+      "intro": "A few of the brands, sites and books we have made.",
+      "layout": "left",
+      "background": "light"
+    },
+    {
+      "type": "text",
+      "heading": "A florist's shopfront",
+      "body": "A new identity for a family bakery, from the shop sign to the bread bags.",
+      "background": "light"
+    },
+    {
+      "type": "text",
+      "heading": "A summer festival",
+      "body": "A website and printed programme for a three-day music festival.",
+      "background": "dark"
+    },
+    {
+      "type": "cases",
+      "heading": "All projects",
+      "show": "in-order",
+      "count": 6,
+      "background": "light"
+    }
+  ]
+}

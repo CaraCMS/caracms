@@ -1,0 +1,23 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "Notes from the Ridge",
+  "date": "2025-08-11",
+  "tags": ["print", "field"],
+  "cover": { "key": "uploads/61e1f507072b/cafe-chairs.jpg", "alt": "An empty café with wooden chairs and tables", "focal": [0.92, 0.33], "w": 4000, "h": 2662 },
+  "excerpt": "Three days at a festival on the ridge, forty bands and one very large printed programme.",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Notes from", "The Ridge"],
+      "intro": "Three days, forty bands and one very large printed programme.",
+      "layout": "left",
+      "background": "light"
+    },
+    {
+      "type": "text",
+      "heading": "What we learned",
+      "body": "Print the schedule bigger than you think. Then bigger again.",
+      "background": "dark"
+    }
+  ]
+}

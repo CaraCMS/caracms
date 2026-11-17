@@ -1,0 +1,14 @@
+---
+/**
+ * The text styles' fonts, for the page's `<head>`: `<Fonts />`. Astro's fonts API
+ * emits each `@font-face` (registered by the integration from the text styles,
+ * `font-display: block`, Decision 14) and a preload.
+ */
+import { Font } from 'astro:assets';
+import { site } from 'virtual:caracms/config';
+
+const styles = Object.values(site.textStyles);
+const variables = [...new Set(styles.map((s) => s.cssVariable))];
+---
+
+{variables.map((cssVariable) => <Font cssVariable={cssVariable as any} preload />)}

@@ -1,0 +1,5 @@
+{
+  "$schema": "../../schemas/tags.schema.json",
+  "title": "Type",
+  "description": "Letters, lines and the rules we set for them, on paper and on screens of every size."
+}

@@ -1,0 +1,64 @@
+---
+/**
+ * The page's head (M6 Decisions 15 and 16): the site's page component puts it in its
+ * `<head>`, as it does `<Fonts />`, and keeps its own icon links:
+ *
+ *   <Head document={document} collection={collection} preview={preview} listPage={listPage} />
+ *
+ * It writes `<title>`, the description, the canonical link, `og:` and `twitter:` tags
+ * and the Google tag (the rules: ../head.ts). Site Settings is read from the file the
+ * build or the preview renders from (read.ts → renderSourceOf), so a preview shows the
+ * drafts' defaults and a build the deployed ones. The Google tag never goes into a
+ * preview or a dev build; the canonical link and `og:url` only with `SITE_URL`.
+ */
+import { join } from 'node:path';
+import { site } from 'virtual:caracms/config';
+import { build } from 'virtual:caracms/public';
+import { documentAddress } from '../content.ts';
+import type { PageProps } from '../document.ts';
+import { googleTagSnippet, headOf, withoutHtml } from '../head.ts';
+import { readMediaConfig } from '../media.ts';
+import { renderSourceOf } from '../read.ts';
+import { SITE_SETTINGS_FILE } from '../reserved.ts';
+
+/** The page component's props; `data` (its own fields) and `settings` aren't needed here. */
+// Edit in context: the page's contexts too, so `<Head {...Astro.props}>` and a site's own subset both fit.
+type Props = Omit<PageProps, 'data' | 'settings' | 'listPage' | 'read' | 'path' | 'cms' | 'settingsCms'> & { data?: PageProps['data']; settings?: PageProps['settings']; listPage?: number; read?: PageProps['read']; path?: PageProps['path']; cms?: PageProps['cms']; settingsCms?: PageProps['settingsCms'] };
+const { document, collection, preview = false } = Astro.props;
+// Posts and tags, Decision 16: page 2 onwards says so in its title. A preview is always page 1.
+const listPage = !preview && Number.isInteger(Astro.props.listPage) && Astro.props.listPage! >= 1 ? Astro.props.listPage! : 1;
+
+const settingsText = await renderSourceOf(Astro.locals).readText(join(site.root, SITE_SETTINGS_FILE));
+// A public page's path is its own address; a preview's is the document's: the page component's
+// `path` when it's passed on, else the GET's `?path=` (for the home page's title).
+const previewPath = async () => {
+	if (Astro.props.path !== undefined) return Astro.props.path;
+	const path = Astro.url.searchParams.get('path');
+	// Collections under pages: a held document's address is its holder's + its slug.
+	return path ? documentAddress(site, collection, path, renderSourceOf(Astro.locals)) : null;
+};
+const head = headOf({
+	document,
+	settingsText,
+	// A public page's own address, without a `build.format: 'file'` prerender's `.html` (head.ts).
+	path: preview ? await previewPath() : withoutHtml(Astro.url.pathname),
+	siteUrl: preview ? null : build.siteUrl,
+	media: readMediaConfig(),
+	tagAllowed: build.production && !preview,
+	listPage,
+	titleSeparator: site.titleSeparator,
+	titleFallback: site.titleFallback,
+});
+---
+
+<title>{head.title}</title>
+{head.description && <meta name="description" content={head.description} />}
+{head.canonical && <link rel="canonical" href={head.canonical} />}
+<meta property="og:title" content={head.title} />
+{head.description && <meta property="og:description" content={head.description} />}
+{head.canonical && <meta property="og:url" content={head.canonical} />}
+{head.image && <meta property="og:image" content={head.image.url} />}
+{head.image?.width && <meta property="og:image:width" content={String(head.image.width)} />}
+{head.image?.height && <meta property="og:image:height" content={String(head.image.height)} />}
+<meta name="twitter:card" content={head.twitterCard} />
+{head.googleTag && <Fragment set:html={googleTagSnippet(head.googleTag)} />}

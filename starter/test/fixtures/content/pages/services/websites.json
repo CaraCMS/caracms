@@ -1,0 +1,49 @@
+{
+  "$schema": "../../../schemas/pages.schema.json",
+  "title": "Websites",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Websites"],
+      "intro": "Fast, accessible sites that you can edit yourself.",
+      "layout": "left",
+      "background": "light"
+    },
+    {
+      "type": "text",
+      "heading": "Built to be changed",
+      "body": "Every site we make comes with an editor, so the words can change without us.",
+      "background": "dark"
+    },
+    {
+      "type": "columns",
+      "left": {
+        "heading": "Built for you",
+        "text": [
+          { "p": "A site you can change yourself, from the words to the pictures." }
+        ],
+        "button": [
+          {
+            "label": "See our work",
+            "href": "/work",
+            "style": "primary"
+          }
+        ]
+      },
+      "right": {
+        "heading": "Looked after",
+        "text": [
+          { "p": "We stay on after launch, for the fixes and the next idea." }
+        ],
+        "button": [
+          {
+            "label": "Get in touch",
+            "href": "/contact",
+            "style": "secondary"
+          }
+        ]
+      },
+      "background": "light"
+    }
+  ]
+}

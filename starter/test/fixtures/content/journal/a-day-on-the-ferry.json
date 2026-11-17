@@ -1,0 +1,23 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "A day on the ferry",
+  "date": "2025-12-12",
+  "tags": ["field"],
+  "cover": { "key": "uploads/61e1f507072b/cafe-chairs.jpg", "alt": "An empty café with wooden chairs and tables", "focal": [0.92, 0.33], "w": 4000, "h": 2662 },
+  "excerpt": "We took the morning ferry with High-street coffee roaster to see their cart at work.",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["A day on", "The ferry"],
+      "intro": "Four crossings, a lot of coffee and a notebook full of sign sketches.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "What we saw",
+      "body": "People read the menu from twenty metres away. So the menu got bigger.",
+      "background": "light"
+    }
+  ]
+}

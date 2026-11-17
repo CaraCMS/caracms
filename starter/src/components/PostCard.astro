@@ -1,0 +1,51 @@
+---
+/**
+ * A post's listing card (posts and tags, Decision 9): cover at 3:2, date, title, excerpt, one
+ * link to the post. The case card's markup and tokens (blocks/Cases.astro), so the two lists
+ * look alike. Each part is left out when the post hasn't got it (Acceptance 4–6): no box for a
+ * missing cover, no line for a missing date. Review gaps (Acceptance 27): its cover, date and
+ * excerpt are marked as the post's (`cms.of`), so a click opens the post over the page at that
+ * field; the date is drawn as a day, so it's marked without its value. A title is never marked.
+ */
+import Block from 'caracms/components/Block.astro';
+import Media from 'caracms/components/Media.astro';
+import Text from 'caracms/components/Text.astro';
+import type { BlockContext } from 'caracms/document';
+import { formatDay } from '../collections/case-studies.ts';
+import type { Post } from '../collections/journal.ts';
+
+interface Props {
+	post: Post;
+	cms: BlockContext;
+	/** The cover's `sizes`, from the grid it sits in (blocks/grid.ts → gridSizes). */
+	sizes: string;
+}
+const { post, cms, sizes } = Astro.props;
+const of = cms.of(post.entry);
+---
+
+<Block cms={of} as="a" class="post-card grid content-start gap-2 no-underline" href={post.url ?? undefined}>
+	{post.data.cover && <Media cms={of} field="cover" value={post.data.cover} sizes={sizes} ratio={3 / 2} class="frame frame-landscape mb-3" />}
+	{
+		post.data.date && (
+			<Block cms={of} field="date" as="time" class="eyebrow fg-muted" datetime={post.data.date}>
+				{formatDay(post.data.date)}
+			</Block>
+		)
+	}
+	<b class="post-title text-h4">{post.title}</b>
+	{post.data.excerpt && <Text cms={of} field="excerpt" value={post.data.excerpt} as="span" class="fg-muted" />}
+</Block>
+
+<style>
+	.post-card:hover .post-title {
+		text-decoration: underline;
+		text-decoration-thickness: 1px;
+		text-underline-offset: 0.2em;
+	}
+
+	.post-card:focus-visible {
+		outline-offset: 6px;
+		border-radius: var(--radius-media);
+	}
+</style>

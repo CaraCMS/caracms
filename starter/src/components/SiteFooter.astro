@@ -1,0 +1,127 @@
+---
+/**
+ * The page shell's footer (M7 Decision 18, from the Tina template's SiteFooter). On every
+ * page, the 404 too; not on a body block's own preview. Since edit in context (Decision 16)
+ * it's the footer slot's shared block (src/blocks/Footer.astro gives it its data and `cms`).
+ *
+ * A grey-50 band: the footer's link columns (a heading and links each), then the
+ * contact details (email as mailto:, phone as tel:), the postal address and the social
+ * links, then the © line. Two per row on phones, three on tablets, one row of five on
+ * desktop. The columns' headings are content; the other three labels are code. Anything
+ * unset is left out with no empty wrapper (shell.ts → footerParts): with nothing set, only
+ * the © line, with no separator above it. Contact spans both columns on phones, so the
+ * email fits on its line; where a column is still too narrow it breaks before the @.
+ *
+ * Social links are each network's name (M7 Open question 2, *Decisions during build*).
+ * The year is the build's: the site rebuilds on every Publish.
+ *
+ * Edit in context, its marks in a preview (Decisions 4, 10, 16): the root is the footer's
+ * shared block (`data-cms-source="shared/footer"`), and a column's heading its field. The contact
+ * details and socials are Site Settings' fields, through `cms.settings`: the phone and the address
+ * typed on the page, the email marked without the package drawing it (it keeps its `<wbr>`), a
+ * social marked as its network. The columns' links aren't marked: they follow (Decision 7).
+ */
+import Block from 'caracms/components/Block.astro';
+import Text from 'caracms/components/Text.astro';
+import type { BlockContext } from 'caracms/document';
+import type { FooterParts, ShellLink } from './shell.ts';
+import { fileAttributes } from './shell.ts';
+
+interface Props {
+	name: string;
+	parts: FooterParts;
+	/** The footer's shared block's context (the slot's); `cms.settings` marks Site Settings' fields. */
+	cms: BlockContext;
+}
+
+const { name, parts, cms } = Astro.props;
+const { columns, contact, address, socials } = parts;
+const any = columns.length > 0 || contact.length > 0 || address.length > 0 || socials.length > 0;
+const year = new Date().getFullYear();
+const linkClass = 'no-underline underline-offset-[0.22em] [overflow-wrap:anywhere] hover:underline';
+// An email breaks before its @ when its column is too narrow, never mid-word.
+const emailParts = (email: string) => email.split(/(?=@)/);
+const groups: { label: string; links: ShellLink[]; nav: boolean; column: number | null }[] = [
+	...columns.map((c) => ({ label: c.heading, links: c.links, nav: true, column: c.index })),
+	...(contact.length > 0 ? [{ label: 'Contact', links: contact, nav: false, column: null }] : []),
+];
+---
+
+<Block cms={cms} as="footer" class="bg-grey-50 pt-14 pb-10" data-site-footer>
+	<div class="content-container">
+		{
+			any && (
+				<div class="grid grid-cols-2 gap-x-grid gap-y-10 md:grid-cols-3 lg:grid-cols-5">
+					{groups.map((group) => {
+						const Tag = group.nav ? 'nav' : 'div';
+						return (
+							<Tag aria-label={group.nav ? group.label || undefined : undefined} class:list={[!group.nav && 'col-span-2 md:col-span-1']} data-footer-group>
+								{group.column !== null ? (
+									<Text cms={cms} field={`columns.${group.column}.heading`} value={group.label} as="h2" class="eyebrow fg-muted mb-3" />
+								) : (
+									<h2 class="eyebrow fg-muted mb-3" data-cms-fixed>
+										{group.label}
+									</h2>
+								)}
+								<ul class="grid gap-2">
+									{group.links.map((link) => (
+										<li>
+											{link.href.startsWith('mailto:') ? (
+												<Block cms={cms.settings} field="contact.email" as="a" class={linkClass} href={link.href}>
+													{emailParts(link.label).map((part, i) => (i > 0 ? <><wbr />{part}</> : part))}
+												</Block>
+											) : link.href.startsWith('tel:') ? (
+												<a class:list={[linkClass, 'whitespace-nowrap']} href={link.href}>
+													<Text cms={cms.settings} field="contact.phone" value={link.label} as="span" />
+												</a>
+											) : (
+												<a class={linkClass} href={link.href} {...fileAttributes(link)}>
+													{link.label}
+													{link.file === 'new-tab' && <span class="sr-only"> (opens in a new tab)</span>}
+												</a>
+											)}
+										</li>
+									))}
+								</ul>
+							</Tag>
+						);
+					})}
+					{address.length > 0 && (
+						<div data-footer-group>
+							<h2 class="eyebrow fg-muted mb-3" data-cms-fixed>
+								Address
+							</h2>
+							<Block cms={cms.settings} field="contact.address" as="address">
+								{address.map((line, i) => (
+									<>
+										{i > 0 && <br />}
+										{line}
+									</>
+								))}
+							</Block>
+						</div>
+					)}
+					{socials.length > 0 && (
+						<div data-footer-group>
+							<h2 class="eyebrow fg-muted mb-3" data-cms-fixed>
+								Follow
+							</h2>
+							<ul class="grid gap-2">
+								{socials.map((link) => (
+									<li>
+										<Block cms={cms.settings} field={`socials.${link.index}.network`} as="a" class={linkClass} href={link.href}>
+											{link.label}
+										</Block>
+									</li>
+								))}
+							</ul>
+						</div>
+					)}
+				</div>
+			)
+		}
+		<p class:list={['fg-muted text-small', any && 'mt-14 border-t border-grey-200 pt-6']} data-footer-legal data-cms-fixed>
+			© {year} {name}
+		</p>
+	</div>
+</Block>

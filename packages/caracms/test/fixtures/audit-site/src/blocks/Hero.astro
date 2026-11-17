@@ -1,0 +1,19 @@
+---
+/** Marks its heading, its link (the label), its photo (valueless) and its cover (`<Media>`, which draws only with media set up); its intro is drawn unmarked. */
+import Block from 'caracms/components/Block.astro';
+import Link from 'caracms/components/Link.astro';
+import Media from 'caracms/components/Media.astro';
+import Text from 'caracms/components/Text.astro';
+import type { BlockProps } from 'caracms/document';
+
+type Props = BlockProps<any>;
+const { block, cms } = Astro.props;
+---
+
+<Block cms={cms} class={`hero ${block.layout}`}>
+	<Text cms={cms} field="heading" value={block.heading} as="h1" />
+	<p class="intro">{block.intro}</p>
+	<Link cms={cms} field="cta" value={block.cta} />
+	{block.photo && <Block cms={cms} field="photo" as="img" src="/photo.jpg" alt={block.photo.alt} />}
+	<Media cms={cms} field="cover" value={block.cover} sizes="100vw" />
+</Block>

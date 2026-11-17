@@ -1,0 +1,23 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "Text styles, set in code",
+  "date": "2025-06-27",
+  "tags": ["type", "editing"],
+  "cover": { "key": "uploads/61e1f507072b/cafe-chairs.jpg", "alt": "An empty café with wooden chairs and tables", "focal": [0.92, 0.33], "w": 4000, "h": 2662 },
+  "excerpt": "A site names its text styles once, in code, and the editor offers them by name.",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Text styles,", "Set in code"],
+      "intro": "The developer sets the sizes. The editor picks a style.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "By name",
+      "body": "An editor chooses Display or Body, never a font size, so every page keeps to the same few.",
+      "background": "light"
+    }
+  ]
+}

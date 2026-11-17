@@ -1,0 +1,49 @@
+{
+  "$schema": "../../../schemas/pages.schema.json",
+  "title": "Editing",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Editing"],
+      "intro": "Change a page where it is, and see it as visitors will.",
+      "layout": "left",
+      "background": "light"
+    },
+    {
+      "type": "text",
+      "heading": "Blocks, not templates",
+      "body": "Every page is a list of the site’s own blocks: add them, reorder them and edit them in the page’s preview.",
+      "background": "dark"
+    },
+    {
+      "type": "columns",
+      "left": {
+        "heading": "Draft, then publish",
+        "text": [
+          { "p": "Edits stay in the draft until someone publishes. A Publish is one commit to the site’s repository." }
+        ],
+        "button": [
+          {
+            "label": "See examples",
+            "href": "/work",
+            "style": "primary"
+          }
+        ]
+      },
+      "right": {
+        "heading": "Shared blocks",
+        "text": [
+          { "p": "The header, the footer and any block used on several pages are edited once, in one place." }
+        ],
+        "button": [
+          {
+            "label": "Get in touch",
+            "href": "/contact",
+            "style": "secondary"
+          }
+        ]
+      },
+      "background": "light"
+    }
+  ]
+}

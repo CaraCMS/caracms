@@ -1,0 +1,55 @@
+{
+  "$schema": "../../schemas/pages.schema.json",
+  "title": "About",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": {
+        "lines": ["An editor that", "stays out of the way"],
+        "phone": ["An editor", "that stays out", "of the way"]
+      },
+      "intro": "CaraCMS is an npm package for Astro sites, free under the MIT licence.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "How it works",
+      "body": "A developer adds it with npx caracms init and describes the site’s blocks in caracms.config.ts.\nEditors then sign in at /admin and change the pages they see.",
+      "background": "light"
+    },
+    {
+      "type": "features",
+      "heading": "What you can count on",
+      "intro": "The site stays yours: its code, its content and where it runs.",
+      "perRow": "3",
+      "items": [
+        {
+          "heading": "Your own repository",
+          "text": "Content is JSON files beside the code. Pages are never kept in a database of ours."
+        },
+        {
+          "heading": "Any Node host",
+          "text": "Railway, Render, Fly or a VPS: anywhere that keeps one Node server running behind HTTPS."
+        },
+        {
+          "heading": "MIT licensed",
+          "text": "The whole package is free, with no caps. CaraCMS Cloud is there for the annoying parts, if you want it."
+        }
+      ],
+      "background": "light",
+      "spaceAbove": "default",
+      "spaceBelow": "default"
+    },
+    {
+      "type": "media",
+      "media": { "key": "uploads/61e1f507072b/cafe-chairs.jpg", "alt": "An empty café with wooden chairs and tables", "focal": [0.92, 0.33], "w": 4000, "h": 2662 },
+      "width": "content",
+      "caption": "An empty café, one of the starter’s sample pictures.",
+      "background": "light",
+      "spaceAbove": "default",
+      "spaceBelow": "default"
+    },
+    { "shared": "start-a-project" }
+  ]
+}

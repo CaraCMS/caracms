@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Workshops",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "frame": {
+      "description": "The page's own picks for its frame, each a shared block's path; a slot it doesn't name gets the site's default.",
+      "type": "object",
+      "properties": {
+        "header": {
+          "type": "string",
+          "minLength": 1
+        },
+        "footer": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "open": {
+      "title": "Open for booking",
+      "description": "Off: the booking form stops offering it. Bookings already made still name it.",
+      "type": "boolean"
+    },
+    "sessions": {
+      "title": "Sessions",
+      "description": "The sessions it runs. None: a booking can pick either.",
+      "type": "array",
+      "items": {
+        "title": "Sessions",
+        "enum": [
+          "morning",
+          "afternoon"
+        ]
+      }
+    },
+    "seo": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "image": {
+          "type": "object",
+          "properties": {
+            "key": {
+              "type": "string",
+              "minLength": 1
+            },
+            "w": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "h": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "focal": {
+              "type": "array",
+              "items": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "minItems": 2,
+              "maxItems": 2
+            }
+          },
+          "required": [
+            "key"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "title"
+  ],
+  "additionalProperties": false
+}

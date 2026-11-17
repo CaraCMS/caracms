@@ -1,0 +1,40 @@
+---
+/**
+ * Full-width media (M7 Decision 10): one image or clip at 16:9, full-bleed (square
+ * corners, at most 90% of the window's height) or framed at the content width, with an
+ * optional caption under it. With nothing in it, it renders nothing on the page
+ * (Acceptance 27); a preview keeps the empty block, unpadded, so its markers are there.
+ * Schema beside it in media.ts.
+ */
+import Block from 'caracms/components/Block.astro';
+import Media from 'caracms/components/Media.astro';
+import Text from 'caracms/components/Text.astro';
+import type { BlockProps } from 'caracms/document';
+import { bandClass } from './background.ts';
+import type { FullMediaData } from './media.ts';
+
+type Props = BlockProps<FullMediaData>;
+const { block, cms } = Astro.props;
+const bleed = block.width === 'bleed';
+const sizes = bleed ? '100vw' : '(min-width: 1296px) 1200px, (min-width: 1024px) calc(100vw - 96px), (min-width: 768px) calc(100vw - 64px), calc(100vw - 40px)';
+---
+
+{
+	block.media ? (
+		<Block cms={cms} class={bandClass(block)}>
+			<figure class:list={[{ 'content-container': !bleed }]}>
+				<Media cms={cms} field="media" value={block.media} sizes={sizes} ratio={16 / 9} class:list={['frame frame-wide', { 'full-bleed': bleed }]} />
+				<Text cms={cms} field="caption" value={block.caption} as="figcaption" class:list={['caption', { 'content-container': bleed }]} />
+			</figure>
+		</Block>
+	) : (
+		cms.preview && <Block cms={cms} class="band" />
+	)
+}
+
+<style>
+	figure :global(.full-bleed) {
+		max-height: 90svh;
+		border-radius: 0;
+	}
+</style>

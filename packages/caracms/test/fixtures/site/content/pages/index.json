@@ -1,0 +1,10 @@
+{
+  "title": "Home",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Building a better mousetrap", "For You"],
+      "intro": "Hello"
+    }
+  ]
+}

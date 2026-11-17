@@ -1,0 +1,23 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "Running on Railway",
+  "date": "2025-12-12",
+  "tags": ["hosting"],
+  "cover": { "key": "uploads/61e1f507072b/cafe-chairs.jpg", "alt": "An empty café with wooden chairs and tables", "focal": [0.92, 0.33], "w": 4000, "h": 2662 },
+  "excerpt": "What a site needs on Railway: one instance, HTTPS, and the same SITE_URL where it’s built and where it runs.",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Running on", "Railway"],
+      "intro": "One service, a push to main, and a deploy.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "What it needs",
+      "body": "One instance, HTTPS, and SITE_URL set the same at build and at run time.",
+      "background": "light"
+    }
+  ]
+}

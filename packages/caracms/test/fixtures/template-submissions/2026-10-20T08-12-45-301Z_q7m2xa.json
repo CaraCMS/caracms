@@ -1,0 +1,20 @@
+{
+  "v": 1,
+  "id": "2026-10-20T08-12-45-301Z_q7m2xa",
+  "form": "contact",
+  "receivedAt": "2026-10-20T08:12:45.301Z",
+  "fields": {
+    "firstName": "Ana",
+    "lastName": "R.",
+    "email": "ana@example.com",
+    "message": "Hi CaraCMS team,\nwe would love to book a games night for twenty people in November."
+  },
+  "readAt": null,
+  "email": {
+    "status": "sent",
+    "at": "2026-10-20T08:12:46.112Z",
+    "to": [
+      "owner@example.com"
+    ]
+  }
+}

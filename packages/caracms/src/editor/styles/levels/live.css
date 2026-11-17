@@ -1,0 +1,12 @@
+/*
+ * Live mode's pieces (M4 Phase 4) beyond the mockup's CSS (all in ../editor.css):
+ * a mark's wrapper that lays out as its children, and the read-only fields' fieldset,
+ * which disables every control in it and takes no room of its own. Tokens only.
+ */
+.mk{display:contents}
+fieldset.ro-fields{display:contents;margin:0;padding:0;border:0;min-width:0}
+.note .acts .why{flex-basis:100%;margin:0;font-size:var(--text-xs);color:var(--text-subtle)}
+/* Failed (or taking longer than usual) with no redeployer (a state M4 adds): Publish is off, so it takes the off ink, not the failure's red (1.9:1 on the off fill). */
+.pub.fail .pb.off{color:var(--bar-off-text)}
+/* Discard changes: a waiting document's own Discard…, under its line, where its notes start. */
+.wi-acts{display:flex;gap:var(--space-3);margin:var(--space-1) 0 0 24px;font-size:var(--text-sm)}

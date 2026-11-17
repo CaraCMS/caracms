@@ -1,0 +1,23 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "Help text on fields",
+  "date": "2025-07-15",
+  "tags": ["editing", "type"],
+  "cover": { "key": "uploads/a40fe31a6eeb/material-samples.png", "alt": "Paint swatches, fabric, stone and timber samples on marble", "w": 1200, "h": 1800 },
+  "excerpt": "A field can carry a sentence of help, shown under it in the editor’s form.",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Help text", "On fields"],
+      "intro": "One sentence, where the editor needs it.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "Written once",
+      "body": "The developer writes it in the field’s config, and every editor reads it.",
+      "background": "light"
+    }
+  ]
+}

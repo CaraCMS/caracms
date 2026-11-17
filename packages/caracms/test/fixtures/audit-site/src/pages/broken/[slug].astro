@@ -1,0 +1,8 @@
+---
+/** A route whose getStaticPaths throws: the audit says so and carries on. */
+export function getStaticPaths(): { params: { slug: string } }[] {
+	throw new Error('this route is broken on purpose');
+}
+---
+
+<p>Never rendered.</p>

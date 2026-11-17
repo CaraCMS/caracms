@@ -1,0 +1,23 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "What the editor shows",
+  "date": "2026-09-12",
+  "tags": ["news", "editing"],
+  "cover": { "key": "uploads/61e1f507072b/cafe-chairs.jpg", "alt": "An empty café with wooden chairs and tables", "focal": [0.92, 0.33], "w": 4000, "h": 2662 },
+  "excerpt": "The pages tree, collections, shared blocks and Site Settings: a short tour of /admin.",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["What the", "Editor shows"],
+      "intro": "Pages, collections, shared blocks and Site Settings.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "Pages first",
+      "body": "The pages tree reads Home first, then the pages under it. Arrange pages changes the order.",
+      "background": "light"
+    }
+  ]
+}

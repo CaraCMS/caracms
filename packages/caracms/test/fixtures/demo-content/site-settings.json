@@ -1,0 +1,24 @@
+{
+  "$schema": "../schemas/site-settings.schema.json",
+  "title": "Site Settings",
+  "editors": ["niamh@example.com"],
+  "brand": {
+    "name": "CaraCMS",
+    "accent": "#1f3a2e"
+  },
+  "seo": {
+    "title": "CaraCMS, a small design studio",
+    "description": "Identities, websites and print for people within an hour of the studio.",
+    "image": { "key": "uploads/3f9a1c07b2e4/harbour-wall.jpg", "w": 4000, "h": 2667, "focal": [0.4, 0.3] }
+  },
+  "collectionOrder": {
+    "case-studies": ["nature-films", "tiny-publisher", "oak-furniture", "high-street-coffee", "sourdough-bakery", "weekend-bikes"]
+  },
+  "formWords": {
+    "contact": {
+      "sent": {
+        "heading": "Thanks, it’s sent"
+      }
+    }
+  }
+}

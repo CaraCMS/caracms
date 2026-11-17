@@ -1,0 +1,5 @@
+{
+  "$schema": "../../schemas/tags.schema.json",
+  "title": "Studio",
+  "description": "Life at the Old Mill: the people, the tools and how we spend a working week."
+}

@@ -1,0 +1,43 @@
+{
+  "$schema": "../../schemas/pages.schema.json",
+  "title": "Field notes",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Field notes"],
+      "intro": "",
+      "buttons": [],
+      "media": { "video": "nzTSImGqyv01rB02zkGGEO7Zn3zLAP02702vjD00g023U7SMw", "play": "loop", "duration": 6.066667, "w": 1280, "h": 720 },
+      "layout": "left",
+      "background": "light"
+    },
+    {
+      "type": "tm",
+      "body": [
+        { "p": "Text beside a picture: notes from a morning in a café." }
+      ],
+      "media": { "key": "uploads/61e1f507072b/cafe-chairs.jpg", "alt": "An empty café with wooden chairs and tables", "focal": [0.92, 0.33], "w": 4000, "h": 2662 },
+      "side": "left",
+      "background": "light"
+    },
+    {
+      "type": "gallery",
+      "heading": "Sample pictures",
+      "images": [
+        { "key": "uploads/ee1763a26420/img-4471.heic", "alt": "", "decorative": true, "w": 1200, "h": 1800 },
+        { "key": "uploads/a40fe31a6eeb/material-samples.png", "alt": "Paint swatches, fabric, stone and timber samples on marble", "w": 1200, "h": 1800 },
+        { "key": "uploads/61e1f507072b/cafe-chairs.jpg", "alt": "An empty café with wooden chairs and tables", "focal": [0.92, 0.34], "w": 4000, "h": 2662 }
+      ],
+      "background": "light"
+    },
+    {
+      "type": "media",
+      "media": { "key": "uploads/61e1f507072b/cafe-chairs.jpg", "alt": "An empty café with wooden chairs and tables", "focal": [0.92, 0.33], "w": 4000, "h": 2662 },
+      "width": "bleed",
+      "caption": "",
+      "background": "light",
+      "spaceAbove": "default",
+      "spaceBelow": "default"
+    }
+  ]
+}

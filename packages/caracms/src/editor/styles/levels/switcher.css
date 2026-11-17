@@ -1,0 +1,3 @@
+/* The ⌘K switcher (Phase 4), beyond ../editor.css: the keyboard highlight is a wash, not a rail. */
+#swlist .drow.is-active{background:var(--surface-pressed)}
+#swlist .drow.is-active.is-current{background:var(--select-wash)}

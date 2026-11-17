@@ -1,0 +1,26 @@
+{
+  "$schema": "../../schemas/case-studies.schema.json",
+  "title": "Sourdough bakery",
+  "heading": ["Sourdough", "Bakery"],
+  "client": "Sourdough bakery",
+  "sector": "food",
+  "featured": true,
+  "launched": "2023-09-20",
+  "summary": "A bakery that opens at six, and a sign you can read from the end of the street.",
+  "body": [
+    { "p": "The bakery bakes one bread and does it well. The identity is just as plain: one colour, one typeface, one stamp." },
+    { "h2": "The sign first" },
+    { "p": "We started with the sign over the door and worked inward, to the bags, the till receipts and a [contact page](/contact) that says when the bread runs out." }
+  ],
+  "credits": [
+    {
+      "role": "Identity",
+      "name": "Dara"
+    },
+    {
+      "role": "Signage",
+      "name": "Ciarán"
+    }
+  ],
+  "related": ["high-street-coffee", "oak-furniture"]
+}

@@ -1,0 +1,23 @@
+---
+/**
+ * The text block (the template's Long-form text): an optional heading in the first
+ * third on desktop, the rich-text body (H2 and H3, lists, links) in the last two at
+ * reading width. Stacked below 1024. Schema beside it in text.ts.
+ */
+import Block from 'caracms/components/Block.astro';
+import RichText from 'caracms/components/RichText.astro';
+import Text from 'caracms/components/Text.astro';
+import type { BlockProps } from 'caracms/document';
+import { bandClass } from './background.ts';
+import type { TextData } from './text.ts';
+
+type Props = BlockProps<TextData>;
+const { block, cms } = Astro.props;
+---
+
+<Block cms={cms} class={bandClass(block)}>
+	<div class="content-container split">
+		<Text cms={cms} field="heading" value={block.heading} class="text-h2" />
+		<RichText cms={cms} field="body" value={block.body} class="prose" />
+	</div>
+</Block>

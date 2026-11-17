@@ -1,0 +1,23 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "Posters for the film studio",
+  "date": "2026-02-03",
+  "tags": ["print"],
+  "cover": { "key": "uploads/a40fe31a6eeb/material-samples.png", "alt": "Paint swatches, fabric, stone and timber samples on marble", "w": 1200, "h": 1800 },
+  "excerpt": "A run of screen-printed posters for a film night, one colour at a time.",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Posters for", "The film studio"],
+      "intro": "Three colours, three days and a drying rack in the hall.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "One colour a day",
+      "body": "Each layer needs a night to dry, so the posters set the pace, not us.",
+      "background": "light"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "$schema": "../../schemas/case-studies.schema.json",
+  "title": "Kitchen pottery",
+  "heading": ["Kitchen", "Pottery"],
+  "client": "Kitchen pottery Pottery",
+  "sector": "craft",
+  "featured": true,
+  "launched": "2026-09-15",
+  "summary": "A new identity for a pottery that fires its own glazes.",
+  "body": [
+    { "p": "Kitchen pottery make plates for restaurants in the city. We built them a **glaze-led** identity." }
+  ],
+  "credits": [
+    {
+      "role": "Identity",
+      "name": "Aoife"
+    },
+    {
+      "role": "Type design",
+      "name": "Ciarán"
+    },
+    {
+      "role": "Photography",
+      "name": "Dara"
+    }
+  ],
+  "related": ["high-street-coffee"]
+}

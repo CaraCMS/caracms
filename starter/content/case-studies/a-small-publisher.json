@@ -1,0 +1,26 @@
+{
+  "$schema": "../../schemas/case-studies.schema.json",
+  "title": "A small publisher",
+  "heading": ["A small", "Publisher"],
+  "client": "A small publisher",
+  "sector": "culture",
+  "featured": true,
+  "launched": "2025-03-14",
+  "summary": "An example: a series of books as a collection, every cover on the same grid.",
+  "body": [
+    { "p": "The publisher brings out four short books a year, each one an essay that started as a talk." },
+    { "h2": "One grid, every cover" },
+    { "p": "Every book is an entry with the same fields, so the series reads as one shelf. The *titles* change; the frame never does." }
+  ],
+  "credits": [
+    {
+      "role": "Series design",
+      "name": "Niamh"
+    },
+    {
+      "role": "Typesetting",
+      "name": "Aoife"
+    }
+  ],
+  "related": ["a-coffee-roaster"]
+}

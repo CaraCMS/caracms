@@ -1,0 +1,20 @@
+---
+/**
+ * The header slot's block (site-header.ts): the shared block's menu and Site Settings' name,
+ * read through the render's source (so a preview shows the draft's, and an opened Site
+ * Settings' copy), drawn by src/components/SiteHeader.astro. The current page is the page the
+ * slot is drawn on (`cms.path`; none on the header's own preview).
+ */
+import { siteSettings } from 'caracms/content';
+import type { BlockProps } from 'caracms/document';
+import { site } from 'virtual:caracms/config';
+import SiteHeader from '../components/SiteHeader.astro';
+import { menuItems, siteName } from '../components/shell.ts';
+import type { SiteHeaderData } from './site-header.ts';
+
+type Props = BlockProps<SiteHeaderData>;
+const { block, cms } = Astro.props;
+const settings = await siteSettings(site, Astro.locals);
+---
+
+<SiteHeader name={siteName(settings)} items={menuItems(block, cms.path ?? null)} cms={cms} />

@@ -1,0 +1,23 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "Publishing is a commit",
+  "date": "2026-02-03",
+  "tags": ["publishing"],
+  "cover": { "key": "uploads/a40fe31a6eeb/material-samples.png", "alt": "Paint swatches, fabric, stone and timber samples on marble", "w": 1200, "h": 1800 },
+  "excerpt": "What Publish does: one commit to main, carrying every change in the draft.",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Publishing is", "A commit"],
+      "intro": "In the history the site already has.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "One commit",
+      "body": "Everything in the draft goes in together, so the site never builds half a change.",
+      "background": "light"
+    }
+  ]
+}

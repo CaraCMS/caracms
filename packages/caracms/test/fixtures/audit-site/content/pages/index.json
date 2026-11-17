@@ -1,0 +1,19 @@
+{
+  "title": "Home",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": "Welcome",
+      "intro": "We make things",
+      "layout": "centre",
+      "wide": true,
+      "count": 3,
+      "when": "2026-11-01",
+      "cta": { "label": "Say hello", "href": "/contact" },
+      "photo": { "key": "uploads/3f9a1c07b2e4/harbour-wall.jpg", "alt": "The harbour wall", "w": 4000, "h": 2667 },
+      "cover": { "key": "uploads/3f9a1c07b2e4/harbour-wall.jpg", "alt": "The harbour wall at dusk", "w": 4000, "h": 2667 }
+    },
+    { "shared": "promo" },
+    { "type": "latest", "heading": "Latest" }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "$schema": "../../schemas/case-studies.schema.json",
+  "title": "A travel company",
+  "heading": ["Trips, by season"],
+  "client": "A travel company",
+  "sector": "travel",
+  "featured": true,
+  "launched": "2026-06-10",
+  "summary": "An example: trips as a collection, each with its dates, its pictures and a booking form.",
+  "body": [
+    { "p": "Each trip is an entry, and the trips page holds them." },
+    { "p": "The pictures come from the media library." }
+  ]
+}

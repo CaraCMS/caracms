@@ -1,0 +1,19 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "Type that holds its lines",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Lines that", "Never wrap"],
+      "intro": "Why our headlines shrink instead of breaking on a phone.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "The rule",
+      "body": "A designer sets the lines. The text gets smaller instead of wrapping.",
+      "background": "light"
+    }
+  ]
+}

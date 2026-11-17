@@ -1,0 +1,96 @@
+---
+/**
+ * /admin and /admin/<collection>/<path> (addresses, Decision 19). Injected in dev and
+ * in the build (M4 Decision 1); live mode needs a session (Phase 3's guard).
+ *
+ * The shell is React, rendered here on the server (Decision 2), so the chrome is in
+ * the HTML before any script runs: the pane with the Pages groups as the cookie
+ * says (Decision 20), the stage with the iframes already loading, the bar. The
+ * browser then hydrates it (client/main.tsx) from the same props.
+ *
+ * Content is read now (Decision 5), through the mode's drafts store (server/mode.ts):
+ * the disk in local mode, the `drafts` copy with autosaves on top in live mode.
+ */
+import '../styles/fonts.css';
+import '../styles/tokens.css';
+import '../styles/editor.css';
+// Each pane level's own CSS, if it needs any beyond the mockup's (styles/levels/<level>.css).
+import.meta.glob('../styles/levels/*.css', { eager: true });
+import geistMono from '../fonts/geist-mono-latin-wght-normal.woff2?url';
+import instrumentSans from '../fonts/instrument-sans-latin-wght-normal.woff2?url';
+import { site } from 'virtual:caracms/config';
+import { monogramIcon } from '../brand.ts';
+import tokensCss from '../styles/tokens.css?raw';
+import { adminProps } from '../server/admin-props.ts';
+import { emptySitePage } from '../server/empty-site.ts';
+import { personOf } from '../../live/locals.ts';
+import { editorMode, editorStore } from '../server/mode.ts';
+import { renderEditor } from '../server/render.tsx';
+import { UI_COOKIE } from '../ui-state.ts';
+
+export const prerender = false;
+
+Astro.response.headers.set('Cache-Control', 'no-store');
+
+// Defence in depth: the guard (Phase 3) signs people in; with no person here, nothing is shown.
+if (editorMode().kind === 'live' && !personOf(Astro.locals)) {
+	return new Response('<!doctype html><meta charset="utf-8"><title>Sign in</title><p>Sign in to use the editor.</p><p><a href="/admin/login">Sign in</a></p>', {
+		status: 401,
+		headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' },
+	});
+}
+
+const result = await adminProps({ site, store: await editorStore(site), url: Astro.url, cookie: (name) => Astro.cookies.get(name)?.value, person: personOf(Astro.locals) });
+if (!result.ok && result.empty) {
+	// Editor wording note (caracms-cloud adversarial review): a new site's /admin says what's missing and what to do.
+	return new Response(emptySitePage(result.empty, tokensCss), {
+		status: result.status,
+		headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' },
+	});
+}
+if (!result.ok) {
+	const escape = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
+	return new Response(
+		`<!doctype html><meta charset="utf-8"><title>Not found</title><p>${escape(result.message)}</p><p><a href="/admin">Open the editor</a></p>`,
+		{ status: result.status, headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' } },
+	);
+}
+const { props } = result;
+// The server's view of the per-browser state (the open document's groups opened, Recent updated) goes back in the cookie.
+Astro.cookies.set(UI_COOKIE, JSON.stringify(props.ui), { path: '/', maxAge: 60 * 60 * 24 * 365, sameSite: 'lax' });
+
+const html = renderEditor(props);
+// The props travel as JSON in the page; `<` escaped so no text can close the tag.
+const json = JSON.stringify(props).replace(/</g, '\\u003c');
+const { brand } = props.site;
+// M6: the inbox names itself (it has no document of its own).
+const title = `${props.inbox ? 'Submissions' : props.arrange ? 'Arrange pages' : props.opened.document.title || props.opened.entry.label} · ${brand.name}`;
+const accent = `--accent:${brand.accent};--accent-ink:${brand.accentInk};--accent-edge:${brand.accentEdge}`;
+---
+
+<!doctype html>
+<html lang="en" style={accent}>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="robots" content="noindex" />
+		<title>{title}</title>
+		<link rel="icon" href={brand.tabIcon ?? brand.icon ?? brand.logo ?? monogramIcon(brand.name, brand.accent)} />
+		<link rel="preload" href={instrumentSans} as="font" type="font/woff2" crossorigin />
+		<link rel="preload" href={geistMono} as="font" type="font/woff2" crossorigin />
+	</head>
+	<body>
+		<div id="viewport" set:html={html} />
+		<script type="application/json" id="caracms-props" set:html={json} />
+		<script>
+			// First, what the site's framework integrations run before an island hydrates (Astro's
+			// injectScript 'before-hydration'; empty with none). In dev, @astrojs/react's is the React
+			// Refresh preamble, and its plugin-react instruments every module this page loads (it
+			// replaces the plugin's node_modules exclude, so even react-dom's pre-bundled chunk calls
+			// `$RefreshSig$`): without the preamble the editor dies before it hydrates. Astro adds it
+			// only to pages that render an island, and the editor's shell isn't one.
+			import 'astro:scripts/before-hydration.js';
+			import '../client/main.tsx';
+		</script>
+	</body>
+</html>

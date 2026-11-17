@@ -1,0 +1,24 @@
+{
+  "$schema": "../../schemas/shared.schema.json",
+  "title": "Footer",
+  "default": true,
+  "block": {
+    "type": "footer",
+    "address": "Unit 4, The Old Mill\nCork",
+    "email": "hello@example.com",
+    "links": [
+      {
+        "label": "Instagram",
+        "href": "https://instagram.com/example"
+      },
+      {
+        "label": "Journal",
+        "href": "/journal/a-new-home-for-caracms"
+      },
+      {
+        "label": "Visit the studio",
+        "href": "/contact"
+      }
+    ]
+  }
+}

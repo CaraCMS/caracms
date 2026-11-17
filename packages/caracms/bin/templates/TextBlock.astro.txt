@@ -1,0 +1,13 @@
+---
+/** The plain text block `caracms init` adds: one text field, as a paragraph. */
+import Block from 'caracms/components/Block.astro';
+import Text from 'caracms/components/Text.astro';
+import type { BlockProps } from 'caracms/document';
+
+type Props = BlockProps<{ text: string }>;
+const { block, cms } = Astro.props;
+---
+
+<Block cms={cms} as="section">
+	<Text cms={cms} field="text" value={block.text} />
+</Block>

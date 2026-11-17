@@ -1,0 +1,24 @@
+{
+  "$schema": "../../schemas/case-studies.schema.json",
+  "title": "Oak furniture maker",
+  "heading": ["Oak", "Furniture"],
+  "client": "Oak furniture maker",
+  "sector": "craft",
+  "featured": false,
+  "launched": "2024-11-08",
+  "summary": "Oak furniture, and a catalogue printed on the risograph.",
+  "body": [
+    { "p": "The workshop finishes a run of tables four times a year. Each run gets a printed catalogue, run off on our **risograph** the week after." }
+  ],
+  "credits": [
+    {
+      "role": "Catalogue",
+      "name": "Aoife"
+    },
+    {
+      "role": "Printing",
+      "name": "Dara"
+    }
+  ],
+  "related": ["sourdough-bakery"]
+}

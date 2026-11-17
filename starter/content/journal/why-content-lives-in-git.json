@@ -1,0 +1,23 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "Why content lives in git",
+  "date": "2025-01-20",
+  "tags": ["news", "publishing"],
+  "cover": { "key": "uploads/e4c45074933b/studio-window.jpg", "alt": "Morning light through a window", "w": 1920, "h": 1280 },
+  "excerpt": "Every change is a commit: who made it, when and what it was, in the history the site already has.",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Why content", "Lives in git"],
+      "intro": "No database to run, back up or move.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "Files first",
+      "body": "Every page is a JSON file beside the code, and the site builds from it.",
+      "background": "light"
+    }
+  ]
+}

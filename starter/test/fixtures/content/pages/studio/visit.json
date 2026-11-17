@@ -1,0 +1,32 @@
+{
+  "$schema": "../../../schemas/pages.schema.json",
+  "title": "Visit",
+  "blocks": [
+    {
+      "type": "text",
+      "heading": "Visit the studio",
+      "body": [
+        { "p": "Come and see where the work happens." },
+        { "h2": "Opening times\nand how to find us" },
+        { "p": "Bring a **friend**, and we'll put the kettle on." },
+        { "ul": ["Parking on the quay", "Ring the bell at the green door", "Open Tuesday to Friday"] },
+        { "p": "Before you come, see our [Work](/work)" }
+      ],
+      "background": "light"
+    },
+    {
+      "type": "hero",
+      "heading": ["Come and", "say hello"],
+      "intro": "",
+      "buttons": [
+        {
+          "label": "Get in touch",
+          "href": "/contact",
+          "style": "primary"
+        }
+      ],
+      "layout": "left",
+      "background": "light"
+    }
+  ]
+}

@@ -1,0 +1,182 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   THE LOOK: the starter's tokens (M7 Decisions 4–6). A client site restyles by
+   swapping this file, the lockup text styles beside it (text-styles.ts), the fonts
+   (src/fonts/) and the tab icons (public/favicon.*). Nothing in src/blocks/, src/components/,
+   src/collections/ or src/pages/ names a colour, a font or a type size: they
+   read these.
+
+   Every name is a Tailwind v4 theme namespace, so each one is also a utility:
+   --color-accent → bg-accent, --text-h2 → text-h2 (with its line height,
+   tracking and weight), --spacing-section → py-section,
+   --container-content → max-w-content, --aspect-landscape → aspect-landscape,
+   --radius-media → rounded-media.
+
+   `static`: every token is written to :root whether a utility uses it or not,
+   because scoped <style> blocks read them as var(--…) too.
+
+   Phone values here; the few that step per breakpoint are overridden on :root
+   in the two media queries after this block (@theme can't hold @media).
+   Breakpoints stay Tailwind's: md 48rem (768px, also caracms.config.ts's
+   phoneLinesWidth), lg 64rem (1024px).
+
+   Tailwind's own palette, font stacks, type sizes and the rest are cleared
+   first, so a class that isn't from these tokens (a default grey, a serif
+   stack, a default size) generates nothing.
+   ═══════════════════════════════════════════════════════════════════════════ */
+@theme static {
+	--color-*: initial;
+	--font-*: initial;
+	--text-*: initial;
+	--font-weight-*: initial;
+	--tracking-*: initial;
+	--leading-*: initial;
+	--radius-*: initial;
+	--shadow-*: initial;
+	--inset-shadow-*: initial;
+	--drop-shadow-*: initial;
+	--text-shadow-*: initial;
+	--blur-*: initial;
+	--container-*: initial;
+	--aspect-*: initial;
+	--breakpoint-*: initial;
+	--breakpoint-md: 48rem;
+	--breakpoint-lg: 64rem;
+
+	/* ── Type family: one, self-hosted (the @font-face below). Weights used:
+	      400, 500, 600, and 400 italic. The display lockup is the same family,
+	      measured (text-styles.ts). ── */
+	--font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+	--font-weight-normal: 400; /* body, lead, small */
+	--font-weight-medium: 500; /* headings, buttons, labels, links */
+	--font-weight-semibold: 600; /* the site name, <strong> */
+
+	/* ── Type scale: fluid from a 375px to a 1440px viewport (px in comments).
+	      Each step carries its line height, tracking and weight. The size
+	      follows the role, not the tag (a Hero heading is display size whether
+	      it renders as h1 or h2). ── */
+	--text-display: clamp(2.75rem, 1.782rem + 4.131vw, 5.5rem); /* 44 → 88 */
+	--text-display--line-height: 1.02;
+	--text-display--letter-spacing: -0.035em;
+	--text-display--font-weight: 500;
+
+	--text-h1: clamp(2.25rem, 1.634rem + 2.629vw, 4rem); /* 36 → 64 */
+	--text-h1--line-height: 1.05;
+	--text-h1--letter-spacing: -0.03em;
+	--text-h1--font-weight: 500;
+
+	--text-h2: clamp(1.875rem, 1.479rem + 1.69vw, 3rem); /* 30 → 48 */
+	--text-h2--line-height: 1.1;
+	--text-h2--letter-spacing: -0.025em;
+	--text-h2--font-weight: 500;
+
+	--text-h3: clamp(1.5rem, 1.324rem + 0.751vw, 2rem); /* 24 → 32 */
+	--text-h3--line-height: 1.2;
+	--text-h3--letter-spacing: -0.02em;
+	--text-h3--font-weight: 500;
+
+	--text-h4: clamp(1.25rem, 1.162rem + 0.376vw, 1.5rem); /* 20 → 24 */
+	--text-h4--line-height: 1.3;
+	--text-h4--letter-spacing: -0.01em;
+	--text-h4--font-weight: 500;
+
+	--text-lead: clamp(1.125rem, 1.037rem + 0.376vw, 1.375rem); /* 18 → 22 */
+	--text-lead--line-height: 1.5;
+	--text-lead--letter-spacing: -0.005em;
+	--text-lead--font-weight: 400;
+
+	--text-body: clamp(1rem, 0.956rem + 0.188vw, 1.125rem); /* 16 → 18 */
+	--text-body--line-height: 1.6;
+	--text-body--letter-spacing: 0em;
+	--text-body--font-weight: 400;
+
+	--text-small: 0.875rem; /* 14 */
+	--text-small--line-height: 1.5;
+	--text-small--letter-spacing: 0em;
+	--text-small--font-weight: 400;
+
+	--tracking-eyebrow: 0.06em; /* the small upper-case labels: the 404's "Error 404", footer labels */
+
+	/* ── Colour: ink, surface, one accent, a grey scale; three functional ones. ── */
+	--color-ink: #141414; /* text; the Dark background */
+	--color-surface: #ffffff; /* the page; text on dark and on media */
+	--color-accent: #2f4fdb; /* primary buttons, links, focus rings, the Accent background. 6.4:1 on surface */
+	--color-on-accent: #ffffff; /* text and icons on the accent. Set it to the ink for a light accent */
+	--color-error: #b42318; /* a field in error, the form's failure line. 6.6:1 */
+	--color-scrim: rgb(20 20 20 / 0.45); /* over media behind text (the ink at 45%) */
+
+	--color-grey-50: #f5f5f5; /* the Grey background */
+	--color-grey-100: #ebebeb; /* a media frame before its image loads, or if it fails */
+	--color-grey-200: #dedede; /* hairlines: header, questions, footer */
+	--color-grey-300: #c7c7c7;
+	--color-grey-400: #a3a3a3;
+	--color-grey-500: #808080; /* field borders (3.9:1, enough for a control's edge) */
+	--color-grey-600: #666666; /* muted text: captions, meta, summaries (5.7:1) */
+	--color-grey-700: #4d4d4d; /* soft text: intros, answers (8.5:1) */
+	--color-grey-800: #333333;
+	--color-grey-900: #1f1f1f;
+
+	/* ── Spacing: Tailwind's 4px step is the scale (p-4 = calc(var(--spacing) * 4)).
+	      The roles below step per breakpoint. They never take t-shirt names:
+	      max-w-sm looks in --spacing-* before --container-*. ── */
+	--spacing: 0.25rem;
+	--spacing-gutter: 1.25rem; /* 20 · 32 · 48   the page's side margin */
+	--spacing-grid: 1rem; /* 16 · 24 · 32   gap between grid columns */
+	--spacing-heading: 2rem; /* 32 · 40 · 56   a block's heading group → its content */
+	--spacing-section: 3rem; /* 48 · 64 · 80   Space above/below: Default */
+	--spacing-section-tight: 1.5rem; /* 24 · 32 · 40   Tight */
+	--spacing-section-extra: 5rem; /* 80 · 104 · 128 Extra   (None is 0) */
+
+	/* ── Layout widths ── */
+	--container-content: 75rem; /* 1200: the content column, inside the gutters */
+	--container-reading: 40rem; /* 640: long text, intros, answers (≈ 65 characters) */
+
+	/* ── Shape ── */
+	--radius-control: 0.25rem; /* buttons, fields */
+	--radius-media: 0.25rem; /* framed media at content width; full-bleed media is square */
+
+	/* ── Framed media shapes (width / height). ── */
+	--aspect-wide: 16 / 9; /* Full-width media */
+	--aspect-landscape: 3 / 2; /* Text and media, Cards, Case studies */
+	--aspect-portrait: 4 / 5; /* Gallery */
+}
+
+/* The tokens that step per breakpoint (tablet md, desktop lg). */
+@media (min-width: 48rem) {
+	:root {
+		--spacing-gutter: 2rem;
+		--spacing-grid: 1.5rem;
+		--spacing-heading: 2.5rem;
+		--spacing-section: 4rem;
+		--spacing-section-tight: 2rem;
+		--spacing-section-extra: 6.5rem;
+	}
+}
+@media (min-width: 64rem) {
+	:root {
+		--spacing-gutter: 3rem;
+		--spacing-grid: 2rem;
+		--spacing-heading: 3.5rem;
+		--spacing-section: 5rem;
+		--spacing-section-tight: 2.5rem;
+		--spacing-section-extra: 8rem;
+	}
+}
+
+/* ── The body font (Decision 6): Inter 4's variable font, Latin subset, OFL.
+      Named here, not in astro.config.mjs, so swapping it is part of the look.
+      `swap`: body text shows at once in the fallback. The display lockup
+      registers its own face through text-styles.ts (with `block`). ── */
+@font-face {
+	font-family: 'Inter Variable';
+	src: url('../fonts/InterVariable.woff2') format('woff2');
+	font-weight: 100 900;
+	font-style: normal;
+	font-display: swap;
+}
+@font-face {
+	font-family: 'Inter Variable';
+	src: url('../fonts/InterVariable-Italic.woff2') format('woff2');
+	font-weight: 100 900;
+	font-style: italic;
+	font-display: swap;
+}

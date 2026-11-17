@@ -1,0 +1,101 @@
+/* ══ A flat collection as a table over the stage (pre-M7 polish; collections/CollectionTable.tsx) ══
+   In the editor's own language: the sidebar's rows (wash on hover, the open one a wash with a ring,
+   no side rails), its find box and inputs, its chips; light, over the stage, full width. */
+.stage-table{position:absolute;inset:0;z-index:3;display:none;flex-direction:column;min-height:0;background:var(--surface);color:var(--text)}
+.stage.is-table .stage-table{display:flex;animation:fade-in var(--dur-base) var(--ease-out)}
+.stage.is-table .frame{visibility:hidden}
+.ctable{display:flex;flex-direction:column;flex:1;min-height:0}
+.ct-head{flex:none;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:var(--space-3);padding:var(--space-4) var(--space-6) var(--space-3);border-bottom:1px solid var(--border)}
+.ct-head>.ct-title{display:flex;align-items:baseline;gap:var(--space-2);min-width:0}
+.ct-head>.ct-title>.i{align-self:center;color:var(--icon)}
+.ct-head>.ct-title h2{margin:0;font-size:var(--text-xl);font-weight:var(--weight-semibold);letter-spacing:var(--tracking-tight);white-space:nowrap}
+.ct-head>.ct-title .n-chip{font-size:var(--text-sm);font-weight:var(--weight-medium);color:var(--text-subtle);white-space:nowrap}
+.ct-sub{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:var(--text-xs);color:var(--text-subtle)}
+.ct-tools{grid-column:1 / -1;display:flex;align-items:center;gap:var(--space-2);flex-wrap:wrap}
+.ct-tools .find{width:240px;margin:0}
+.ct-filter{width:auto;max-width:200px;height:var(--control-h-sm);padding-top:0;padding-bottom:0;font-size:var(--text-sm)}
+.ct-filter.is-set{border-color:var(--select);background-color:var(--select-wash)}
+.ct-scroll{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;padding:var(--space-2) var(--space-4) var(--space-6);scrollbar-width:thin;scrollbar-color:var(--border-hover) transparent}
+.ct{width:100%;border-collapse:separate;border-spacing:0;font-size:var(--text-base);font-variant-numeric:tabular-nums}
+.ct thead th{position:sticky;top:calc(-1 * var(--space-2));z-index:1;padding:0;background:var(--surface);border-bottom:1px solid var(--border);text-align:left;font-weight:var(--weight-medium)}
+.ct-sort{display:inline-flex;align-items:center;gap:var(--space-1);height:32px;padding:0 var(--space-2);border:0;border-radius:var(--radius-sm);background:none;color:var(--text-subtle);font-size:var(--text-xs);font-weight:var(--weight-semibold);letter-spacing:var(--tracking-caps);text-transform:uppercase;white-space:nowrap}
+.ct-sort:hover{color:var(--text)}
+.ct-sort .i{opacity:0;transition:opacity var(--dur-fast)}
+.ct-sort:hover .i,.ct-sort.on .i{opacity:1}
+.ct-sort.on{color:var(--text)}
+.ct tbody tr{cursor:pointer}
+.ct tbody th,.ct tbody td{height:var(--row-h);padding:var(--space-1-5) var(--space-2);border-bottom:1px solid var(--border);text-align:left;font-weight:var(--weight-regular);vertical-align:middle;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:280px}
+.ct tbody th:first-child,.ct tbody td:first-child{border-radius:var(--radius-md) 0 0 var(--radius-md)}
+.ct tbody th:last-child,.ct tbody td:last-child{border-radius:0 var(--radius-md) var(--radius-md) 0}
+.ct tbody tr:hover>*{background:var(--surface-hover)}
+.ct tbody tr.is-current>*{background:var(--select-wash);color:var(--select-strong);border-bottom-color:transparent;box-shadow:inset 0 1px 0 var(--select),inset 0 -1px 0 var(--select)}
+.ct tbody tr.is-current>:first-child{box-shadow:inset 1px 0 0 var(--select),inset 0 1px 0 var(--select),inset 0 -1px 0 var(--select)}
+.ct tbody tr.is-current>:last-child{box-shadow:inset -1px 0 0 var(--select),inset 0 1px 0 var(--select),inset 0 -1px 0 var(--select)}
+.ct-title-cell{max-width:none!important;width:34%}
+.ct-title-cell>*{vertical-align:middle}
+.ct-open{display:inline;max-width:100%;padding:0;border:0;background:none;color:var(--text);font-weight:var(--weight-medium);text-align:left;overflow:hidden;text-overflow:ellipsis}
+.ct-open:focus-visible{outline:2px solid var(--select);outline-offset:2px;border-radius:var(--radius-xs)}
+.ct-title-cell .meta{display:inline-flex;align-items:center;gap:var(--space-1);margin-left:var(--space-1-5)}
+.ct-title-cell .meta:empty{display:none}
+/* Hidden (M9 Decision 7; collections under pages, Decision 11): the sidebar row's mark, small and grey, not part of the title. */
+.ct-title-cell .hmark{font-size:var(--text-xs);font-weight:var(--weight-regular);color:var(--text-subtle);white-space:nowrap}
+.ct-extra{margin-left:var(--space-2);font-size:var(--text-xs);color:var(--text-subtle)}
+.ct tr.is-warned .ct-open{color:var(--text-muted)}
+.ct tr.is-current .ct-open{color:var(--select-strong);font-weight:var(--weight-semibold)}
+.ct-address{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--text-muted)}
+.ct-edited{color:var(--text-muted)}
+.ct-number{text-align:right!important}
+.ct-toggle .i{color:var(--select)}
+.ct-nil{color:var(--border-hover)}
+.ct-none{display:flex;align-items:center;gap:var(--space-2);padding:var(--space-4) var(--space-2)}
+.ct-empty{margin:var(--space-8) auto;max-width:360px}
+@container app (max-width:1100px){.ct-tools .find{width:180px}.ct-sub{display:none}}
+
+/* ══ M6c (G5) · the List / Grid switch: the editor's mini segmented control, at the end of the tools row ══ */
+.ct-view{margin:0 0 0 auto;flex:none}
+.ct-view button{flex:none;padding:0 var(--space-2-5)}
+/* In Grid there are no column headers to sort by, so the order is a select beside the filters (the same view's sort) */
+.ct-order{max-width:240px}
+
+/* ══ M6c (G5) · the grid (collections/CollectionGrid.tsx): cards, as many as the stage fits. A card is the sidebar's
+   row grown up: a wash on hover, the open one a wash with a full ring (never a side rail) ══ */
+.cgrid{--card-ratio:4/3;display:grid;grid-template-columns:repeat(auto-fill,minmax(var(--card-min),1fr));gap:var(--card-gap-y) var(--card-gap-x);padding:var(--space-2) 0 0}
+.card{position:relative;display:flex;flex-direction:column;gap:var(--space-2);min-width:0;padding:var(--card-pad) var(--card-pad) var(--space-2);border:1px solid transparent;border-radius:var(--radius-lg);background:none;color:var(--text);text-align:left;font:inherit;cursor:pointer;transition:background var(--dur-fast),border-color var(--dur-fast)}
+.card:hover{background:var(--surface-hover)}
+.card:focus-visible{outline:2px solid var(--focus);outline-offset:1px}
+.card.is-current{background:var(--select-wash);border-color:var(--select)}
+.card-pic{position:relative;display:block}
+.card .ph{display:block;width:100%;aspect-ratio:var(--card-ratio);border-radius:var(--radius-md);background:var(--card-loading-bg)}
+/* A hairline inside every picture, so a pale one still has an edge */
+.card .ph::after{content:"";position:absolute;inset:0;z-index:2;border-radius:inherit;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--text) 9%,transparent);pointer-events:none}
+/* The picture lands already cropped (cards.ts); it fades in once it has loaded, and is simply there when it already had */
+.card-img{opacity:0;transition:opacity var(--dur-base) var(--ease-out)}
+.card-img.in{opacity:1}
+.card-img.now{transition:none}
+.card-txt{display:flex;flex-direction:column;gap:1px;min-width:0;padding:0 var(--space-0-5)}
+.card-t{display:flex;align-items:center;gap:var(--space-1-5);min-width:0;font-size:var(--text-base);font-weight:var(--weight-medium);line-height:1.35}
+.card-t .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card-t .meta{display:inline-flex;align-items:center;gap:var(--space-1);flex:none}
+.card-t .meta:empty{display:none}
+.card.is-current .card-t{color:var(--select-strong);font-weight:var(--weight-semibold)}
+.card.is-warned .card-t .nm{color:var(--text-muted)}
+.card-cs{display:flex;flex-direction:column;gap:1px;min-width:0}
+.card-c{font-size:var(--text-xs);color:var(--text-subtle);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.45}
+.card-c.mono{font-family:var(--font-mono);font-size:var(--text-2xs)}
+.card.is-current .card-c{color:color-mix(in srgb,var(--select-strong) 70%,var(--text-subtle))}
+/* Someone's lock, said on the picture's top right (clear of a text card's title and a clip's badge): the lock chip,
+   raised so it reads on any picture */
+.card-lock{position:absolute;right:var(--space-1-5);top:var(--space-1-5);z-index:3;display:inline-flex;align-items:center;gap:var(--space-1);height:22px;padding:0 var(--space-2) 0 2px;box-shadow:inset 0 0 0 1px var(--status-locked-border),var(--shadow-raised)}
+/* A clip's poster: the library's duration badge, with a play mark */
+.card .pbadge{right:var(--space-1-5);bottom:var(--space-1-5);z-index:3;height:18px;padding:0 5px 0 4px}
+.card .pbadge .i{width:9px;height:9px;fill:currentColor;stroke:none}
+/* The text card: no image, so the title is set in the picture's place, on paper, like a plain book cover.
+   It's never empty-looking: a type size of its own, the collection's icon, and the same hairline as a picture */
+.card .ph.tcard{position:relative;display:flex;flex-direction:column;justify-content:space-between;gap:var(--space-2);padding:var(--space-3);background:var(--card-text-bg);container-type:normal}
+.tcard>.i{color:var(--icon);opacity:.8}
+.tcard .tc-t{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;font-size:var(--text-xl);font-weight:var(--weight-semibold);letter-spacing:var(--tracking-tight);line-height:1.18;color:var(--text);text-wrap:balance}
+.card.is-current .tcard{background:color-mix(in srgb,var(--select) 9%,var(--surface))}
+/* Posts and tags (Decision 13): a reference that's gone, and a list of references' header, which doesn't sort. */
+.ct-missing{color:var(--status-warning-strong);font-weight:var(--weight-medium)}
+.ct-label{cursor:default}
+.ct-label:hover{color:var(--text-subtle)}

@@ -1,0 +1,10 @@
+/* The document level: the block list, the add-block picker, the empty page (Phase 4), beyond ../editor.css.
+   Tokens only (M2 Decision 7); no side rails (M2 Decision 10). */
+
+.ptype:focus-visible{border-color:var(--select)}
+
+/* An unknown block's "What's kept" (Decision 21): each top-level key with a short preview. */
+.panel .kept{display:grid;gap:var(--space-1);margin:var(--space-2) 0 0;font-size:var(--text-sm)}
+.panel .kept>div{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:var(--space-2)}
+.panel .kept dt{color:var(--text);font-weight:var(--weight-medium)}
+.panel .kept dd{margin:0;color:var(--text-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}

@@ -1,0 +1,23 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "The autumn print run",
+  "date": "2026-10-06",
+  "tags": ["print"],
+  "cover": { "key": "uploads/a40fe31a6eeb/material-samples.png", "alt": "Paint swatches, fabric, stone and timber samples on marble", "w": 1200, "h": 1800 },
+  "excerpt": "Three jobs on the press in one week, and the system that kept the proofs from getting mixed up.",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["The autumn", "Print run"],
+      "intro": "Three clients, one press and a lot of labelled envelopes.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "The system",
+      "body": "Every proof goes in an envelope with the client’s name on it. Every time.",
+      "background": "light"
+    }
+  ]
+}

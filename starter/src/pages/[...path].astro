@@ -1,0 +1,49 @@
+---
+/**
+ * Every document with an address (collections under pages, Decision 14): the Pages collection,
+ * nested ones included (M3 Decision 8: the file's path is the URL), the Journal page's posts and
+ * the Work page's case studies at their holder's address, and tags at /tags/<slug>, all through
+ * the package's reader (`addressedDocuments`). Prerendered; each document is read from disk when
+ * it renders (Decision 5), never imported.
+ *
+ * Posts and tags (Decision 10): a page whose first "All, a page at a time" Posts block has more
+ * than ten posts (its Tag's, when it has one) also gets `<address>/page/2` onwards, rendered with
+ * `listPage`. Page 1 is the page's own address; there's no `/page/1`. A real document at a paged
+ * address wins: the build warns, naming it, and doesn't make that paged one (Watch-outs).
+ */
+import RenderDocument from 'caracms/components/RenderDocument.astro';
+import { addressedDocuments, contentReader, readDocument } from 'caracms/content';
+import { site } from 'virtual:caracms/config';
+import { listingPages } from '../blocks/posts.ts';
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+	// A file that can't be opened (invalid JSON, no title, a nested index.json) has no page, and
+	// nor has a hidden one, or one under or held by a hidden page (M9 Decision 7): visitors get the 404 page.
+	const documents = await addressedDocuments(site);
+	const real = new Set(documents.map((d) => d.url.toLowerCase()));
+	const read = contentReader(site);
+	const paths: { params: { path: string | undefined }; props: { collection: string; path: string; listPage: number } }[] = [];
+	for (const d of documents) {
+		const at = d.url === '/' ? undefined : d.url.slice(1);
+		paths.push({ params: { path: at }, props: { collection: d.collection, path: d.path, listPage: 1 } });
+		if (d.collection !== 'pages') continue;
+		const pages = await listingPages(read, d.path);
+		for (let n = 2; n <= pages; n++) {
+			const paged = at ? `${at}/page/${n}` : `page/${n}`;
+			if (real.has(`/${paged}`)) {
+				console.warn(`[caracms-starter] The document at /${paged} has the address of page ${n} of "${d.path}"'s posts. The page wins; that page of posts isn't built.`);
+				continue;
+			}
+			paths.push({ params: { path: paged }, props: { collection: 'pages', path: d.path, listPage: n } });
+		}
+	}
+	return paths;
+}
+
+const { collection, path, listPage } = Astro.props;
+const { document } = await readDocument(site, collection, path);
+---
+
+<RenderDocument document={document} collection={collection} listPage={listPage} />

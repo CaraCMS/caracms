@@ -1,0 +1,32 @@
+{
+  "$schema": "../../../schemas/pages.schema.json",
+  "title": "Try it locally",
+  "blocks": [
+    {
+      "type": "text",
+      "heading": "Try it locally",
+      "body": [
+        { "p": "Run the starter on your own machine and open the editor." },
+        { "h2": "Three steps\nto the editor" },
+        { "p": "Bring a **site**, or use this one." },
+        { "ul": ["Install with pnpm install", "Start it with pnpm dev", "Open /admin in a Chromium browser"] },
+        { "p": "Before you start, see the [examples](/work)" }
+      ],
+      "background": "light"
+    },
+    {
+      "type": "hero",
+      "heading": ["Questions?", "Ask us"],
+      "intro": "",
+      "buttons": [
+        {
+          "label": "Get in touch",
+          "href": "/contact",
+          "style": "primary"
+        }
+      ],
+      "layout": "left",
+      "background": "light"
+    }
+  ]
+}

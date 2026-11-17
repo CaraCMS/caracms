@@ -1,0 +1,10 @@
+---
+/** The footer slot, drawn wrong: the island is its outermost element, with no `<Block>` root. */
+import type { BlockProps } from 'caracms/document';
+import Nav from '../components/Nav';
+
+type Props = BlockProps<any>;
+const { block } = Astro.props;
+---
+
+<Nav client:load links={block.links} menuLabel={block.menuLabel} />

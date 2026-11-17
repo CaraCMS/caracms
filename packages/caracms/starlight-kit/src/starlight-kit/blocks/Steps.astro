@@ -1,0 +1,30 @@
+---
+/** The steps block (steps.ts), drawn with Starlight's <Steps>: one numbered item per step, numbered from the block's `start`. Empty, the preview says so. */
+import { Steps } from '@astrojs/starlight/components';
+import Block from 'caracms/components/Block.astro';
+import RichText from 'caracms/components/RichText.astro';
+import type { BlockProps } from 'caracms/document';
+import { stepsStart, type StepsData } from './steps.ts';
+
+type Props = BlockProps<StepsData>;
+const { block, cms } = Astro.props;
+const steps = block.steps ?? [];
+// Starlight's <Steps> reads the list's `start` and numbers from it.
+const start = stepsStart(block.start);
+---
+
+<Block cms={cms} as="div">
+	{steps.length === 0 && cms.preview && <p class="sl-kit-empty">No steps yet: add one in the block's settings.</p>}
+	<Steps>
+		<ol start={start === 1 ? undefined : start}>
+			{steps.map((step, i) => <li><RichText cms={cms} field={`steps.${i}`} value={step} /></li>)}
+		</ol>
+	</Steps>
+</Block>
+
+<style>
+	.sl-kit-empty {
+		color: var(--sl-color-gray-3);
+		font-style: italic;
+	}
+</style>

@@ -1,0 +1,54 @@
+{
+  "$schema": "../../schemas/shared.schema.json",
+  "title": "Header",
+  "default": true,
+  "block": {
+    "type": "siteHeader",
+    "menu": [
+      {
+        "label": "About",
+        "href": {
+          "href": "/about"
+        },
+        "links": []
+      },
+      {
+        "label": "Work",
+        "href": {
+          "href": "/work"
+        },
+        "links": []
+      },
+      {
+        "label": "Journal",
+        "href": {
+          "href": "/journal"
+        },
+        "links": []
+      },
+      {
+        "label": "Services",
+        "href": {
+          "href": ""
+        },
+        "links": [
+          {
+            "label": "Branding",
+            "href": "/services/branding"
+          },
+          {
+            "label": "Websites",
+            "href": "/services/websites"
+          }
+        ]
+      },
+      {
+        "label": "Contact",
+        "href": {
+          "href": "/contact"
+        },
+        "links": []
+      }
+    ]
+  }
+}

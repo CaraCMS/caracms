@@ -1,0 +1,39 @@
+{
+  "$schema": "../../schemas/pages.schema.json",
+  "title": "Contact",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Say hello"],
+      "intro": "hello@example.com\n+353 21 000 0000",
+      "layout": "centre",
+      "background": "light"
+    },
+    {
+      "type": "form",
+      "heading": "Ask a question",
+      "intro": "A line or two is plenty. We never add you to a list.",
+      "form": "contact"
+    },
+    {
+      "type": "cta",
+      "heading": ["Rather read", "First?"],
+      "text": "The common questions have answers on one page.",
+      "buttons": [
+        {
+          "label": "Read the questions",
+          "href": "/faq",
+          "style": "primary"
+        }
+      ],
+      "background": "dark",
+      "spaceAbove": "default",
+      "spaceBelow": "default"
+    },
+    { "shared": "start-a-project" }
+  ],
+  "seo": {
+    "title": "Contact CaraCMS",
+    "description": "Ask a question about CaraCMS."
+  }
+}

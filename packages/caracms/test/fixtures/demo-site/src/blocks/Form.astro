@@ -1,0 +1,228 @@
+---
+/**
+ * The Form block (M6 Decision 17): a heading, an intro, and one of the site's forms
+ * through the package's Form component, which posts without JavaScript. Schema beside
+ * it in form.ts. The look is the starter's (M7 restyles it); the mockup's `b-form`.
+ */
+import Block from 'caracms/components/Block.astro';
+import Form from 'caracms/components/Form.astro';
+import Text from 'caracms/components/Text.astro';
+import type { BlockProps } from 'caracms/document';
+import type { FormBlockData } from './form.ts';
+
+type Props = BlockProps<FormBlockData>;
+const { block, cms } = Astro.props;
+---
+
+<Block cms={cms} class="band bg-light form-block">
+	<div class="band-inner">
+		<div class="form-head">
+			<Text cms={cms} field="heading" value={block.heading} class="form-heading" />
+			{(block.intro || cms.preview) && <Text cms={cms} field="intro" value={block.intro} class="form-intro" />}
+		</div>
+		<Form form={block.form} preview={cms.preview} state={cms.state} />
+	</div>
+</Block>
+
+<style>
+	.form-block {
+		padding-block: clamp(3.5rem, 7vw, 7rem);
+	}
+
+	.form-head {
+		max-width: 42.5rem;
+	}
+
+	.form-block :global(.form-heading) {
+		margin: 0 0 0.875rem;
+		font-size: clamp(1.875rem, 3.4vw, 3.25rem);
+		line-height: 1.05;
+	}
+
+	.form-block :global(.form-intro) {
+		margin: 0 0 2.125rem;
+		max-width: 32.5rem;
+		font-size: 1.1875rem;
+		color: color-mix(in srgb, var(--ink) 75%, transparent);
+	}
+
+	.form-block :global(.cms-form) {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 1.125rem 1.25rem;
+		max-width: 42.5rem;
+	}
+
+	.form-block :global(.cms-form-field) {
+		display: flex;
+		flex-direction: column;
+		gap: 0.4375rem;
+		min-width: 0;
+	}
+
+	.form-block :global(.cms-form-field[data-type='textarea']),
+	.form-block :global(.cms-form-field[data-type='files']),
+	.form-block :global(.cms-form-turnstile),
+	.form-block :global(.cms-form-status) {
+		grid-column: 1 / -1;
+	}
+
+	.form-block :global(.cms-form-label) {
+		font-size: 0.9375rem;
+		font-weight: 600;
+	}
+
+	.form-block :global(.cms-form-optional) {
+		font-weight: 400;
+		color: color-mix(in srgb, var(--ink) 65%, transparent);
+	}
+
+	.form-block :global(.cms-form input:not([type='file'])),
+	.form-block :global(.cms-form select),
+	.form-block :global(.cms-form textarea) {
+		width: 100%;
+		min-height: 3.25rem;
+		padding: 0.75rem 1rem;
+		border: 1.5px solid var(--ink);
+		border-radius: 6px;
+		background: #fbf9f4;
+		color: var(--ink);
+		font: inherit;
+	}
+
+	.form-block :global(.cms-form input[type='file']) {
+		padding: 1.25rem 1rem;
+		border: 1.5px dashed var(--ink);
+		border-radius: 6px;
+		font: inherit;
+	}
+
+	/* M6: the files chosen so far (the form's script adds picks up), each with its size and Remove */
+	.form-block :global(.cms-form-files) {
+		display: grid;
+		gap: 6px;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.form-block :global(.cms-form-files[hidden]) {
+		display: none;
+	}
+
+	.form-block :global(.cms-form-file) {
+		display: flex;
+		align-items: baseline;
+		gap: 10px;
+		min-width: 0;
+		padding: 8px 12px;
+		border: 1px solid color-mix(in srgb, var(--ink) 20%, transparent);
+		border-radius: 6px;
+		font-size: 0.9375rem;
+	}
+
+	.form-block :global(.cms-form-file-name) {
+		flex: 1;
+		min-width: 0;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.form-block :global(.cms-form-file-size) {
+		flex: none;
+		color: color-mix(in srgb, var(--ink) 65%, transparent);
+		font-size: 0.8125rem;
+	}
+
+	.form-block :global(.cms-form-file-remove) {
+		flex: none;
+		padding: 0;
+		border: 0;
+		background: none;
+		color: inherit;
+		font: inherit;
+		font-size: 0.8125rem;
+		font-weight: 600;
+		text-decoration: underline;
+		cursor: pointer;
+	}
+
+	.form-block :global(.cms-form-help) {
+		margin: 0;
+		font-size: 0.8125rem;
+		color: color-mix(in srgb, var(--ink) 65%, transparent);
+	}
+
+	.form-block :global(.cms-form-error) {
+		margin: 0;
+		font-size: 0.8125rem;
+		color: #9b2c1f;
+	}
+
+	.form-block :global(.cms-form-submit) {
+		justify-self: start;
+		padding: 0.875rem 1.75rem;
+		border: 0;
+		border-radius: 999px;
+		background: var(--button-bg);
+		color: var(--button-ink);
+		font: inherit;
+		font-weight: 600;
+		cursor: pointer;
+	}
+
+	.form-block :global(.cms-form-submit[disabled]) {
+		opacity: 0.6;
+	}
+
+	.form-block :global(.cms-form-status) {
+		margin: 0;
+		min-height: 1.5em;
+	}
+
+	.form-block :global(.cms-form-status.cms-form-failed) {
+		color: #9b2c1f;
+	}
+
+	/* Review gaps, as the starter's: a field in error has a red edge (a failed submit's :user-invalid, the editor's Invalid state's aria-invalid). */
+	.form-block :global(.cms-form :is(input, select, textarea):user-invalid),
+	.form-block :global(.cms-form .cms-form-field :is(input, select, textarea)[aria-invalid='true']) {
+		border-color: #9b2c1f;
+	}
+
+	/* Review gaps, as the starter's: the sent panel is a grey card (drawn only when a sent heading resolves). */
+	.form-block :global(.cms-form-sent) {
+		grid-column: 1 / -1;
+		display: grid;
+		align-content: start;
+		gap: 0.5rem;
+		padding: 2rem;
+		border-radius: 4px;
+		background: #f5f5f5;
+	}
+
+	.form-block :global(.cms-form-sent-heading) {
+		justify-self: start;
+		margin: 0;
+		font-size: 1.625rem;
+		line-height: 1.2;
+		font-weight: 650;
+	}
+
+	.form-block :global(.cms-form-sent-line) {
+		justify-self: start;
+		margin: 0;
+		font-size: 1.125rem;
+	}
+
+	@media (width < 640px) {
+		.form-block :global(.cms-form) {
+			grid-template-columns: 1fr;
+		}
+
+		.form-block :global(.cms-form-submit) {
+			justify-self: stretch;
+		}
+	}
+</style>

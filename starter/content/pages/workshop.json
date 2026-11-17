@@ -1,0 +1,16 @@
+{
+  "$schema": "../../schemas/pages.schema.json",
+  "title": "Workshops",
+  "blocks": [
+    {
+      "type": "form",
+      "heading": "Book a workshop",
+      "intro": "A form with rows: book a place or a few, for one workshop or more, morning or afternoon.",
+      "form": "workshop"
+    }
+  ],
+  "seo": {
+    "title": "Book a workshop",
+    "description": "An example booking form, with a row for each workshop."
+  }
+}

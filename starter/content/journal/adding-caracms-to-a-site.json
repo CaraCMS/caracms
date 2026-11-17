@@ -1,0 +1,23 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "Adding CaraCMS to a site",
+  "date": "2026-03-18",
+  "tags": ["hosting", "news"],
+  "cover": { "key": "uploads/e4c45074933b/studio-window.jpg", "alt": "Morning light through a window", "w": 1920, "h": 1280 },
+  "excerpt": "npm install caracms, then npx caracms init: it shows every change as a diff before it writes one.",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Adding CaraCMS", "To a site"],
+      "intro": "Two steps, on an Astro site you already have.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "Look first",
+      "body": "init changes nothing until --write, so its change is one diff to review.",
+      "background": "light"
+    }
+  ]
+}

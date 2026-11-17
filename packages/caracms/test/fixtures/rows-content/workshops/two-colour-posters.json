@@ -1,0 +1,5 @@
+{
+  "$schema": "../../schemas/workshops.schema.json",
+  "title": "Two-colour posters",
+  "open": true
+}

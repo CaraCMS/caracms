@@ -1,0 +1,13 @@
+---
+/** The header slot: a hydrated React menu inside the block's own root. */
+import Block from 'caracms/components/Block.astro';
+import type { BlockProps } from 'caracms/document';
+import Nav from '../components/Nav';
+
+type Props = BlockProps<any>;
+const { block, cms } = Astro.props;
+---
+
+<Block cms={cms} as="header">
+	<Nav client:load links={block.links} menuLabel={block.menuLabel} />
+</Block>

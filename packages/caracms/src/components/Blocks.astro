@@ -1,0 +1,184 @@
+---
+/**
+ * The page's body: put it where the page's content goes, `<Blocks document={document}
+ * collection={collection} preview={preview} />`. What it renders depends on the
+ * document's kind (M5a → Core framing):
+ *
+ * - **A section builder's** blocks, with the site's block components, in order.
+ * - **A list-of-fields document** (Decision 7) through its collection's component
+ *   (`collection` names it; the page component passes it on). The component gets
+ *   `{ document, cms }`: the document's render data plus its `title`, and a render
+ *   context whose `h1Field` is the first heading field in schema order with a value.
+ * - **A shared block on its own** (its own preview, Decision 8): the block alone,
+ *   following M3 Decision 16's `h1` rule as the page's only block.
+ *
+ * Rules, as before:
+ * - An unknown block type is skipped in the render (Decision 7; it stays in the file).
+ *   In a preview render only (Decision 17), it leaves an HTML comment where it would
+ *   be, `<!--cms-skipped <index> type=<type>-->` (skipped.ts),
+ *   so the editor can mark it (amber dashes, from the overlay layer) and open it. No
+ *   element: a site's sibling CSS matches across it, as on the public page, where
+ *   there's nothing for it at all.
+ * - **A shared-block entry** (`{ "shared": "footer" }`, Decision 8) renders the shared
+ *   block as it stands in the page's own source (Decision 9: the disk at build, the
+ *   editor's store in a preview). One that names a shared block that doesn't exist,
+ *   or whose type the code doesn't know, is skipped exactly as an unknown block is
+ *   (its comment also says `shared=<name>`).
+ * - A document with no blocks leaves, in a preview render only, an empty area
+ *   (`data-cms-empty`) where its blocks would go, so the editor can offer "Add the
+ *   first block" on the page (Phase 4's insert points). The public render has nothing.
+ * - Each block gets `{ block, cms }`: its render data (fields.ts → renderData: the
+ *   parsed data, with a value the field can't use, such as a number out of range,
+ *   as `null`, M5a Decision 15; a reference to a document that doesn't exist as
+ *   `null`, Decision 6), and its render context (document.ts → BlockContext): its
+ *   index, whether this is a preview render (Decision 17), which of its fields holds
+ *   the page's `h1` (Decision 16), `read`, the other documents (Decision 9), and
+ *   `listPage`, the page of a paged listing (posts and tags, Decision 12: the page
+ *   component passes on the `listPage` it gets, 1 when it doesn't).
+ * - **Heading ids** (heading-ids.ts): every block's rich-text `h2`/`h3` ids are numbered here,
+ *   once, across the page in document order, and given to each block as `cms.headingIds`.
+ *   `pageHeadings` (caracms/content) gives the page component the same list for a TOC.
+ * - The context is computed here, per render, and passed down as props: no module
+ *   state, so concurrent preview renders can't leak into each other.
+ * - **Runs of blocks** (M9 Decision 9): `wrap` is the page component's rule for which
+ *   neighbouring blocks go together and what's drawn round them (a band of cards, each
+ *   card several blocks). It gets the blocks that render (`{ index, type, data }`) and
+ *   returns runs, `{ from, to, component, props?, runs? }` (block-runs.ts). Each block in a
+ *   run keeps its index, context, markers, selection and morph, exactly as outside one.
+ *   A section builder's (or a shared block's) blocks only.
+ *
+ * Edit in context:
+ * - **A body entry naming a slot's block** (`{ "shared": "footer" }` where the footer's type has
+ *   `slot: 'footer'`, Decision 2) is skipped on the page and kept in the file; a preview's comment
+ *   says `slot=footer` too, so the editor can say why.
+ * - **A slot block's own preview** draws nothing here: the page component's `<Slot>` draws it in its
+ *   slot, and the body is empty (no "Add the first block" area either).
+ * - **Each block gets its own reader** in a preview the route records (read.ts → recordingReader):
+ *   what its render reads through `cms.read`, its child components' reads included, is the page's
+ *   read record under its index. Every block's context also has `settings` (Site Settings' context)
+ *   and `of(entry)` (an entry's), document.ts → BlockContext.
+ *
+ * Vivid (the config's `vivid`, vivid.ts): on a public render with the switch on, each context also
+ * carries the document its fields are stored in (`cms.vivid`): the page's, found from its
+ * `readDocument` tag, at `blocks.<index>.`; a shared entry's shared block; a fields document itself.
+ */
+import { blocks } from 'virtual:caracms/blocks';
+import { components } from 'virtual:caracms/collections';
+import { site } from 'virtual:caracms/config';
+import { blockContexts, documentKind, fieldsHeading, own, settingsContext, stateOf, withSources, type BlockContext, type DocumentBlock, type PageDocument, type SiteDocument } from '../document.ts';
+import { firstImagePath } from '../fields.ts';
+import { pagedPreview } from '../audit/paged.ts';
+import { documentReader, readRecordOf, recordingReader, renderFields, renderSourceOf, renderStateOf, resolveShared } from '../read.ts';
+import { skippedMarker } from '../skipped.ts';
+import { runTree, type RunNode, type WrapBlocks } from '../block-runs.ts';
+import { fieldsDocumentHeadingIds, headingIdsOf } from '../heading-ids.ts';
+import { documentRefOf } from '../vivid.ts';
+import BlockRunTree from './BlockRunTree.astro';
+
+interface Props {
+	document: PageDocument;
+	/** The document's collection: needed for a fields document (its component is the collection's). */
+	collection?: string;
+	preview?: boolean;
+	/** Posts and tags, Decision 12: the page of a paged listing (the page component's `listPage`); 1 by default. */
+	listPage?: number;
+	/** M9 Decision 9: which runs of blocks go together, and what's drawn round each (block-runs.ts). */
+	wrap?: WrapBlocks;
+}
+
+const { document, collection, preview = false, wrap } = Astro.props;
+// A preview is always page 1; anything that isn't a whole number from 1 reads as 1.
+// caracms audit (review gaps): a preview is page 1, unless the audit's render asks for its later pages (audit/paged.ts).
+const listPage = (!preview || pagedPreview(Astro.locals)) && Number.isInteger(Astro.props.listPage) && Astro.props.listPage! >= 1 ? Astro.props.listPage! : 1;
+const read = documentReader(site, renderSourceOf(Astro.locals));
+const kind = documentKind(document);
+// Vivid (vivid.ts): a public render with the config's switch on marks each field with its document,
+// this one's from its `readDocument` tag (none for a document built in code: then only shared entries are marked).
+const vivid = site.vivid && !preview ? { ref: documentRefOf(document) } : null;
+const settings = settingsContext(preview, read, listPage, !!vivid);
+// Edit in context: a preview's read record, one reader per block (read.ts → recordingReader).
+const record = preview ? readRecordOf(Astro.locals) : undefined;
+const readerOf = (index: number) => (record ? recordingReader(read, record, index) : read);
+
+interface Item {
+	index: number;
+	Component: ((props: any) => any) | undefined;
+	data: Record<string, unknown> | null;
+	cms: BlockContext | null;
+	skipped: { type: string; shared?: string; slot?: string } | null;
+}
+let items: Item[] = [];
+let empty = false;
+let body: { Component: (props: any) => any; props: Record<string, unknown> } | null = null;
+let tree: RunNode[] | null = null;
+
+if (kind === 'fields') {
+	const c = collection ? own(site.collections, collection) : undefined;
+	if (!c || c.kind !== 'fields') throw new Error(`<Blocks>: a list-of-fields document needs its collection (pass collection={collection}); got ${JSON.stringify(collection)}.`);
+	const Component = components[c.name];
+	if (!Component) throw new Error(`<Blocks>: collection "${c.name}" has no component.`);
+	const doc = document as Extract<PageDocument, { kind: 'fields' }>;
+	const fields = c.fields ?? {};
+	// M5b Decision 4: a fields document is its page's first block, so its images load eagerly and its first (the cover) is high priority.
+	const reader = readerOf(0);
+	const cms: BlockContext = withSources(
+		{ index: 0, first: true, type: c.name, preview, h1Field: fieldsHeading(fields, doc.data), collection: c.name, shared: null, read: reader, listPage, eager: true, priority: firstImagePath(fields, doc.data), headingIds: fieldsDocumentHeadingIds(fields, doc.data).ids, vivid: vivid?.ref ? { ...vivid.ref, prefix: '' } : null },
+		{ preview, read: reader, listPage, vivid: !!vivid },
+		settings,
+	);
+	body = { Component, props: { document: { ...(await renderFields(fields, doc.data, read)), title: doc.title }, cms } };
+} else {
+	// A shared block on its own renders as the only block of a page (Decision 8); a slot's block, in its slot (edit in context, Decision 9).
+	const solo = kind === 'shared' ? (document as Extract<PageDocument, { kind: 'shared' }>).block : null;
+	const slotSolo = !!solo?.known && !!own(site.blocks, solo.type)?.slot;
+	const page: SiteDocument = solo ? { title: document.title, blocks: slotSolo ? [] : [solo] } : (document as SiteDocument);
+	const resolved = new Map<number, DocumentBlock>();
+	const skips = new Map<number, { type: string; shared: string; slot?: string }>();
+	await Promise.all(
+		page.blocks.map(async (entry, i) => {
+			if (entry.shared === undefined) return;
+			const r = await resolveShared(entry, read);
+			// Edit in context, Decision 2: a slot's block is the page's frame, never a block of its body.
+			const slot = 'block' in r ? own(site.blocks, r.block.type)?.slot : undefined;
+			if ('block' in r && !slot) resolved.set(i, r.block);
+			else skips.set(i, { type: 'block' in r ? r.block.type : r.type, shared: entry.shared, ...(slot ? { slot } : {}) });
+		}),
+	);
+	const contexts = blockContexts(page, site, preview, read, resolved, listPage, settings, vivid);
+	if (record) for (const [i, cms] of contexts.entries()) if (cms) cms.read = readerOf(i);
+	// Heading ids (heading-ids.ts): numbered across the page, once, from the document; each block's by field path.
+	const ids = headingIdsOf(page, site, resolved).blocks;
+	for (const [i, cms] of contexts.entries()) if (cms) cms.headingIds = ids[i] ?? null;
+	// Review gaps (Decision 8): the block state a preview asked for, on that block (never a shared entry, drawn as placed).
+	const chosen = preview ? renderStateOf(Astro.locals) : null;
+	if (chosen) for (const [i, cms] of contexts.entries()) if (cms && !cms.shared) cms.state = stateOf(site, cms.type, chosen, i);
+	items = await Promise.all(
+		page.blocks.map(async (entry, i): Promise<Item> => {
+			const cms = contexts[i] ?? null;
+			const block = resolved.get(i) ?? entry;
+			const Component = cms ? blocks[block.type] : undefined;
+			if (Component && cms) return { index: i, Component, data: await renderFields(own(site.blocks, block.type)!.fields, block.data, read), cms, skipped: null };
+			return { index: i, Component: undefined, data: null, cms: null, skipped: skips.get(i) ?? { type: entry.type } };
+		}),
+	);
+	empty = page.blocks.length === 0 && !slotSolo;
+	if (wrap) {
+		const rendered = items.filter((it) => it.Component && it.cms).map((it) => ({ index: it.index, type: it.cms!.type, data: it.data! }));
+		const runs = wrap(rendered);
+		if (runs.length) tree = runTree(items.map((it) => it.index), runs);
+	}
+}
+const byIndex = new Map(items.map((it) => [it.index, it]));
+---
+
+{body && <body.Component {...body.props} />}
+{tree && <BlockRunTree nodes={tree} items={byIndex} preview={preview} />}
+{
+	!tree &&
+	items.map(({ index, Component, data, cms, skipped }) => {
+		if (Component && cms) return <Component block={data} cms={cms} />;
+		// A comment, not an element: the site's sibling CSS (`+`, `:has(+ …)`) matches across it as on the public page.
+		return preview && skipped ? <Fragment set:html={skippedMarker(index, skipped)} /> : null;
+	})
+}
+{preview && empty ? <div data-cms-empty="" aria-hidden="true" style="display:block;min-height:320px;margin:0;padding:0;border:0" /> : null}

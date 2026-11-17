@@ -1,0 +1,4 @@
+# The package, create-caracms and the starter.
+packages:
+  - packages/*
+  - starter

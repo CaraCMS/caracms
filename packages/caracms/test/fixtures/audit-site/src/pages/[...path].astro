@@ -1,0 +1,19 @@
+---
+/** The fixture's pages, and the listing's later page (`/news/page/2`), as a site's own route makes them. */
+import RenderDocument from 'caracms/components/RenderDocument.astro';
+import { readDocument } from 'caracms/content';
+import { site } from 'virtual:caracms/config';
+
+export async function getStaticPaths() {
+	return [
+		{ params: { path: undefined }, props: { collection: 'pages', path: 'index', listPage: 1 } },
+		{ params: { path: 'news' }, props: { collection: 'pages', path: 'news', listPage: 1 } },
+		{ params: { path: 'news/page/2' }, props: { collection: 'pages', path: 'news', listPage: 2 } },
+	];
+}
+
+const { collection, path, listPage } = Astro.props;
+const { document } = await readDocument(site, collection, path);
+---
+
+<RenderDocument document={document} collection={collection} listPage={listPage} />

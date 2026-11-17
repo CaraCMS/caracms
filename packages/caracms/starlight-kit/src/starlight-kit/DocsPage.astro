@@ -1,0 +1,36 @@
+---
+/**
+ * The page component for a CaraCMS site on Starlight: every CaraCMS
+ * page, on the public site and in the editor's preview, drawn inside Starlight's
+ * <StarlightPage>, so Starlight writes the whole document (head, header, search, theme,
+ * sidebar, table of contents, prev/next) and CaraCMS's <Blocks> fill the content area.
+ *
+ * - The page's title is Starlight's `title` (its H1 and <title>); `seo.description` is its
+ *   `description` (<meta name="description">). `seo.title` and the share image aren't used:
+ *   Starlight writes the head, so CaraCMS's <Head> and <Fonts> aren't here.
+ * - The sidebar is the page tree (sidebar.ts), from the render's own reader, so the preview
+ *   shows the drafts. Prev and next follow it: Starlight works them out from the sidebar.
+ * - The table of contents is the page's h2s and h3s, from caracms's `pageHeadings`: the same
+ *   ids (`headingId`, one slug rule) that the rendered headings and the Markdown writer use.
+ *
+ * Assumes: set as `page` in caracms.config.ts; pages in a nested `pages` collection.
+ */
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import Blocks from 'caracms/components/Blocks.astro';
+import { pageHeadings } from 'caracms/content';
+import type { PageProps } from 'caracms/document';
+import { site } from 'virtual:caracms/config';
+import { groupLabels } from 'virtual:starlight-kit/config';
+import { sidebarFrom } from './sidebar.ts';
+
+type Props = PageProps;
+const { document, collection, preview = false, listPage, read } = Astro.props;
+const title = 'title' in document && typeof document.title === 'string' ? document.title : '';
+const description = (document as { seo?: { description?: string } }).seo?.description || undefined;
+const sidebar = await sidebarFrom(read, { groupLabels });
+const headings = await pageHeadings(site, document, { collection, read });
+---
+
+<StarlightPage frontmatter={{ title, description }} sidebar={sidebar} headings={headings}>
+	<Blocks document={document} collection={collection} preview={preview} listPage={listPage} />
+</StarlightPage>

@@ -1,0 +1,43 @@
+{
+  "title":   "Every field",
+  "blocks": [
+    {
+      "type": "everything",
+      "count":12,
+      "heading": ["High-street", "Coffee"],
+      "body": [
+        { "p": "The roaster started as a cart on the quay. 5 * 3 is a stray asterisk." },
+        {"h2": "From the harbour wall\noutward"},
+        { "p": "We drew the letters from the old **ferry signs**, see [the print work](/services/print)." },
+        { "ul": ["First point",   "Second *point*"] }
+      ],
+      "notes": "An old text value with a * in it\n\nand a second paragraph",
+      "cta": { "href": "/work", "label": "See the work" },
+      "buttons": [
+        { "label": "Start", "href": "/contact", "style": "primary" },
+        {"style":"secondary","label":"Half"}
+      ],
+      "featured":true,
+      "launched": "2024-05-02",
+      "credits": [
+        { "name": "Aoife", "role": "Identity" },
+        {
+          "role": "Photography",
+          "name": "Dara"
+        }
+      ],
+      "tags": ["coffee","print"],
+      "related": ["my-first-post",   "gone"],
+      "lead": "my-first-post",
+      "extra": { "kept": true }
+    },
+    {
+      "type": "everything",
+      "heading": ["Second"],
+      "count": "twelve",
+      "launched": "15/10/2026",
+      "body": "Plain *string* body",
+      "cta": "not an object"
+    }
+  ]
+}

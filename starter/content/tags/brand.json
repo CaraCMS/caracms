@@ -1,0 +1,5 @@
+{
+  "$schema": "../../schemas/tags.schema.json",
+  "title": "Brand",
+  "description": "The site’s name, accent, logo and tab icon, and how an editor changes them."
+}

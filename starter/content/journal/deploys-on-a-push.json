@@ -1,0 +1,23 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "Deploys on a push",
+  "date": "2026-06-30",
+  "tags": ["hosting", "publishing"],
+  "cover": { "key": "uploads/61e1f507072b/cafe-chairs.jpg", "alt": "An empty café with wooden chairs and tables", "focal": [0.92, 0.33], "w": 4000, "h": 2662 },
+  "excerpt": "CaraCMS never deploys anything itself: a Publish commits to main, and the host does the rest.",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Deploys", "On a push"],
+      "intro": "The host already knows how to deploy a push.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "Nothing new to run",
+      "body": "Railway, Render and Coolify deploy on a push. Elsewhere, a GitHub Action does it.",
+      "background": "light"
+    }
+  ]
+}

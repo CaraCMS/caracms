@@ -1,0 +1,27 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "A new home for CaraCMS",
+  "date": "2025-03-14",
+  "tags": ["studio"],
+  "cover": { "key": "uploads/e4c45074933b/studio-window.jpg", "alt": "Morning light through the studio window", "w": 1920, "h": 1280 },
+  "excerpt": "We moved into the Old Mill in March. One big room, a long kitchen table and far fewer stairs.",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["A new home", "For CaraCMS"],
+      "intro": "We moved into the Old Mill in March. Here is what changed.",
+      "buttons": [],
+      "media": null,
+      "layout": "left",
+      "background": "dark",
+      "spaceAbove": "default",
+      "spaceBelow": "default"
+    },
+    {
+      "type": "text",
+      "heading": "More light, fewer stairs",
+      "body": "The new studio has one big room and a kitchen table long enough for everyone.",
+      "background": "light"
+    }
+  ]
+}

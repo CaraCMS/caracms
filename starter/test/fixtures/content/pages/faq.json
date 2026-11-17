@@ -1,0 +1,46 @@
+{
+  "$schema": "../../schemas/pages.schema.json",
+  "title": "Questions",
+  "blocks": [
+    {
+      "type": "faq",
+      "heading": "Questions we hear a lot",
+      "intro": "If yours isn’t here, email hello@example.com.",
+      "items": [
+        {
+          "question": "How much does a new identity cost?",
+          "answer": [
+            { "p": "It depends on how much there is to make. Most identities land between €6,000 and €14,000, type and a short guide included. After the first call we’ll give you a range in writing." }
+          ]
+        },
+        {
+          "question": "How long does a website take?",
+          "answer": [
+            { "p": "Eight to twelve weeks for most sites, from the first workshop to launch. The words usually set the pace, so we start on them first." }
+          ]
+        },
+        {
+          "question": "Can we edit the website ourselves?",
+          "answer": [
+            { "p": "Yes. Every site we build comes with an editor, and an hour with us to learn it. See [our websites](/services/websites) for more." }
+          ]
+        },
+        {
+          "question": "Do you work with clients abroad?",
+          "answer": [
+            { "p": "About a third of our clients are outside Ireland. We meet on video and send proofs by post." }
+          ]
+        },
+        {
+          "question": "Do you print in house?",
+          "answer": [
+            { "p": "Small runs, on our **risograph**. Anything bigger goes to a printer we trust, and we check the proofs with you." }
+          ]
+        }
+      ],
+      "background": "light",
+      "spaceAbove": "default",
+      "spaceBelow": "default"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "Forms and submissions",
+  "date": "2026-10-06",
+  "tags": ["publishing"],
+  "cover": { "key": "uploads/a40fe31a6eeb/material-samples.png", "alt": "Paint swatches, fabric, stone and timber samples on marble", "w": 1200, "h": 1800 },
+  "excerpt": "A site defines its forms in code. What a visitor sends is kept, and sent on by email.",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Forms and", "Submissions"],
+      "intro": "Fields in code, recipients in Site Settings.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "Who gets it",
+      "body": "Each form’s recipients are listed in Site Settings, so an editor can change them.",
+      "background": "light"
+    }
+  ]
+}

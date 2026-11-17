@@ -1,0 +1,16 @@
+// The editor's React files (M3 Decision 2). Vite takes its JSX settings from the
+// nearest tsconfig, and a site's own is Astro's (JSX preserved), so the editor
+// carries its own. Type-checking uses the package's tsconfig, which matches.
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+    "noEmit": true
+  }
+}

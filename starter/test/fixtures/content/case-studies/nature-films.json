@@ -1,0 +1,26 @@
+{
+  "$schema": "../../schemas/case-studies.schema.json",
+  "title": "Nature film studio",
+  "heading": ["Nature", "Films"],
+  "client": "Nature film studio",
+  "sector": "culture",
+  "featured": false,
+  "launched": "2025-08-29",
+  "summary": "A documentary studio, and titles that hold their lines on every screen.",
+  "body": [
+    { "p": "The studio makes long documentaries about short journeys. We made their titles, their posters and a site for the trailers." },
+    { "h2": "Titles that fit" },
+    { "p": "Every title is set as a lockup, so it breaks where the director wants it to, from the cinema screen to a phone." }
+  ],
+  "credits": [
+    {
+      "role": "Titles",
+      "name": "Ciarán"
+    },
+    {
+      "role": "Website",
+      "name": "Niamh"
+    }
+  ],
+  "related": ["tiny-publisher"]
+}

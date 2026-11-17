@@ -1,0 +1,8 @@
+{
+  "title": "About",
+  "blocks": [
+    { "type": "stats", "stats": [{ "value": "12", "label": "Years" }] },
+    { "type": "answers", "heading": "Questions" },
+    { "shared": "promo" }
+  ]
+}

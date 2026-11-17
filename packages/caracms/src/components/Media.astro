@@ -1,0 +1,126 @@
+---
+/**
+ * One media slot (M5b Decision 4): an image or a Mux clip, whichever it holds.
+ *
+ *   <Media cms={cms} field="media" value={block.media} sizes="…" ratio={3 / 2} class="tm-media" />
+ *
+ * - **An image is exactly one `<img>`**: no `<picture>`, no wrapper. The caller's
+ *   `class` and `style` go on it, so the block's CSS sizes the box.
+ *   - Fluid (pass `sizes`, optionally `ratio`): a `w` srcset over the ladder;
+ *     with a ratio, `rs:fill` at it with the focal point's gravity; without, `rs:fit`.
+ *   - Fixed (pass a CSS `width` and/or `height`): 1×, 2×, 3×; both sides `rs:fill`,
+ *     or `rs:fit` with `fit="contain"`.
+ *   - `object-position: x% y%` only when a focal point is set (before the caller's style).
+ *   - `width`/`height` from the stored size, scaled to the ratio.
+ *   - `alt` from the value (`""` when decorative: decorative wins).
+ * - **A loop**: `<video autoplay muted loop playsinline>` on Mux's MP4, with its poster,
+ *   `aria-hidden`, and no script. Its source carries
+ *   `media="(prefers-reduced-motion: no-preference)"`, so with reduced motion no
+ *   source matches and only the poster shows.
+ * - **A player**: MediaPlayer.astro (its poster and a "Play video: {name}" button);
+ *   only it carries a script, so a page with no player has none.
+ * - **PNG** (M9 Decision 8): a field declared `media({ format: 'png' })` gets `@png`
+ *   URLs at every width; every other image is WebP.
+ * - **Loading** (Decision 4): eager in the first two rendered blocks (`cms.eager`),
+ *   `fetchpriority="high"` only on the image at `cms.priority`; lazy otherwise. Props
+ *   override both.
+ * - **Preview markers**: `data-cms-field="<path>" data-cms-kind="media"` on the element,
+ *   preview renders only, when `field` is given (a dotted path into a list works).
+ *   Without `field` (a card showing another document's cover) there's no marker.
+ * - **An empty slot** (M9 port friction, item 12): nothing for visitors. In a preview, with
+ *   `field`, a placeholder carrying the markers, so the slot can be clicked on the page
+ *   (it selects the field, as a placed image does): a `<span>` (valid inside a `<p>` or a
+ *   link) with the caller's `class`, at `ratio` when given (else the fixed `width`/`height`,
+ *   else at least 6rem square), drawn as a dashed box in the text's own colour. So a block
+ *   that wants its empty slot clickable calls `<Media>` even when the value is empty
+ *   (`{(block.media || cms.preview) && <Media … />}`); the visitors' page is unchanged.
+ * - **Without the media variables** (Decision 5): a preview (and `astro dev`) renders an
+ *   image slot as nothing; a build throws the one sentence naming them.
+ *
+ * Server-only: the signing happens here, in the server render.
+ */
+import { site } from 'virtual:caracms/config';
+import { renderValue, type MediaField } from '../fields.ts';
+import { failedOnce, fixedImage, fluidImage, isProductionBuild, mediaUnsetMessage, readMediaConfig } from '../media.ts';
+import { renderMedia, type RenderMedia } from '../media-value.ts';
+import { contextMarker, requireField, whose } from './descriptor.ts';
+import MediaPlayer from './MediaPlayer.astro';
+import { passThrough } from './attributes.ts';
+import { vividOf } from '../vivid.ts';
+import type { MediaProps } from './media-props.ts';
+
+/** Its props: media-props.ts (M8 trial, item 13: the element's own attributes type-check too). */
+type Props = MediaProps;
+
+const { cms, field, value, sizes, ratio, minWidth, maxWidth, width, height, fit, loading, fetchpriority, class: className, style, ...given } = Astro.props;
+// M8 trial (item 4): a bare attribute stays bare, false is none (attributes.ts).
+const rest = passThrough(given);
+const descriptor: MediaField | null = field ? requireField(site, cms, field, 'media', 'Media') : null;
+const media: RenderMedia | null = descriptor ? (renderValue(descriptor, value) as RenderMedia | null) : renderMedia(value);
+// Vivid (vivid.ts): on a public page with the config's switch on, the field and its editor address.
+const markers = cms.preview && field ? { 'data-cms-field': field, 'data-cms-kind': 'media', ...contextMarker(cms) } : field ? vividOf(site, cms, Astro, import.meta.env.DEV)(field) : {};
+const load = loading ?? (cms.eager ? 'eager' : 'lazy');
+const priority = fetchpriority ?? (field && cms.priority === field ? 'high' : undefined);
+const fixed = width !== undefined || height !== undefined;
+// M9 Decision 8: the field's own format (PNG for flat artwork), WebP otherwise.
+const format = descriptor?.format;
+
+let img: (ReturnType<typeof fluidImage> & { alt: string; style?: string }) | null = null;
+if (media?.kind === 'image') {
+	const config = readMediaConfig();
+	if (config.kind !== 'ready') {
+		// A missing deploy setting: the build stops with one sentence; a preview (and dev) shows nothing.
+		// Once per process: the page's other slots render in parallel, and a second throw would be an unhandled rejection.
+		if (!cms.preview && isProductionBuild() && !failedOnce()) throw new Error(`caracms: ${mediaUnsetMessage(config)}`);
+	} else {
+		if (!fixed && !sizes) throw new Error(`<Media>: a fluid image needs \`sizes\` (${whose(cms)}${field ? `, field "${field}"` : ''}).`);
+		const built = fixed ? fixedImage(config.settings, media, { width, height, fit, format }) : fluidImage(config.settings, media, { sizes: sizes!, ratio, minWidth, maxWidth, format });
+		const styles = media.position ? [`object-position: ${media.position}`, style].filter(Boolean).join('; ') : style;
+		img = { ...built, alt: media.alt, style: styles };
+	}
+}
+const clip = media?.kind === 'video' ? media : null;
+// An empty slot in a preview: something to click (see above). Never in the public render.
+const placeholderStyle = cms.preview && field && !media ? emptySlotStyle({ ratio, width, height, style }) : null;
+
+function emptySlotStyle(size: { ratio?: number; width?: number; height?: number; style?: string }): string {
+	const box =
+		size.ratio !== undefined
+			? [`aspect-ratio: ${size.ratio}`, 'min-width: 6rem']
+			: size.width !== undefined || size.height !== undefined
+				? [size.width !== undefined ? `width: ${size.width}px` : 'min-width: 6rem', size.height !== undefined ? `height: ${size.height}px` : 'min-height: 6rem']
+				: ['min-width: 6rem', 'min-height: 6rem'];
+	const look = ['background: color-mix(in srgb, currentColor 6%, transparent)', 'outline: 1.5px dashed color-mix(in srgb, currentColor 40%, transparent)', 'outline-offset: -1.5px', 'cursor: pointer'];
+	return ['display: block', 'box-sizing: border-box', ...box, size.style, ...look].filter(Boolean).join('; ');
+}
+---
+
+{placeholderStyle !== null && <span class={className} style={placeholderStyle} aria-hidden="true" data-cms-placeholder="" {...rest} {...markers} />}
+
+{
+	img && (
+		<img
+			src={img.src}
+			srcset={img.srcset}
+			sizes={img.sizes}
+			width={img.width}
+			height={img.height}
+			alt={img.alt}
+			loading={load}
+			fetchpriority={priority}
+			decoding="async"
+			class={className}
+			style={img.style}
+			{...rest}
+			{...markers}
+		/>
+	)
+}
+{
+	clip && clip.play === 'loop' && (
+		<video autoplay muted loop playsinline preload="metadata" poster={clip.poster} width={clip.w ?? undefined} height={clip.h ?? undefined} aria-hidden="true" class={className} style={style} {...rest} {...markers}>
+			<source src={clip.mp4} type="video/mp4" media="(prefers-reduced-motion: no-preference)" />
+		</video>
+	)
+}
+{clip && clip.play === 'player' && <MediaPlayer clip={clip} loading={load} fetchpriority={priority} class={className} style={style} markers={{ ...rest, ...markers }} />}

@@ -1,0 +1,128 @@
+---
+/**
+ * A case study's body (M5a Decision 7): the collection's component, rendered in the
+ * page's frame by Page.astro's `<Blocks>`. Schema beside it in case-studies.ts.
+ *
+ * The package's components work here as in a block, markers included (Decision 16):
+ * `<Block>` is the root (in a preview it carries `data-cms-document`), and list items
+ * pass their paths (`credits.1.name`). The heading is the page's `h1` when it has
+ * lines (Decision 7's rule). Related work is read through the render context
+ * (Decision 9); a related case study that doesn't exist is null, and skipped.
+ *
+ * M5b: the cover, at 16:9 across the content column under the header (eager, high
+ * priority: it's the page's first image). `sizes`: the content column, 100vw less the
+ * gutters (20, 32 from 768, 48 from 1024), capped at 1200px from 1296. M7: the tokens'
+ * look, the credits in the first third and the story in the last two on desktop.
+ */
+import Block from 'caracms/components/Block.astro';
+import Lockup from 'caracms/components/Lockup.astro';
+import Media from 'caracms/components/Media.astro';
+import RichText from 'caracms/components/RichText.astro';
+import Text from 'caracms/components/Text.astro';
+import type { FieldsDocumentProps } from 'caracms/document';
+import { formatDay, sectorLabel, type CaseStudyData } from './case-studies.ts';
+
+type Props = FieldsDocumentProps<CaseStudyData>;
+const { document: cs, cms } = Astro.props;
+const year = cs.launched ? cs.launched.slice(0, 4) : '';
+const related = (await Promise.all(cs.related.map((path) => (path ? cms.read.document('case-studies', path) : null)))).filter((r) => r !== null);
+const credits = cs.credits.map((c, i) => ({ ...c, i })).filter((c) => c.role || c.name || cms.preview);
+---
+
+<Block cms={cms} as="article">
+	<header class="band pt-section">
+		<div class="content-container">
+			<p class="eyebrow fg-muted mb-6">
+				<span data-cms-fixed>Case study</span>
+				{sectorLabel(cs.sector) && (
+					<>
+						{' · '}
+						<Block cms={cms} field="sector" as="span">
+							{sectorLabel(cs.sector)}
+						</Block>
+					</>
+				)}
+				{year && (
+					<>
+						{' · '}
+						<Block cms={cms} field="launched" as="span">
+							{year}
+						</Block>
+					</>
+				)}
+			</p>
+			<Lockup cms={cms} field="heading" value={cs.heading} />
+			<dl class="mt-8 flex flex-wrap gap-x-12 gap-y-4">
+				{
+					(cs.client || cms.preview) && (
+						<div>
+							<dt class="eyebrow fg-muted" data-cms-fixed>
+								Client
+							</dt>
+							<Text cms={cms} field="client" value={cs.client} as="dd" class="mt-1 font-medium" />
+						</div>
+					)
+				}
+				{
+					cs.launched && (
+						<div>
+							<dt class="eyebrow fg-muted" data-cms-fixed>
+								Launched
+							</dt>
+							<Block cms={cms} field="launched" as="dd" class="mt-1 font-medium">
+								{formatDay(cs.launched)}
+							</Block>
+						</div>
+					)
+				}
+			</dl>
+		</div>
+	</header>
+	{
+		cs.cover && (
+			<div class="band pt-section-tight">
+				<div class="content-container">
+					<Media cms={cms} field="cover" value={cs.cover} sizes="(min-width: 1296px) 1200px, (min-width: 1024px) calc(100vw - 96px), (min-width: 768px) calc(100vw - 64px), calc(100vw - 40px)" ratio={16 / 9} class="frame frame-wide" />
+				</div>
+			</div>
+		)
+	}
+	<section class="band py-section">
+		<div class="content-container split">
+			{
+				credits.length > 0 && (
+					<ul class="grid content-start gap-3 text-small" role="list">
+						{credits.map((c) => (
+							<li class="grid">
+								<Text cms={cms} field={`credits.${c.i}.role`} value={c.role} as="span" class="eyebrow fg-muted" />
+								<Text cms={cms} field={`credits.${c.i}.name`} value={c.name} as="span" />
+							</li>
+						))}
+					</ul>
+				)
+			}
+			<div>
+				<Text cms={cms} field="summary" value={cs.summary} class="text-lead fg-soft max-w-reading mb-6" />
+				<RichText cms={cms} field="body" value={cs.body} class="prose" />
+			</div>
+		</div>
+	</section>
+	{
+		related.length > 0 && (
+			<section class="band scheme-grey py-section">
+				<div class="content-container">
+					<h2 class="text-h3" data-cms-fixed>
+						Related work
+					</h2>
+					<ul class="mt-4 flex flex-wrap gap-x-8 gap-y-3" role="list">
+						{related.map((r) => (
+							<li>
+								<Block cms={cms.of(r)} as="a" class="link" href={r.url ?? undefined}>{r.title}</Block>
+							</li>
+						))}
+					</ul>
+				</div>
+			</section>
+		)
+	}
+</Block>

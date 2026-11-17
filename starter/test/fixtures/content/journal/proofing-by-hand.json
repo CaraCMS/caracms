@@ -1,0 +1,23 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "Proofing by hand",
+  "date": "2025-02-06",
+  "tags": ["print"],
+  "cover": { "key": "uploads/a40fe31a6eeb/material-samples.png", "alt": "Paint swatches, fabric, stone and timber samples on marble", "w": 1200, "h": 1800 },
+  "excerpt": "Every proof we send to press is checked on paper, at size, by two people.",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Proofing", "By hand"],
+      "intro": "Screens lie about colour and size. Paper does not.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "Two pairs of eyes",
+      "body": "One of us reads for words, the other for everything else. Then we swap.",
+      "background": "light"
+    }
+  ]
+}

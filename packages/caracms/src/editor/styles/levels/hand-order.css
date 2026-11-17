@@ -1,0 +1,44 @@
+/* Review gaps, hand order (Decisions 1–5; packages/caracms/test/mockups/review-gaps.html, #order-*). A manual collection's list in
+   the sidebar: Site order by default, a grip at each row's start (the block list's and list fields' grip, useRowDrag),
+   the row being dragged a dashed slot with a lifted copy saying where it goes (--shadow-drag). Sorted any other way,
+   found or filtered, the grips go and a line says so. Tokens only; no side rails anywhere (M2 Decision 10). */
+.ord-h{display:flex;align-items:center;gap:var(--space-1-5);height:28px;margin:0 0 var(--space-0-5);padding:0 var(--space-1);font-size:var(--text-xs);font-weight:var(--weight-semibold);letter-spacing:var(--tracking-caps);text-transform:uppercase;color:var(--text-muted)}
+.ord-h .k{display:inline-flex;align-items:center;gap:3px;margin-left:auto;font-weight:var(--weight-regular);letter-spacing:0;text-transform:none;color:var(--text-subtle)}
+.ord-h .k kbd{min-width:16px;padding:1px 3px}
+.olist{--order-grip-w:20px;position:relative;list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.orow{position:relative;border:1px solid transparent;border-radius:var(--radius-md)}
+.orow .drow:has(.ogrip){padding-left:0}
+.orow .drow:focus-visible{outline-offset:0}
+.ogrip{display:inline-grid;place-items:center;width:var(--order-grip-w);height:24px;flex:none;margin-right:-2px;border-radius:var(--radius-sm);color:var(--icon);opacity:.5;cursor:grab;touch-action:none;transition:opacity var(--dur-fast),background var(--dur-fast)}
+.orow:hover .ogrip,.orow .drow:focus-visible .ogrip{opacity:1}
+.ogrip:hover{background:var(--surface-pressed)}
+.olist.is-off .ogrip{opacity:.3;cursor:not-allowed}
+.olist.is-off .ogrip:hover{background:none}
+.orow .hmark{font-size:var(--text-xs);color:var(--text-subtle)}
+/* Sorted by another column (#order-sorted): the row shows that column on its right. */
+.orow .meta .when{font-variant-numeric:tabular-nums}
+/* The row being dragged keeps its place as a dashed slot; the drop line is full width (the block list's). */
+.orow.is-ghost{border:1px dashed var(--border-strong)}
+.orow.is-ghost>*{visibility:hidden}
+.orow.drop-before::before,.orow.drop-after::after{content:"";position:absolute;left:6px;right:6px;height:2px;border-radius:2px;background:var(--select);box-shadow:0 0 0 2px var(--surface)}
+.orow.drop-before::before{top:-3px}.orow.drop-after::after{bottom:-3px}
+.odrag{position:absolute;left:var(--space-1-5);right:calc(-1 * var(--space-1));z-index:5;display:grid;grid-template-columns:var(--order-grip-w) 16px minmax(0,1fr);align-items:center;column-gap:var(--space-2);min-height:calc(var(--row-h) + 14px);padding:var(--space-1) var(--space-2) var(--space-1) 0;background:var(--surface);border:1px solid var(--border-strong);border-radius:var(--radius-md);box-shadow:var(--shadow-drag);pointer-events:none;rotate:-.6deg}
+.odrag .ogrip{opacity:1;cursor:grabbing}
+.odrag>.i{color:var(--icon)}
+.odrag .nm{min-width:0;font-weight:var(--weight-semibold);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.odrag .to{grid-column:3;font-size:var(--text-xs);color:var(--select-strong);font-weight:var(--weight-medium)}
+@media (prefers-reduced-motion:reduce){.odrag{rotate:none}}
+
+/* The line a view that can't drag shows, in the sidebar above its list and on the table under its tools: the sunken
+   wash and an icon, the sort (or the find) said in words, a way back. Never a rail. */
+.order-line{display:flex;align-items:flex-start;gap:var(--space-2);padding:var(--space-2) var(--space-2-5);border-radius:var(--radius-md);background:var(--surface-sunken);font-size:var(--text-sm);color:var(--text-muted);line-height:1.4}
+.order-line>.i{flex:none;margin-top:1px;color:var(--icon)}
+.order-line b{color:var(--text);font-weight:var(--weight-semibold)}
+.order-line .linkbtn{white-space:nowrap}
+.side-body .order-line{margin-bottom:var(--space-2)}
+.ct-tools .order-line{flex-basis:100%;padding-block:var(--space-1-5)}
+
+/* The table: Site order is a column of its own, first, so it can be sorted back to. */
+.ct-pos{width:64px}
+.ct tbody td.ct-pos{color:var(--text-subtle);font-size:var(--text-sm);font-variant-numeric:tabular-nums}
+.ct-pos .ct-sort{padding-left:var(--space-2)}

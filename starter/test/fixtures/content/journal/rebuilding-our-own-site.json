@@ -1,0 +1,23 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "Rebuilding our own site",
+  "date": "2026-03-18",
+  "tags": ["web", "studio"],
+  "cover": { "key": "uploads/e4c45074933b/studio-window.jpg", "alt": "Morning light through the studio window", "w": 1920, "h": 1280 },
+  "excerpt": "We finally rebuilt example.com, and held ourselves to the rules we give clients.",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Rebuilding", "Our own site"],
+      "intro": "The cobbler’s children got new shoes at last.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "Same rules",
+      "body": "One typeface, no slider and every page editable by anyone in the studio.",
+      "background": "light"
+    }
+  ]
+}

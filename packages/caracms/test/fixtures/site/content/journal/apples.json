@@ -1,0 +1,9 @@
+{
+  "title": "Apples",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Play Hard", "Work Hard"]
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "Type that holds its lines",
+  "date": "2025-11-03",
+  "tags": ["type", "editing"],
+  "cover": { "key": "uploads/a40fe31a6eeb/material-samples.png", "alt": "Paint swatches, fabric, stone and timber samples on marble", "w": 1200, "h": 1800 },
+  "excerpt": "Why the starter’s headlines shrink instead of breaking on a phone, and the one rule behind it.",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Lines that", "Never wrap"],
+      "intro": "Why the headlines shrink instead of breaking on a phone.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "The rule",
+      "body": "A heading is set as lines. The text gets smaller instead of wrapping.",
+      "background": "light"
+    }
+  ]
+}

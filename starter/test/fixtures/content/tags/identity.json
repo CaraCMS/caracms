@@ -1,0 +1,5 @@
+{
+  "$schema": "../../schemas/tags.schema.json",
+  "title": "Identity",
+  "description": "Names, marks and the type that carries them, and how they hold up once a client starts using them."
+}

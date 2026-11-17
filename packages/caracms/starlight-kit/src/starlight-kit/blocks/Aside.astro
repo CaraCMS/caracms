@@ -1,0 +1,18 @@
+---
+/** The aside block (aside.ts), drawn with Starlight's <Aside> in its kind. */
+import { Aside } from '@astrojs/starlight/components';
+import Block from 'caracms/components/Block.astro';
+import RichText from 'caracms/components/RichText.astro';
+import type { BlockProps } from 'caracms/document';
+import { ASIDE_KINDS, type AsideData, type AsideKind } from './aside.ts';
+
+type Props = BlockProps<AsideData>;
+const { block, cms } = Astro.props;
+const kind: AsideKind = (ASIDE_KINDS as readonly string[]).includes(block.kind) ? (block.kind as AsideKind) : 'note';
+---
+
+<Block cms={cms} as="div">
+	<Aside type={kind}>
+		<RichText cms={cms} field="body" value={block.body} />
+	</Aside>
+</Block>

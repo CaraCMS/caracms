@@ -1,0 +1,14 @@
+---
+/** The text block (text.ts): its rich text, as Starlight styles any page's content. */
+import Block from 'caracms/components/Block.astro';
+import RichText from 'caracms/components/RichText.astro';
+import type { BlockProps } from 'caracms/document';
+import type { TextData } from './text.ts';
+
+type Props = BlockProps<TextData>;
+const { block, cms } = Astro.props;
+---
+
+<Block cms={cms} as="div">
+	<RichText cms={cms} field="body" value={block.body} />
+</Block>

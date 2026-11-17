@@ -1,0 +1,95 @@
+---
+/**
+ * Two columns side by side, from 768px; one above the other below. Each column is a
+ * group (columns.ts): a heading, some text and a button. Schema beside it in columns.ts.
+ */
+import Block from 'caracms/components/Block.astro';
+import Buttons from 'caracms/components/Buttons.astro';
+import RichText from 'caracms/components/RichText.astro';
+import Text from 'caracms/components/Text.astro';
+import type { BlockProps } from 'caracms/document';
+import type { ColumnsData } from './columns.ts';
+
+type Props = BlockProps<ColumnsData>;
+const { block, cms } = Astro.props;
+const sides = [
+	['left', block.left],
+	['right', block.right],
+] as const;
+---
+
+<Block cms={cms} class={`band bg-${block.background} columns`}>
+	<div class="band-inner columns-grid">
+		{
+			sides.map(([side, column]) => (
+				<div class="column">
+					<Text cms={cms} field={`${side}.heading`} value={column.heading} class="column-heading" />
+					<RichText cms={cms} field={`${side}.text`} value={column.text} class="column-text" />
+					<Buttons cms={cms} field={`${side}.button`} value={column.button} class="column-buttons" buttonClass="column-button" />
+				</div>
+			))
+		}
+	</div>
+</Block>
+
+<style>
+	.columns {
+		padding-block: 4rem;
+	}
+
+	.columns-grid {
+		display: grid;
+		gap: 3rem;
+	}
+
+	.column-heading {
+		margin: 0;
+		font-size: 1.5rem;
+		line-height: 1.2;
+		text-wrap: balance;
+	}
+
+	.column-text {
+		margin-top: 1rem;
+		font-size: 1.0625rem;
+		line-height: 1.55;
+		text-wrap: pretty;
+	}
+
+	.column-text :global(p) {
+		margin: 0 0 0.75rem;
+	}
+
+	.column-buttons {
+		margin-top: 1.5rem;
+	}
+
+	.column-buttons :global(.column-button) {
+		display: inline-block;
+		padding: 0.75rem 1.25rem;
+		border: 2px solid var(--button-bg);
+		border-radius: 999px;
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	.column-buttons :global(.column-button--primary) {
+		background: var(--button-bg);
+		color: var(--button-ink);
+	}
+
+	.column-buttons :global(.column-button--secondary) {
+		color: inherit;
+	}
+
+	@media (width >= 768px) {
+		.columns {
+			padding-block: 6rem;
+		}
+
+		.columns-grid {
+			grid-template-columns: 1fr 1fr;
+			gap: 4rem;
+		}
+	}
+</style>

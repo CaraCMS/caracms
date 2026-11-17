@@ -1,0 +1,14 @@
+{
+  "$schema": "../../schemas/case-studies.schema.json",
+  "title": "Local travel company",
+  "heading": ["A treatsie"],
+  "client": "Local travel company",
+  "sector": "travel",
+  "featured": true,
+  "launched": "2026-06-10",
+  "summary": "this is tinty summary",
+  "body": [
+    { "p": "And a bunch of cool text" },
+    { "p": "Images?" }
+  ]
+}

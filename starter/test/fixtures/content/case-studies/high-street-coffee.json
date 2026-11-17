@@ -1,0 +1,30 @@
+{
+  "$schema": "../../schemas/case-studies.schema.json",
+  "title": "High-street coffee roaster",
+  "heading": ["High-street", "Coffee"],
+  "client": "High-street coffee roaster",
+  "sector": "food",
+  "featured": true,
+  "launched": "2024-05-02",
+  "summary": "A full identity for a roastery on the quay, from the cart to the café.",
+  "body": [
+    { "p": "The roaster started as a cart on the quay, selling coffee to the people waiting for the morning ferry." },
+    { "h2": "From the harbour wall\noutward" },
+    { "p": "We drew the letters from the old **ferry signs**, then set them on everything from cups to the van. See [the print work](/services/print) for the bags." },
+    { "ul": ["A wordmark and a stamp", "Bags, cups and the van", "A one-page site with the timetable"] },
+    { "p": "This is some text and its quite nice" },
+    { "h2": "A heading" },
+    { "p": "hjklhkl\nhjkl\n\nkhjklhjkl" }
+  ],
+  "credits": [
+    {
+      "role": "Photography",
+      "name": "Dara"
+    },
+    {
+      "role": "Director",
+      "name": "Wiggles"
+    }
+  ],
+  "related": ["tiny-publisher", "sourdough-bakery"]
+}

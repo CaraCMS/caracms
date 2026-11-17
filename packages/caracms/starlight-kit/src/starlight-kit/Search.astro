@@ -1,0 +1,35 @@
+---
+/**
+ * Starlight's search, unchanged, plus the fixes CaraCMS's editor preview needs.
+ *
+ * Starlight's scripts set three things once, on load: they enable the search button (it's
+ * rendered `disabled`), show the "Ctrl K" badge, and on a Mac turn it into "⌘ K" with
+ * `aria-keyshortcuts="Meta+K"`. In the editor's preview an edit morphs `<body>` back to the
+ * server's render, which undoes all three on the same elements, and Starlight's scripts don't
+ * run again. So after every morph (`caracms:rendered`, which only the preview fires) this
+ * does them again, as Starlight's scripts do. The click handlers survive the morph.
+ *
+ * Assumes: registered as Starlight's `Search` override (`components: { Search: … }` in
+ * astro.config). Nothing here is site-specific.
+ */
+import Default from '@astrojs/starlight/components/Search.astro';
+---
+
+<Default {...Astro.props} />
+
+<script>
+	document.addEventListener('caracms:rendered', () => {
+		const mac = /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform);
+		for (const button of document.querySelectorAll<HTMLButtonElement>('site-search button[data-open-modal]')) {
+			button.disabled = false;
+			const shortcut = button.querySelector('kbd');
+			if (!(shortcut instanceof HTMLElement)) continue;
+			const platformKey = shortcut.querySelector('kbd');
+			if (platformKey && mac) {
+				platformKey.textContent = '⌘';
+				button.setAttribute('aria-keyshortcuts', 'Meta+K');
+			}
+			shortcut.style.display = '';
+		}
+	});
+</script>

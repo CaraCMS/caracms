@@ -1,0 +1,119 @@
+---
+/**
+ * A buttons field (M5a Decision 2; the template's one button shape):
+ * `[{ label, href, style }]` as links. A block author never writes the "half a
+ * button shows nothing" rule: this component applies it.
+ *
+ *   <Buttons cms={cms} field="buttons" value={block.buttons} class="actions" buttonClass="button" />
+ *
+ * - Shows the first `max` buttons (the field's, default 2) that have both a label
+ *   and an href passing the link rule. Half a button, or one whose link fails the
+ *   rule, shows nothing (the field says why). Indexes stay the field's own, so
+ *   markers line up with the editor's rows.
+ * - Each is `<a href class="<buttonClass> <buttonClass>--<style>">label</a>`, in a
+ *   wrapper element `as` (default `div`) that takes `class` and other attributes.
+ *   Public render: nothing at all when no button shows.
+ * - A field with `allowNoLink` (the editor-friction batch, item 4): a button with words
+ *   and no link is meant ("Coming soon"), and shows as a plain label with the same
+ *   classes, `<span class="<buttonClass> <buttonClass>--<style>">label</span>`. A
+ *   custom slot gets it with `href: ''` and `linked: false`. One whose link fails the
+ *   rule still shows nothing (the field says why).
+ * - Or render each one yourself with a function as the default slot:
+ *     <Buttons cms={cms} field="buttons" value={block.buttons}>
+ *       {(b) => <a href={b.href} class={`btn btn-${b.style}`} {...b.markers}>{b.label}</a>}
+ *     </Buttons>
+ *   `b` is `{ label, href, linked, style, index, markers }`; spread `markers` on the element.
+ * - Preview render only (M3 Decision 17): the wrapper is always there with
+ *   `data-cms-field="<path>" data-cms-kind="buttons"`, and each button carries
+ *   `data-cms-field="<path>.<index>.label" data-cms-kind="button"` (Decision 16).
+ * - M6c Decision 11: a button whose link is a file link carries the site's behaviour
+ *   (`fileLinkAttributes`): `target="_blank" rel="noopener"` and a visually hidden
+ *   " (opens in a new tab)" for a PDF without `?download`, `download` for any other.
+ *   A custom slot gets them as `b.attributes` (spread them) and `b.newTabNote` (HTML
+ *   to put inside, or '').
+ */
+import { site } from 'virtual:caracms/config';
+import type { HTMLTag } from 'astro/types';
+import type { BlockContext } from '../document.ts';
+import { parseField, usableHref, type ButtonValue } from '../fields.ts';
+import { fileLinkAttributes, NEW_TAB_NOTE_HTML } from '../rich-text.ts';
+import { contextMarker, requireField } from './descriptor.ts';
+import { passThrough } from './attributes.ts';
+import { vividOf } from '../vivid.ts';
+
+/** One button as the default slot's function gets it. */
+export interface ShownButton {
+	label: string;
+	/** Where it goes; '' for a plain label (a field with `allowNoLink`, a button with no link). */
+	href: string;
+	/** False for a plain label: draw it as text with the button's look, not a link. */
+	linked: boolean;
+	style: string;
+	/** Its index in the field's value (the editor's row). */
+	index: number;
+	/** The preview markers to spread on its element (in the public render, Vivid's when the config's `vivid` is on, else none). */
+	markers: Record<string, string>;
+	/** A file link's attributes to spread on its element (M6c Decision 11), else empty. */
+	attributes: Record<string, string | boolean>;
+	/** The visually hidden " (opens in a new tab)" to put inside a new-tab file link, else ''. */
+	newTabNote: string;
+}
+
+interface Props {
+	cms: BlockContext;
+	field: string;
+	value: ButtonValue[];
+	as?: HTMLTag;
+	class?: string;
+	/** Each button's class, and `<buttonClass>--<style>` beside it. */
+	buttonClass?: string;
+	[attribute: string]: unknown;
+}
+
+const { cms, field, value, as: Tag = 'div', class: className, buttonClass, ...given } = Astro.props;
+// M8 trial (item 4): a bare attribute stays bare, false is none (attributes.ts).
+const rest = passThrough(given);
+const descriptor = requireField(site, cms, field, 'buttons', 'Buttons');
+const all = parseField(descriptor, value) as ButtonValue[];
+const shown: ShownButton[] = [];
+// Vivid (vivid.ts): on a public page with the config's switch on, each button's words and the row as a whole.
+const vivid = vividOf(site, cms, Astro, import.meta.env.DEV);
+all.slice(0, descriptor.max).forEach((b, index) => {
+	if (!b.label) return;
+	const markers: Record<string, string> = cms.preview ? { 'data-cms-field': `${field}.${index}.label`, 'data-cms-kind': 'button', ...contextMarker(cms) } : vivid(`${field}.${index}.label`);
+	// allowNoLink: words and no link at all are a plain label.
+	if (!b.href && descriptor.allowNoLink) {
+		shown.push({ label: b.label, href: '', linked: false, style: b.style, index, markers, attributes: {}, newTabNote: '' });
+		return;
+	}
+	const href = usableHref(b.href);
+	if (!href) return;
+	const file = fileLinkAttributes(href);
+	const attributes = Object.fromEntries(Object.entries(file.attributes).map(([name, v]) => [name, v === '' ? true : v]));
+	shown.push({ label: b.label, href, linked: true, style: b.style, index, markers, attributes, newTabNote: file.newTab ? NEW_TAB_NOTE_HTML : '' });
+});
+const custom = Astro.slots.has('default');
+const rendered = custom ? await Promise.all(shown.map((b) => Astro.slots.render('default', [b]))) : [];
+const markers = cms.preview ? { 'data-cms-field': field, 'data-cms-kind': 'buttons', ...contextMarker(cms) } : vivid(field);
+---
+
+{
+	(shown.length > 0 || cms.preview) && (
+		<Tag class={className} {...rest} {...markers}>
+			{custom
+				? rendered.map((html) => <Fragment set:html={html} />)
+				: shown.map((b) =>
+						b.linked ? (
+							<a href={b.href} class:list={buttonClass ? [buttonClass, `${buttonClass}--${b.style}`] : undefined} {...b.attributes} {...b.markers}>
+								{b.label}
+								{b.newTabNote && <Fragment set:html={b.newTabNote} />}
+							</a>
+						) : (
+							<span class:list={buttonClass ? [buttonClass, `${buttonClass}--${b.style}`] : undefined} {...b.markers}>
+								{b.label}
+							</span>
+						),
+					)}
+		</Tag>
+	)
+}

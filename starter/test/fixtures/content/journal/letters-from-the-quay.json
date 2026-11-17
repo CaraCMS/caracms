@@ -1,0 +1,23 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "Letters from the quay",
+  "date": "2026-02-24",
+  "tags": ["type", "field"],
+  "cover": { "key": "uploads/61e1f507072b/cafe-chairs.jpg", "alt": "An empty café with wooden chairs and tables", "focal": [0.92, 0.33], "w": 4000, "h": 2662 },
+  "excerpt": "Photographs of the hand-painted signs along the quay, before the council repaints them.",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Letters from", "The quay"],
+      "intro": "Some of these signs are older than the harbour wall.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "Before they go",
+      "body": "We photographed every one and traced the best letters back at the studio.",
+      "background": "light"
+    }
+  ]
+}

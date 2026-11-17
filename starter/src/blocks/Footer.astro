@@ -1,0 +1,20 @@
+---
+/**
+ * The footer slot's block (site-footer.ts): the shared block's link columns, with Site
+ * Settings' contact details, social links and name, read through the render's source (so a
+ * preview shows the drafts', and an opened Site Settings' copy), drawn by
+ * src/components/SiteFooter.astro.
+ */
+import { siteSettings } from 'caracms/content';
+import type { BlockProps } from 'caracms/document';
+import { site } from 'virtual:caracms/config';
+import SiteFooter from '../components/SiteFooter.astro';
+import { footerParts, siteName } from '../components/shell.ts';
+import type { SiteFooterData } from './site-footer.ts';
+
+type Props = BlockProps<SiteFooterData>;
+const { block, cms } = Astro.props;
+const settings = await siteSettings(site, Astro.locals);
+---
+
+<SiteFooter name={siteName(settings)} parts={footerParts(block, settings)} cms={cms} />

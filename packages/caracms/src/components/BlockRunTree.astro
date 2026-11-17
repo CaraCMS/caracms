@@ -1,0 +1,45 @@
+---
+/**
+ * `<Blocks>`'s own renderer for runs of blocks (M9 Decision 9; block-runs.ts): each entry
+ * as `<Blocks>` draws it (the block's component, or a skipped block's preview marker), and
+ * each run as its component round its own entries and runs, recursively. Internal: a site
+ * uses `<Blocks wrap={…}>`.
+ */
+import type { RunNode } from '../block-runs.ts';
+import type { BlockContext } from '../document.ts';
+import { skippedMarker } from '../skipped.ts';
+
+export interface RunItem {
+	Component: ((props: any) => any) | undefined;
+	data: Record<string, unknown> | null;
+	cms: BlockContext | null;
+	skipped: { type: string; shared?: string } | null;
+}
+
+interface Props {
+	nodes: RunNode[];
+	items: ReadonlyMap<number, RunItem>;
+	preview: boolean;
+}
+
+const { nodes, items, preview } = Astro.props;
+---
+
+{
+	nodes.map((node) => {
+		if (node.kind === 'run') {
+			const Wrapper = node.component as (props: any) => any;
+			return (
+				<Wrapper {...node.props}>
+					<Astro.self nodes={node.children} items={items} preview={preview} />
+				</Wrapper>
+			);
+		}
+		const item = items.get(node.index);
+		if (!item) return null;
+		const { Component, data, cms, skipped } = item;
+		if (Component && cms) return <Component block={data} cms={cms} />;
+		// As in Blocks.astro: a comment, so the site's sibling CSS matches across it.
+		return preview && skipped ? <Fragment set:html={skippedMarker(node.index, skipped)} /> : null;
+	})
+}

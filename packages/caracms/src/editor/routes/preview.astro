@@ -1,0 +1,120 @@
+---
+/**
+ * The preview route: the real page, through the site's page
+ * component (RenderDocument), with preview markers (Decision 17).
+ *
+ * - GET ?collection=<name>&path=<path> renders the document as the mode's drafts store
+ *   reads it now (disk in local mode; the `drafts` copy with its autosave in live
+ *   mode): an iframe's first load, version 0.
+ * - POST { version, collection, path, document } renders the document it's sent (the
+ *   editor's copy); `path` (optional) is where it is in its collection, for the page
+ *   component's `path` (an adoption trial, item 2). The response carries the version it rendered in
+ *   `X-Preview-Version` (Decision 13: latest edit wins).
+ * - Edit in context (Contracts → rendering a page with a document over it): POST { version,
+ *   collection, path, overlay: { collection, path, document } } renders the page named by
+ *   `collection` and `path` as the store has it (as the GET does), with the overlay (the
+ *   opened document's unkept copy: a page, a fields document, a shared block, Site Settings) read
+ *   in place of its stored copy, for this render only (read.ts → overlaySource): by `cms.read`, the
+ *   slot component, `siteSettings()` and the page component's `settings`. It's never written:
+ *   nothing here touches the drafts store. Its version counts in the same latest-wins sequence.
+ * - Review gaps (Decision 8, Contracts → Preview): either kind may ask for a block state, GET
+ *   `&state=<block>:<key>` or POST `state: { block, name }`, `block` being the index among the
+ *   rendered document's own blocks (0 for a shared block's own render). That block draws the state
+ *   (`cms.state`); an unknown block or key renders with no state. Nothing about it is kept.
+ * - Every render starts a read record (read.ts → startReadRecord), which the editor middleware
+ *   appends to the page (`<script type="application/json" id="cms-reads">`).
+ *
+ * Any kind of document a page shows (M5a): a section builder's, a list-of-fields
+ * document through its collection's component, a shared block alone in the page's
+ * frame (Decision 8). Site Settings has no page of its own (404). The render reads
+ * other documents (Decision 9: shared blocks, a case-study list) from the mode's
+ * store with its autosaves on top (`store.source()`), never the disk under live mode.
+ *
+ * Keeps no state and writes nothing. Never cached.
+ */
+import RenderDocument from '../../components/RenderDocument.astro';
+import { site } from 'virtual:caracms/config';
+import { DocumentError, readDocument, resolveDocumentFile, type ContentSource } from '../../content.ts';
+import { personOf } from '../../live/locals.ts';
+import { editorMode, editorStore } from '../server/mode.ts';
+import { normaliseAnyDocument, type AnyDocument, type PageDocument } from '../../document.ts';
+import { overlaySource, setRenderSource, setRenderState, startReadRecord, type RenderState } from '../../read.ts';
+import { applyDocumentEdits } from '../../serialize.ts';
+
+export const prerender = false;
+
+const plain = (status: number, message: string) =>
+	new Response(message, { status, headers: { 'Cache-Control': 'no-store', 'Content-Type': 'text/plain; charset=utf-8' } });
+
+if (editorMode().kind === 'live' && !personOf(Astro.locals)) return plain(401, 'signed-out');
+
+let version = 0;
+let collection: string;
+let document: AnyDocument;
+let path: string | undefined;
+let state: RenderState | null = null;
+/** A state as asked for, or null when it isn't one (rendered with no state, as an unknown one is). */
+const stateFrom = (block: unknown, name: unknown): RenderState | null =>
+	Number.isSafeInteger(block) && (block as number) >= 0 && typeof name === 'string' && name !== '' ? { block: block as number, name } : null;
+const store = await editorStore(site);
+let source: ContentSource = await store.source();
+
+if (Astro.request.method === 'POST') {
+	let body: { version?: unknown; collection?: unknown; path?: unknown; document?: unknown; overlay?: unknown; state?: unknown };
+	try {
+		body = await Astro.request.json();
+	} catch {
+		return plain(400, 'Send JSON: { version, collection, document }.');
+	}
+	if (!Number.isSafeInteger(body.version) || (body.version as number) < 0) return plain(400, 'version must be a non-negative integer.');
+	if (typeof body.collection !== 'string' || !Object.hasOwn(site.collections, body.collection)) return plain(400, 'collection must be a declared collection.');
+	version = body.version as number;
+	collection = body.collection;
+	if (typeof body.path === 'string') path = body.path;
+	if (body.state && typeof body.state === 'object') state = stateFrom((body.state as { block?: unknown }).block, (body.state as { name?: unknown }).name);
+	if (body.overlay !== undefined) {
+		const overlay = body.overlay as { collection?: unknown; path?: unknown; document?: unknown } | null;
+		if (!overlay || typeof overlay !== 'object') return plain(400, 'overlay must be { collection, path, document }.');
+		if (typeof overlay.collection !== 'string' || !Object.hasOwn(site.collections, overlay.collection)) return plain(400, 'overlay.collection must be a declared collection.');
+		if (typeof overlay.path !== 'string' || overlay.path === '') return plain(400, 'overlay.path must be the document\'s path.');
+		if (!overlay.document || typeof overlay.document !== 'object') return plain(400, 'overlay.document must be an object.');
+		if (path === undefined) return plain(400, 'path must name the page shown under the overlay.');
+		const into = site.collections[overlay.collection]!;
+		try {
+			const file = resolveDocumentFile(site, overlay.collection, overlay.path);
+			const text = applyDocumentEdits(await source.readText(file), normaliseAnyDocument(overlay.document, site, into), site, into);
+			source = overlaySource(source, file, text);
+			document = (await readDocument(site, collection, path, source, { untitled: true })).document;
+		} catch (error) {
+			if (error instanceof DocumentError) return plain(error.code === 'not-found' ? 404 : 400, error.message);
+			return plain(400, `overlay: ${(error as Error).message}`);
+		}
+	} else {
+		if (!body.document || typeof body.document !== 'object') return plain(400, 'document must be an object.');
+		document = normaliseAnyDocument(body.document, site, site.collections[collection]!);
+	}
+} else if (Astro.request.method === 'GET') {
+	collection = Astro.url.searchParams.get('collection') ?? '';
+	path = Astro.url.searchParams.get('path') ?? '';
+	const asked = /^(\d+):(.+)$/.exec(Astro.url.searchParams.get('state') ?? '');
+	if (asked) state = stateFrom(Number(asked[1]), asked[2]);
+	try {
+		document = (await store.read(collection, path)).document;
+	} catch (error) {
+		if (error instanceof DocumentError) return plain(error.code === 'not-found' ? 404 : 400, error.message);
+		throw error;
+	}
+} else {
+	return new Response('GET or POST.', { status: 405, headers: { Allow: 'GET, POST' } });
+}
+
+if (document.kind === 'settings') return plain(404, 'Site Settings has no page of its own.');
+setRenderSource(Astro.locals, source);
+setRenderState(Astro.locals, state);
+startReadRecord(Astro.locals);
+
+Astro.response.headers.set('Cache-Control', 'no-store');
+Astro.response.headers.set('X-Preview-Version', String(version));
+---
+
+<RenderDocument document={document as PageDocument} collection={collection} previewPath={path} preview />

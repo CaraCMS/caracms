@@ -1,0 +1,6 @@
+{
+  "$schema": "../../schemas/workshops.schema.json",
+  "title": "Moving a site in",
+  "open": false,
+  "sessions": ["afternoon"]
+}

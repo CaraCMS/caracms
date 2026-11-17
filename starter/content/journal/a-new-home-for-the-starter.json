@@ -1,0 +1,27 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "A new home for the starter",
+  "date": "2025-03-14",
+  "tags": ["news"],
+  "cover": { "key": "uploads/e4c45074933b/studio-window.jpg", "alt": "Morning light through a window", "w": 1920, "h": 1280 },
+  "excerpt": "The starter is now a site about CaraCMS itself, with the same pages, blocks and collections as before.",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["A new home", "For the starter"],
+      "intro": "Same pages, same blocks, new words.",
+      "buttons": [],
+      "media": null,
+      "layout": "left",
+      "background": "dark",
+      "spaceAbove": "default",
+      "spaceBelow": "default"
+    },
+    {
+      "type": "text",
+      "heading": "What changed",
+      "body": "Only the copy. Every block and collection the editor shows is still here.",
+      "background": "light"
+    }
+  ]
+}

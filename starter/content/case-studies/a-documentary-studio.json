@@ -1,0 +1,26 @@
+{
+  "$schema": "../../schemas/case-studies.schema.json",
+  "title": "A documentary studio",
+  "heading": ["A documentary", "Studio"],
+  "client": "A documentary studio",
+  "sector": "culture",
+  "featured": false,
+  "launched": "2025-08-29",
+  "summary": "An example: film titles set as lockups, so they hold their lines on every screen.",
+  "body": [
+    { "p": "The studio makes long documentaries about short journeys. Its site lists the films, with a trailer for each." },
+    { "h2": "Titles that fit" },
+    { "p": "Every title is set as a lockup, so it breaks where the director wants it to, from a wide screen to a phone." }
+  ],
+  "credits": [
+    {
+      "role": "Titles",
+      "name": "Ciarán"
+    },
+    {
+      "role": "Website",
+      "name": "Niamh"
+    }
+  ],
+  "related": ["a-small-publisher"]
+}

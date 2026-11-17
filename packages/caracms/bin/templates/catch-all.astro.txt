@@ -1,0 +1,26 @@
+---
+/**
+ * Every document with an address: the Pages collection (content/pages/, nested ones
+ * included: the file's path is the address), and every collection a page holds or that
+ * has a urlBase of its own. Written by `caracms init`. It serves documents only. The
+ * site's other routes in src/pages/ keep serving their own pages, and their addresses are
+ * reserved: a page is code or a document, never both.
+ */
+import RenderDocument from 'caracms/components/RenderDocument.astro';
+import { addressedDocuments, readDocument } from 'caracms/content';
+import { site } from 'virtual:caracms/config';
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+	// A file that can't be opened (invalid JSON, no title, a nested index.json) has no page,
+	// and nor has a hidden one (or one under it, or held by it): visitors get the 404 page.
+	const documents = await addressedDocuments(site);
+	return documents.map((d) => ({ params: { path: d.url === '/' ? undefined : d.url.slice(1) }, props: { collection: d.collection, path: d.path } }));
+}
+
+const { collection, path } = Astro.props;
+const { document } = await readDocument(site, collection, path);
+---
+
+<RenderDocument document={document} collection={collection} />

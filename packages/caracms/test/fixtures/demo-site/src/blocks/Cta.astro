@@ -1,0 +1,59 @@
+---
+/**
+ * The call to action: a lockup, some text and a button label. Schema beside it in
+ * cta.ts. The button goes to Contact (links are M5's fields).
+ */
+import Block from 'caracms/components/Block.astro';
+import Lockup from 'caracms/components/Lockup.astro';
+import Text from 'caracms/components/Text.astro';
+import type { BlockProps } from 'caracms/document';
+import type { CtaData } from './cta.ts';
+
+type Props = BlockProps<CtaData>;
+const { block, cms } = Astro.props;
+---
+
+<Block cms={cms} class={`band bg-${block.background} cta`}>
+	<div class="band-inner">
+		<Lockup cms={cms} field="heading" value={block.heading} />
+		<Text cms={cms} field="text" value={block.text} class="cta-text" />
+		{
+			(block.button || cms.preview) && (
+				<a class="cta-button" href="/contact">
+					<Text cms={cms} field="button" value={block.button} as="span" />
+				</a>
+			)
+		}
+	</div>
+</Block>
+
+<style>
+	.cta {
+		padding-block: 4rem;
+	}
+
+	.cta-text {
+		margin: 1.25rem 0 0;
+		max-width: 34rem;
+		font-size: 1.125rem;
+		line-height: 1.55;
+		text-wrap: pretty;
+	}
+
+	.cta-button {
+		display: inline-block;
+		margin-top: 2rem;
+		padding: 0.875rem 1.5rem;
+		border-radius: 999px;
+		background: var(--button-bg);
+		color: var(--button-ink);
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	@media (width >= 640px) {
+		.cta {
+			padding-block: 6rem;
+		}
+	}
+</style>

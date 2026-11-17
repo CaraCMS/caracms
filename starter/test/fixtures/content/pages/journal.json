@@ -1,0 +1,21 @@
+{
+  "$schema": "../../schemas/pages.schema.json",
+  "title": "Journal",
+  "holds": "journal",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Journal", "Notes from the studio"],
+      "intro": "What we're making, what we're reading, and what we learned on the way.",
+      "layout": "left",
+      "background": "light"
+    },
+    {
+      "type": "posts",
+      "heading": "",
+      "show": "all",
+      "background": "light",
+      "spaceAbove": "tight"
+    }
+  ]
+}

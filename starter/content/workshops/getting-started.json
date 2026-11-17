@@ -1,0 +1,6 @@
+{
+  "$schema": "../../schemas/workshops.schema.json",
+  "title": "Getting started",
+  "open": true,
+  "sessions": ["morning"]
+}

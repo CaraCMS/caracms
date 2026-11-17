@@ -1,0 +1,41 @@
+---
+/**
+ * Every document with an address (collections under pages, Decision 14), through the package's
+ * reader (`addressedDocuments`): every page in the Pages collection, nested ones included (M3
+ * Decision 8: the file's path is the URL), and the Journal page's posts and the Work page's case
+ * studies at their holder's address. Prerendered; each document is read from disk when it
+ * renders (Decision 5), never imported.
+ *
+ * Posts and tags (Decisions 12 and 14): a page with a paged list block (`listing`, only in
+ * `caracms.paged.config.ts`) also gets `<page>/page/2` onwards, counted through the route's
+ * reader (`contentReader`), and renders with `listPage`. Without the block, nothing changes.
+ */
+import RenderDocument from 'caracms/components/RenderDocument.astro';
+import { addressedDocuments, contentReader, readDocument } from 'caracms/content';
+import { site } from 'virtual:caracms/config';
+import { pageCount } from '../blocks/listing.ts';
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+	const read = contentReader(site);
+	const paths: { params: { path: string | undefined }; props: { collection: string; path: string; listPage: number } }[] = [];
+	// A file that can't be opened (invalid JSON, no title, a nested index.json) has no page; nor has a hidden one (M9 Decision 7).
+	for (const d of await addressedDocuments(site)) {
+		const at = d.url === '/' ? undefined : d.url.slice(1);
+		paths.push({ params: { path: at }, props: { collection: d.collection, path: d.path, listPage: 1 } });
+		if (d.collection !== 'pages') continue;
+		const page = await read.document('pages', d.path);
+		const paged = page?.document.kind === undefined || page?.document.kind === 'sections' ? (page!.document as { blocks: { type: string }[] }).blocks.some((b) => b.type === 'listing') : false;
+		if (!paged) continue;
+		const pages = pageCount((await read.documents('journal')).length);
+		for (let n = 2; n <= pages; n++) paths.push({ params: { path: at ? `${at}/page/${n}` : `page/${n}` }, props: { collection: 'pages', path: d.path, listPage: n } });
+	}
+	return paths;
+}
+
+const { collection, path, listPage } = Astro.props;
+const { document } = await readDocument(site, collection, path);
+---
+
+<RenderDocument document={document} collection={collection} listPage={listPage} />

@@ -1,0 +1,5 @@
+{
+  "$schema": "../../schemas/tags.schema.json",
+  "title": "Web",
+  "description": "Websites we build and the small decisions that keep them fast, readable and easy to edit."
+}

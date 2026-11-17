@@ -1,0 +1,28 @@
+{
+  "$schema": "../../schemas/case-studies.schema.json",
+  "title": "A pottery",
+  "heading": ["A pottery’s", "Catalogue"],
+  "client": "A pottery",
+  "sector": "craft",
+  "featured": true,
+  "launched": "2026-09-15",
+  "summary": "An example: a pottery’s catalogue as a collection, one entry for each glaze.",
+  "body": [
+    { "p": "The pottery makes plates for restaurants. Each glaze is an entry with its own **page**." }
+  ],
+  "credits": [
+    {
+      "role": "Identity",
+      "name": "Aoife"
+    },
+    {
+      "role": "Type design",
+      "name": "Ciarán"
+    },
+    {
+      "role": "Photography",
+      "name": "Dara"
+    }
+  ],
+  "related": ["a-coffee-roaster"]
+}

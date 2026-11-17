@@ -1,0 +1,31 @@
+---
+/**
+ * The page component, written by `caracms init`: a document in, a whole page out. The
+ * public pages and the editor's preview both render through it. Give it the site's own
+ * layout (its head, header and footer) with `<Blocks>` where a page's content goes: the
+ * caracms-adopt skill says how.
+ */
+import Blocks from 'caracms/components/Blocks.astro';
+import Fonts from 'caracms/components/Fonts.astro';
+import Head from 'caracms/components/Head.astro';
+import type { PageProps } from 'caracms/document';
+
+type Props = PageProps;
+// `path` is the document's address (`/about`), the same on the public page and in the preview.
+const { document, collection, path, preview = false, listPage } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<Head document={document} collection={collection} path={path} preview={preview} listPage={listPage} />
+		<Fonts />
+	</head>
+	<body>
+		<main>
+			<Blocks document={document} collection={collection} preview={preview} listPage={listPage} />
+		</main>
+	</body>
+</html>

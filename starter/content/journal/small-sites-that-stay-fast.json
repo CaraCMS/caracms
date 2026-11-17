@@ -1,0 +1,23 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "Small sites that stay fast",
+  "date": "2025-05-19",
+  "tags": ["hosting"],
+  "cover": { "key": "uploads/e4c45074933b/studio-window.jpg", "alt": "Morning light through a window", "w": 1920, "h": 1280 },
+  "excerpt": "The public pages are built ahead of time, and the editor stays at /admin, away from them.",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Small sites", "That stay fast"],
+      "intro": "Most of the speed comes from what a visitor never loads.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "The list",
+      "body": "Prerendered pages, pictures at the size the screen needs, and no editor code on the public site.",
+      "background": "light"
+    }
+  ]
+}

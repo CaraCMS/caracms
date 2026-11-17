@@ -1,0 +1,5 @@
+{
+  "$schema": "../../schemas/tags.schema.json",
+  "title": "Publishing",
+  "description": "Drafts, the preview and Publish: how a change gets from the editor to the site."
+}

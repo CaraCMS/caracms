@@ -1,0 +1,36 @@
+{
+  "name": "caracms-starter",
+  "private": true,
+  "type": "module",
+  "version": "0.0.0",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "start": "caracms start",
+    "astro": "astro",
+    "check": "astro check",
+    "test": "node --test --experimental-strip-types 'test/**/*.test.ts'",
+    "test:wraps": "node --test --experimental-strip-types test/wraps.test.ts",
+    "restyle-proof": "node --experimental-strip-types scripts/restyle-proof.ts"
+  },
+  "dependencies": {
+    "@astrojs/node": "^11.1.7",
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "^7.3.8",
+    "caracms": "workspace:*",
+    "gsap": "^3.15.0",
+    "locomotive-scroll": "^5.0.1",
+    "tailwindcss": "^4.3.3"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@types/node": "^22.20.5",
+    "playwright-core": "1.63.0",
+    "railway": "^3.16.0",
+    "typescript": "^6.0.3"
+  }
+}

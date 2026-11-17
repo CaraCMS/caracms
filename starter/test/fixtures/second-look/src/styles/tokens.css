@@ -1,0 +1,152 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   THE LOOK, CARACMS'S: the restyle proof (M7 Decision 9, Acceptance 21–23).
+   The same tokens as the starter's src/styles/tokens.css, by the same names,
+   with the second look's values: cream as the surface, ink for text and the Dark
+   background, forest as the accent with cream on it, moss for decoration only
+   (never under text; no block of the starter's reads it), and a grey scale
+   tinted from the ink (each step the cream mixed toward the ink). The body is
+   the system's sans, so there's no @font-face here; the display lockups are
+   Bricolage Grotesque (text-styles.ts beside this file).
+
+   The restyle test (test/restyle.test.ts) and `pnpm restyle-proof` copy the
+   starter, swap this folder's files in at the same paths, and build. Nothing
+   else changes: that's the proof.
+   ═══════════════════════════════════════════════════════════════════════════ */
+@theme static {
+	--color-*: initial;
+	--font-*: initial;
+	--text-*: initial;
+	--font-weight-*: initial;
+	--tracking-*: initial;
+	--leading-*: initial;
+	--radius-*: initial;
+	--shadow-*: initial;
+	--inset-shadow-*: initial;
+	--drop-shadow-*: initial;
+	--text-shadow-*: initial;
+	--blur-*: initial;
+	--container-*: initial;
+	--aspect-*: initial;
+	--breakpoint-*: initial;
+	--breakpoint-md: 48rem;
+	--breakpoint-lg: 64rem;
+
+	/* ── Type family: the system's sans, as CaraCMS set it. The display lockup is
+	      Bricolage Grotesque, measured (text-styles.ts). ── */
+	--font-sans: system-ui, -apple-system, 'Segoe UI', sans-serif;
+	--font-weight-normal: 400; /* body, lead, small */
+	--font-weight-medium: 500; /* headings, buttons, labels, links */
+	--font-weight-semibold: 600; /* the site name, <strong> */
+
+	/* ── Type scale: fluid from a 375px to a 1440px viewport (px in comments).
+	      Each step carries its line height, tracking and weight. The size
+	      follows the role, not the tag (a Hero heading is display size whether
+	      it renders as h1 or h2). ── */
+	--text-display: clamp(3rem, 1.944rem + 4.507vw, 6rem); /* 48 → 96, the display lockup's sizePx */
+	--text-display--line-height: 1.02;
+	--text-display--letter-spacing: -0.035em;
+	--text-display--font-weight: 500;
+
+	--text-h1: clamp(2.25rem, 1.634rem + 2.629vw, 4rem); /* 36 → 64 */
+	--text-h1--line-height: 1.05;
+	--text-h1--letter-spacing: -0.03em;
+	--text-h1--font-weight: 500;
+
+	--text-h2: clamp(1.875rem, 1.479rem + 1.69vw, 3rem); /* 30 → 48 */
+	--text-h2--line-height: 1.1;
+	--text-h2--letter-spacing: -0.025em;
+	--text-h2--font-weight: 500;
+
+	--text-h3: clamp(1.5rem, 1.324rem + 0.751vw, 2rem); /* 24 → 32 */
+	--text-h3--line-height: 1.2;
+	--text-h3--letter-spacing: -0.02em;
+	--text-h3--font-weight: 500;
+
+	--text-h4: clamp(1.25rem, 1.162rem + 0.376vw, 1.5rem); /* 20 → 24 */
+	--text-h4--line-height: 1.3;
+	--text-h4--letter-spacing: -0.01em;
+	--text-h4--font-weight: 500;
+
+	--text-lead: clamp(1.125rem, 1.037rem + 0.376vw, 1.375rem); /* 18 → 22 */
+	--text-lead--line-height: 1.5;
+	--text-lead--letter-spacing: -0.005em;
+	--text-lead--font-weight: 400;
+
+	--text-body: clamp(1rem, 0.956rem + 0.188vw, 1.125rem); /* 16 → 18 */
+	--text-body--line-height: 1.6;
+	--text-body--letter-spacing: 0em;
+	--text-body--font-weight: 400;
+
+	--text-small: 0.875rem; /* 14 */
+	--text-small--line-height: 1.5;
+	--text-small--letter-spacing: 0em;
+	--text-small--font-weight: 400;
+
+	--tracking-eyebrow: 0.06em; /* the small upper-case labels: the 404's "Error 404", footer labels */
+
+	/* ── Colour: the look's cream, ink, forest and moss; a grey scale from the ink. ── */
+	--color-ink: #17241d; /* text; the Dark background */
+	--color-surface: #f4efe6; /* cream: the page; text on dark and on media */
+	--color-accent: #1f3a2e; /* forest: primary buttons, links, focus rings, the Accent background. 10.8:1 on cream */
+	--color-on-accent: #f4efe6; /* cream on forest */
+	--color-moss: #8fae8b; /* decoration only, never under text */
+	--color-error: #b42318; /* 5.7:1 on cream */
+	--color-scrim: rgb(23 36 29 / 0.5); /* over media behind text (the ink at 50%) */
+
+	--color-grey-50: #e9e5dc; /* the Grey background */
+	--color-grey-100: #dedbd2; /* a media frame before its image loads */
+	--color-grey-200: #ceccc4; /* hairlines */
+	--color-grey-300: #b8b8b0;
+	--color-grey-400: #979a92;
+	--color-grey-500: #787d75; /* field borders (3.7:1) */
+	--color-grey-600: #5c635b; /* muted text (5.4:1 on cream, 4.9:1 on grey-50) */
+	--color-grey-700: #485149; /* soft text (7.2:1) */
+	--color-grey-800: #364039;
+	--color-grey-900: #26322b;
+
+	/* ── Spacing: Tailwind's 4px step is the scale (p-4 = calc(var(--spacing) * 4)).
+	      The roles below step per breakpoint. They never take t-shirt names:
+	      max-w-sm looks in --spacing-* before --container-*. ── */
+	--spacing: 0.25rem;
+	--spacing-gutter: 1.25rem; /* 20 · 32 · 48   the page's side margin */
+	--spacing-grid: 1rem; /* 16 · 24 · 32   gap between grid columns */
+	--spacing-heading: 2rem; /* 32 · 40 · 56   a block's heading group → its content */
+	--spacing-section: 3rem; /* 48 · 64 · 80   Space above/below: Default */
+	--spacing-section-tight: 1.5rem; /* 24 · 32 · 40   Tight */
+	--spacing-section-extra: 5rem; /* 80 · 104 · 128 Extra   (None is 0) */
+
+	/* ── Layout widths ── */
+	--container-content: 75rem; /* 1200: the content column, inside the gutters */
+	--container-reading: 40rem; /* 640: long text, intros, answers (≈ 65 characters) */
+
+	/* ── Shape ── */
+	--radius-control: 0; /* the look's square buttons and fields */
+	--radius-media: 0; /* framed media at content width; full-bleed media is square */
+
+	/* ── Framed media shapes (width / height). ── */
+	--aspect-wide: 16 / 9; /* Full-width media */
+	--aspect-landscape: 3 / 2; /* Text and media, Cards, Case studies */
+	--aspect-portrait: 4 / 5; /* Gallery */
+}
+
+/* The tokens that step per breakpoint (tablet md, desktop lg). */
+@media (min-width: 48rem) {
+	:root {
+		--spacing-gutter: 2rem;
+		--spacing-grid: 1.5rem;
+		--spacing-heading: 2.5rem;
+		--spacing-section: 4rem;
+		--spacing-section-tight: 2rem;
+		--spacing-section-extra: 6.5rem;
+	}
+}
+@media (min-width: 64rem) {
+	:root {
+		--spacing-gutter: 3rem;
+		--spacing-grid: 2rem;
+		--spacing-heading: 3.5rem;
+		--spacing-section: 5rem;
+		--spacing-section-tight: 2.5rem;
+		--spacing-section-extra: 8rem;
+	}
+}

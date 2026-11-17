@@ -1,0 +1,5 @@
+{
+  "$schema": "../../schemas/tags.schema.json",
+  "title": "News",
+  "description": "What’s new in CaraCMS and in this starter."
+}

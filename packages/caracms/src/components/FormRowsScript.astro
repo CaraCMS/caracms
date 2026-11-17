@@ -1,0 +1,13 @@
+---
+/**
+ * A rows field's script (form-rows-client.ts), on its own so that Form.astro carries it only when
+ * the form has a rows field (Astro renders a component's script only where the component renders):
+ * a form without one keeps its one small inline script (form rows Decision 12).
+ */
+---
+
+<script>
+	import { initFormRows } from './form-rows-client.ts';
+
+	initFormRows();
+</script>

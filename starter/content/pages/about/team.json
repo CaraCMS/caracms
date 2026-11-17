@@ -1,0 +1,19 @@
+{
+  "$schema": "../../../schemas/pages.schema.json",
+  "title": "Who does what",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Who does what"],
+      "intro": "A site on CaraCMS usually has a developer who builds it and editors who keep it current.",
+      "layout": "left",
+      "background": "light"
+    },
+    {
+      "type": "text",
+      "heading": "The developer and the editors",
+      "body": "The developer owns the code and the blocks. Editors change the words and pictures, and publish when they’re ready.",
+      "background": "dark"
+    }
+  ]
+}

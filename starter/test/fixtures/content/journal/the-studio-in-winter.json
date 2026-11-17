@@ -1,0 +1,23 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "The studio in winter",
+  "date": "2026-01-09",
+  "tags": ["studio"],
+  "cover": { "key": "uploads/e4c45074933b/studio-window.jpg", "alt": "Morning light through the studio window", "w": 1920, "h": 1280 },
+  "excerpt": "Short days at the Old Mill, and how we rearranged the room to follow the light.",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["The studio", "In winter"],
+      "intro": "By four o’clock the light is gone, so the desks moved to the window.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "A smaller room",
+      "body": "We work closer together in winter. It turns out we like it.",
+      "background": "light"
+    }
+  ]
+}

@@ -1,0 +1,126 @@
+---
+/**
+ * The case-study list (M5a Decision 17): Featured or In order, both in Site order (the case
+ * studies' hand order, review gaps Decision 5a: `documents()` returns them in it),
+ * up to its count (3 when the count is empty or out of range: the render gets null).
+ * Schema beside it in cases.ts. The case studies come from the render context
+ * (Decision 9), the same source as the page itself.
+ *
+ * M5b: each card shows its case study's cover at 3:2, at the top inside the card's
+ * 1.25rem padding and 1px border. `sizes`, from this CSS: one column below 640
+ * (100vw − 48px gutter − 42px), three with a 1.25rem gap from 640
+ * ((100vw − 128px − 40px) / 3 − 42px), capped with the band at 1312px from 1440
+ * ((1312 − 40) / 3 − 42 = 382px).
+ *
+ * Edit in context: each card is marked as its case study (`cms.of(entry)`, Decision 10), and its
+ * cover as that case study's cover field. The heading is marked as the block's `heading` without
+ * the package drawing it (Decision 10b, Acceptance 18b): its text sits in a span of its own.
+ */
+import Block from 'caracms/components/Block.astro';
+import Media from 'caracms/components/Media.astro';
+import { headingTag, type BlockProps } from 'caracms/document';
+import { sectorLabel, type CaseStudyData } from '../collections/case-studies.ts';
+import { DEFAULT_COUNT, type CasesData } from './cases.ts';
+
+type Props = BlockProps<CasesData>;
+const { block, cms } = Astro.props;
+const COVER_SIZES = '(min-width: 1440px) 382px, (min-width: 640px) calc((100vw - 168px) / 3 - 42px), calc(100vw - 90px)';
+const all = await cms.read.documents('case-studies');
+const shown = all
+	.map((r) => ({ entry: r, url: r.url, title: r.title, data: r.data as CaseStudyData }))
+	.filter((r) => block.show !== 'featured' || r.data.featured)
+	.slice(0, block.count ?? DEFAULT_COUNT);
+---
+
+<Block cms={cms} class={`band bg-${block.background} cases`}>
+	<div class="band-inner">
+		{
+			(block.heading || cms.preview) && (
+				<Block cms={cms} field="heading" as={headingTag(cms, 'heading')} class="cases-heading">
+					<span>{block.heading}</span>
+				</Block>
+			)
+		}
+		<ul class="cases-grid">
+			{
+				shown.map((c) => (
+					<Block cms={cms.of(c.entry)} as="li">
+						<a href={c.url ?? undefined}>
+							{c.data.cover && <Media cms={cms.of(c.entry)} field="cover" value={c.data.cover} sizes={COVER_SIZES} ratio={3 / 2} class="cases-cover" />}
+							<span class="cases-sector">{sectorLabel(c.data.sector)}</span>
+							<b>{c.title}</b>
+							{c.data.summary && <span class="cases-summary">{c.data.summary}</span>}
+						</a>
+					</Block>
+				))
+			}
+		</ul>
+	</div>
+</Block>
+
+<style>
+	.cases {
+		padding-block: 3.5rem;
+	}
+
+	.cases-heading {
+		margin: 0 0 1.5rem;
+		font-size: 1.75rem;
+		line-height: 1.2;
+		font-weight: 650;
+	}
+
+	.cases-grid {
+		display: grid;
+		gap: 1.25rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.cases-grid a {
+		display: flex;
+		flex-direction: column;
+		gap: 0.375rem;
+		height: 100%;
+		padding: 1.25rem;
+		border: 1px solid color-mix(in srgb, currentColor 25%, transparent);
+		border-radius: 0.75rem;
+		color: inherit;
+		text-decoration: none;
+	}
+
+	.cases-grid a :global(.cases-cover) {
+		display: block;
+		width: 100%;
+		height: auto;
+		aspect-ratio: 3 / 2;
+		object-fit: cover;
+		margin-bottom: 0.5rem;
+		border-radius: 0.25rem;
+	}
+
+	.cases-sector {
+		font-size: 0.8125rem;
+		opacity: 0.7;
+	}
+
+	.cases-summary {
+		font-size: 0.9375rem;
+		line-height: 1.5;
+	}
+
+	@media (width >= 640px) {
+		.cases {
+			padding-block: 5rem;
+		}
+
+		.cases-grid {
+			grid-template-columns: repeat(3, 1fr);
+		}
+
+		.cases-heading {
+			font-size: 2.25rem;
+		}
+	}
+</style>

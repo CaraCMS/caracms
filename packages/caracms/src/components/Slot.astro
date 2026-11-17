@@ -1,0 +1,86 @@
+---
+/**
+ * A slot of the page's frame (edit in context, Decisions 2 and 3): the shared block this page
+ * uses for its header or footer, drawn through that block's own component. Put it in the page
+ * component where the header or footer goes, given the page component's props:
+ *
+ *   <Slot name="header" {...Astro.props} />
+ *   <main>…<Blocks … /></main>
+ *   <Slot name="footer" {...Astro.props} />
+ *
+ * - **Which block:** the page's pick (its document's `frame.<name>`), else the slot's default (the
+ *   shared block of that slot with `"default": true`). A pick that's missing, of a type the code
+ *   doesn't know, or not of this slot falls back to the default; a slot with no usable block draws
+ *   nothing. Each case warns (slots.ts): on the server's console, and in a preview as a comment
+ *   where the slot is, `<!--cms-slot footer problem=missing pick=footer-dark-->`. A code route (the
+ *   404) gets the defaults: pass it `{ name, settingsCms }` and no document. A site none of whose
+ *   blocks fills the slot draws nothing there, quietly.
+ * - **Marked as its source:** the block's context is a source context for that shared block
+ *   (document.ts → slotContext), so in a preview its root carries `data-cms-source="shared/<path>"`
+ *   and its fields their markers. It also has the page's address as `cms.path`, and Site
+ *   Settings' context as `cms.settings`.
+ * - **A shared block's own preview** (the document is a shared block): a slot block draws in its own
+ *   slot (the other slot gets its default), and a body block's preview draws no slots at all.
+ * - Read from the render's source, as everything is (the editor's store in a preview, an opened
+ *   document's copy on top: read.ts → overlaySource). Its own reads aren't in the read record.
+ */
+import { blocks } from 'virtual:caracms/blocks';
+import { site } from 'virtual:caracms/config';
+import type { SlotName } from '../config.ts';
+import { own, settingsContext, slotContext, stateOf, type BlockContext, type PageDocument, type SharedDocument } from '../document.ts';
+import { documentReader, renderFields, renderSourceOf, renderStateOf } from '../read.ts';
+import { resolveSlot, warnOnce, type SlotCandidate } from '../slots.ts';
+
+interface Props {
+	name: SlotName;
+	/** The page component's props: its document (for the page's pick), its address, its preview, its contexts. */
+	document?: PageDocument;
+	path?: string | null;
+	preview?: boolean;
+	listPage?: number;
+	cms?: BlockContext;
+	settingsCms?: BlockContext;
+	[prop: string]: unknown;
+}
+
+const { name, document, path: address = null, preview = false, listPage = 1 } = Astro.props;
+const read = documentReader(site, renderSourceOf(Astro.locals));
+// Vivid (vivid.ts): a public render with the config's switch on marks the slot's fields as its shared block's.
+const vivid = site.vivid && !preview;
+const settings = Astro.props.settingsCms ?? settingsContext(preview, read, listPage, vivid);
+
+let drawn: { path: string; block: SharedDocument['block'] } | null = null;
+let problem: { problem: string; pick?: string } | null = null;
+const solo = document?.kind === 'shared' ? (document as SharedDocument) : null;
+const soloSlot = solo?.block.known ? own(site.blocks, solo.block.type)?.slot : undefined;
+
+if (solo && soloSlot === name) {
+	// A slot block's own preview: this document, as the editor holds it.
+	drawn = { path: Astro.props.cms?.page?.path ?? '', block: solo.block };
+} else if ((!solo || soloSlot) && Object.values(site.blocks).some((b) => b.slot === name)) {
+	// A site with no block for this slot draws nothing there, without a warning.
+	const listed = await read.documents('shared');
+	const candidates: SlotCandidate[] = listed.map((e) => {
+		const block = (e.document as SharedDocument).block;
+		return { path: e.path, title: e.title, type: block.type, known: block.known, slot: block.known ? own(site.blocks, block.type)?.slot : undefined, default: (e.document as SharedDocument).default === true };
+	});
+	const pick = solo ? undefined : (document as { frame?: Partial<Record<SlotName, string>> } | undefined)?.frame?.[name];
+	const resolved = resolveSlot(name, pick, candidates);
+	for (const w of resolved.warnings) warnOnce(`caracms: ${address ?? 'a page'}: ${w.message}`);
+	if (resolved.warnings[0]) problem = { problem: resolved.warnings[0].problem, ...(pick !== undefined && !resolved.picked ? { pick } : {}) };
+	const entry = resolved.path ? listed.find((e) => e.path === resolved.path) : undefined;
+	if (entry) drawn = { path: entry.path, block: (entry.document as SharedDocument).block };
+}
+
+const schema = drawn ? own(site.blocks, drawn.block.type) : undefined;
+const Component = drawn && schema ? blocks[drawn.block.type] : undefined;
+const cms = drawn && schema ? slotContext(name, { path: drawn.path, type: drawn.block.type }, solo ? null : address, preview, read, settings, listPage, vivid) : null;
+// Review gaps (Decision 7): a slot block's own preview takes the state asked for (block 0); a slot drawn over a page never does.
+if (cms && solo && soloSlot === name && preview) cms.state = stateOf(site, drawn!.block.type, renderStateOf(Astro.locals), 0);
+const data = drawn && schema ? await renderFields(schema.fields, drawn.block.data, read) : null;
+const enc = encodeURIComponent;
+const comment = preview && problem ? `<!--cms-slot ${name} problem=${enc(problem.problem)}${problem.pick !== undefined ? ` pick=${enc(problem.pick)}` : ''}-->` : null;
+---
+
+{comment && <Fragment set:html={comment} />}
+{Component && cms && <Component block={data} cms={cms} />}

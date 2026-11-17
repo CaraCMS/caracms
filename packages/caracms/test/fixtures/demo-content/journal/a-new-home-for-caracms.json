@@ -1,0 +1,19 @@
+{
+  "$schema": "../../schemas/journal.schema.json",
+  "title": "A new home for CaraCMS",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["A new home", "For CaraCMS"],
+      "intro": "We moved into the Old Mill in March. Here is what changed.",
+      "layout": "left",
+      "background": "photo"
+    },
+    {
+      "type": "text",
+      "heading": "More light, fewer stairs",
+      "body": "The new studio has one big room and a kitchen table long enough for everyone.",
+      "background": "light"
+    }
+  ]
+}

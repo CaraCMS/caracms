@@ -1,0 +1,34 @@
+{
+  "$schema": "../../../schemas/pages.schema.json",
+  "title": "Brand settings",
+  "blocks": [
+    {
+      "type": "hero",
+      "heading": ["Your brand"],
+      "intro": "The site’s name, accent colour, logo and tab icon, kept in Site Settings.",
+      "layout": "left",
+      "background": "dark"
+    },
+    {
+      "type": "text",
+      "heading": "Changed by an editor",
+      "body": "An editor can change the brand without a developer. It shows on the site once it’s published.",
+      "background": "light"
+    },
+    {
+      "type": "cta",
+      "heading": ["The look", "Stays in code"],
+      "text": "Fonts, colours and type sizes are the site’s own tokens, so a developer restyles a site by swapping a few files.",
+      "buttons": [
+        {
+          "label": "Ask a question",
+          "href": "/contact",
+          "style": "primary"
+        }
+      ],
+      "background": "dark",
+      "spaceAbove": "default",
+      "spaceBelow": "default"
+    }
+  ]
+}

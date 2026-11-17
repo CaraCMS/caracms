@@ -1,0 +1,49 @@
+---
+/**
+ * Two columns side by side from 768px, one above the other below. Each column is a
+ * group (columns.ts): a heading at h3 size, some text in the soft colour and a button.
+ * Schema beside it in columns.ts.
+ */
+import Block from 'caracms/components/Block.astro';
+import Buttons from 'caracms/components/Buttons.astro';
+import RichText from 'caracms/components/RichText.astro';
+import Text from 'caracms/components/Text.astro';
+import type { BlockProps } from 'caracms/document';
+import { bandClass } from './background.ts';
+import type { ColumnsData } from './columns.ts';
+
+type Props = BlockProps<ColumnsData>;
+const { block, cms } = Astro.props;
+const sides = [
+	['left', block.left],
+	['right', block.right],
+] as const;
+---
+
+<Block cms={cms} class={bandClass(block)}>
+	<div class="content-container columns">
+		{
+			sides.map(([side, column]) => (
+				<div class="grid content-start gap-4">
+					<Text cms={cms} field={`${side}.heading`} value={column.heading} class="text-h3" />
+					<RichText cms={cms} field={`${side}.text`} value={column.text} class="prose fg-soft" />
+					<Buttons cms={cms} field={`${side}.button`} value={column.button} class="btn-row mt-2" buttonClass="btn" />
+				</div>
+			))
+		}
+	</div>
+</Block>
+
+<style>
+	.columns {
+		display: grid;
+		gap: calc(var(--spacing) * 14);
+	}
+
+	@media (min-width: 48rem) {
+		.columns {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: calc(var(--spacing-grid) * 2);
+		}
+	}
+</style>

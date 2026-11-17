@@ -1,0 +1,14 @@
+---
+/** A fields document's body (FAQ, Team and Posts share it). */
+import Block from 'caracms/components/Block.astro';
+import Text from 'caracms/components/Text.astro';
+import type { BlockContext } from 'caracms/document';
+
+interface Props {
+	document: { title: string; answer: string };
+	cms: BlockContext;
+}
+const { document, cms } = Astro.props;
+---
+
+<Block cms={cms} as="article"><Text cms={cms} field="answer" value={document.answer} /></Block>

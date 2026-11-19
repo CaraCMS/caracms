@@ -6,7 +6,8 @@
       "type": "text",
       "heading": "Privacy policy",
       "body": [
-        { "p": "This policy explains what this site collects when you use it or get in touch, and what we do with it. It was last updated on 1 October 2026." },
+        { "p": "**This is sample text.** It shows what a text block can hold (headings, lists, bold, italics and a link) and is nobody’s real policy, CaraCMS’s included. Replace it with your own before the site goes live." },
+        { "p": "This policy explains what this site collects when you use it or get in touch, and what we do with it." },
         { "h2": "What we collect" },
         { "p": "We only collect what you give us, and a little about how the site is used:" },
         { "ul": ["your name, email address and message when you use the contact form;", "anything you send us by email or tell us on the phone;", "anonymous visit statistics, such as which pages are read most."] },

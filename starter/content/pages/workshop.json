@@ -5,7 +5,7 @@
     {
       "type": "form",
       "heading": "Book a workshop",
-      "intro": "A form with rows: book a place or a few, for one workshop or more, morning or afternoon.",
+      "intro": "An example form with rows: a place or a few, for one workshop or more, morning or afternoon. The workshops are made up, and nothing is booked.",
       "form": "workshop"
     }
   ],

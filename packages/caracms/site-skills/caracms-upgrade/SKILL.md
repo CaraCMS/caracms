@@ -67,6 +67,19 @@ Newest first. **Breaks** must be fixed in step 4; **Run** is anything beyond the
 knowing** is a change around the package (the cloud, a skill) that asks nothing of the
 upgrade itself.
 
+### 0.21.0
+
+- **Breaks:** nothing. Nothing in content, on a public page or in the editor changes.
+- **Run:** nothing.
+- **Adopt:** on a Starlight site only. The docs kit now ships inside the package, at
+  `node_modules/caracms/starlight-kit/`, and caracms-starlight copies it from there. A site
+  that already has `src/starlight-kit/` keeps its copy and needs nothing; to take the
+  package's (it adds `groupLabels` for naming the sidebar's groups), follow caracms-starlight
+  → the copy step, and keep any changes the site made to its own copy.
+- **Worth knowing:** the package's source is public, at `github.com/CaraCMS/caracms`, and its
+  npm page links there; issues are open on that repo. The examples in the skills and the
+  README use plain labels and `example.com` addresses now, which changes nothing on a site.
+
 ### 0.20.1
 
 - **Breaks:** nothing. Nothing in content, on a public page or in the editor changes.

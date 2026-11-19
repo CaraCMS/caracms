@@ -1,6 +1,6 @@
 {
   "name": "create-caracms",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Start a caracms site: npm create caracms makes a blank Astro site with caracms on it.",
   "license": "MIT",
   "repository": {
